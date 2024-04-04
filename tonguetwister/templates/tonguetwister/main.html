@@ -1,15 +1,48 @@
 {% extends "tonguetwister/base.html" %}
 
 {% block content %}
-  <h4>Ćwiczenia dykcji wykonuje się w celu poprawy jakości artykulacji głosek,
+<div class="info">
+  <h1>About</h1>
+  <p>
+Ćwiczenia dykcji wykonuje się w celu poprawy jakości artykulacji głosek,
 wypracowania sprawności oraz precyzji działania ruchomych elementów aparatu
 artykulacyjnego. Ćwiczenia dykcji należy wykonywać również jako formę „rozgrzania”
 głosu i aparatu artykulacyjnego- przygotowania do zadania związanego posługiwaniem
 się głosem w mowie, czy w śpiewie. Ćwiczenia dykcji przynoszą korzyść natychmiastową
 oraz długoterminową, pod warunkiem, że są wykonywane systematycznie w długim
-okresie czasu.
-
-
-
-  </h4>
+okresie czasu.</p>
+</div>
+<div class="choice">
+  <h1>Choose how much time do you want to exercise (choose wisely)</h1>
+  <button type="button" class="btn btn-primary">5 min</button>
+<button type="button" class="btn btn-secondary">10 min</button>
+<button type="button" class="btn btn-success">15 min</button>
+  <p class="text-danger">Clicking the button will generate a specific amount of exercises below.</p>
+</div>
+<div class="apparatus">
+  <h1>Apparatus section (generative)</h1>
+  <h4>Rozgrzanie mięśni twarzy i żuchwy</h4>
+  {% for i in apparatus %}
+      <p>> {{ i.text }}</p>
+    {% endfor %}
+</div>
+<div class="articulate">
+  <h1>Articulate section (generative)</h1>
+    <h4>Powoli, starannie wymawiamy kolejno podane sylaby, zwracając uwagę na prawidłowość wybuchu, czyli rozwarcie.</h4>
+    {% for j in articulation %}
+      <p>> {{ j.text }}</p>
+    {% endfor %}
+</div>
+<div class="articulate">
+  <h1>Another sections as needed (generative)</h1>
+    <h4>Blablabla - what to do</h4>
+    <p> > </p>
+</div>
+<div class="twister">
+  <h1>Tongue Twister section (generative)</h1>
+  <h4>Gdy jesteśmy już dobrze przygotowani i rozgrzani, przechodzimy do następnego etapu, jakim są wprawki dykcyjne. </h4>
+  {% for k in twister %}
+      <p>> {{ k.text|linebreaksbr }}</p>
+    {% endfor %}
+</div>
 {% endblock %}
