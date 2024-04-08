@@ -1,48 +1,72 @@
 {% extends "tonguetwister/base.html" %}
 
 {% block content %}
-<div class="info">
-  <h1>About</h1>
-  <p>
-Ćwiczenia dykcji wykonuje się w celu poprawy jakości artykulacji głosek,
-wypracowania sprawności oraz precyzji działania ruchomych elementów aparatu
-artykulacyjnego. Ćwiczenia dykcji należy wykonywać również jako formę „rozgrzania”
-głosu i aparatu artykulacyjnego- przygotowania do zadania związanego posługiwaniem
-się głosem w mowie, czy w śpiewie. Ćwiczenia dykcji przynoszą korzyść natychmiastową
-oraz długoterminową, pod warunkiem, że są wykonywane systematycznie w długim
-okresie czasu.</p>
+<div class="p-5 mb-4 bg-light rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">O aplikacji</h1>
+        <p class="col-md-8 fs-4">Cześć! Fajnie, że jesteś a skoro jesteś to znaczy, że chcesz popracować nad swoją dykcją, trzymamy za Ciebie kciuki i zapraszamy do nauki! :)</p>
+        <p class="col-md-8 fs-4">Przeczytaj ten tekst na głos, staraj sie to zrobic przesaadnie, hiperpoprawnie, jest to losowo wygenerowany fragment prozy</p>
+        <p class="col-md-8 fs-4">Tu coś Nałkowskiej</p>
+        <p class="col-md-8 fs-6">gratki! pierwszy krok za toba <br> czas na kolejny, jak juz to zrobisz to przeskroluj albo kliknij w przycisk aby przejsc do nastepnego cwiczenia</p>
+        <button type="button" class="btn btn-primary">cisniemy dalej, ale ....</button>
+      </div>
 </div>
-<div class="choice">
-  <h1>Choose how much time do you want to exercise (choose wisely)</h1>
-  <button type="button" class="btn btn-primary">5 min</button>
-<button type="button" class="btn btn-secondary">10 min</button>
-<button type="button" class="btn btn-success">15 min</button>
-  <p class="text-danger">Clicking the button will generate a specific amount of exercises below.</p>
+
+<div class="p-5 mb-4 bg-light rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Daj nam znac ile masz czasu i ochoty pogadać</h1>
+        <p class="col-md-8 fs-6">Kliknięcie w przycisk wygeneruje określoną liczbę pozycji z bazy danych</p>
+        <button type="button" class="btn btn-primary">5 min</button>
+        <button type="button" class="btn btn-secondary">10 min</button>
+        <button type="button" class="btn btn-success">15 min</button>
+      </div>
 </div>
-<div class="apparatus">
-  <h1>Apparatus section (generative)</h1>
-  <h4>Rozgrzanie mięśni twarzy i żuchwy</h4>
-  {% for i in apparatus %}
-      <p>> {{ i.text }}</p>
-    {% endfor %}
+
+<div class="p-5 mb-4 bg-light rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Pierwsza sekcja</h1>
+        <p class="col-md-8 fs-4">Rozgrzanie mięśni twarzy i żuchwy</p>
+            {% for i in apparatus %}
+            <p class="col-md-8 fs-6"> -> {{ i.text }}</p>
+            {% endfor %}
+        </p>
+        <button type="button" class="btn btn-primary">cisniemy dalej</button>
+      </div>
 </div>
-<div class="articulate">
-  <h1>Articulate section (generative)</h1>
-    <h4>Powoli, starannie wymawiamy kolejno podane sylaby, zwracając uwagę na prawidłowość wybuchu, czyli rozwarcie.</h4>
-    {% for j in articulation %}
-      <p>> {{ j.text }}</p>
-    {% endfor %}
+
+<div class="p-5 mb-4 bg-light rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Druga sekcja</h1>
+        <p class="col-md-8 fs-4">Powoli, starannie wymawiamy kolejno podane sylaby, zwracając uwagę na prawidłowość wybuchu, czyli rozwarcie.</p>
+            {% for j in articulation %}
+            <p class="col-md-8 fs-6"> -> {{ j.text }}</p>
+            {% endfor %}
+        </p>
+        <button type="button" class="btn btn-primary">cisniemy dalej</button>
+      </div>
 </div>
-<div class="articulate">
-  <h1>Another sections as needed (generative)</h1>
-    <h4>Blablabla - what to do</h4>
-    <p> > </p>
+
+<div class="p-5 mb-4 bg-light rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Zemsta logopedy</h1>
+        <p class="col-md-8 fs-4">Gdy jesteśmy już dobrze przygotowani i rozgrzani, przechodzimy do następnego etapu, jakim są wprawki dykcyjne, lamance jezykowe.</p>
+            {% for k in twister %}
+            <p class="col-md-8 fs-6"> -> {{ k.text|linebreaksbr }}</p>
+            {% endfor %}
+        </p>
+        <button type="button" class="btn btn-primary">cisniemy dalej</button>
+      </div>
 </div>
-<div class="twister">
-  <h1>Tongue Twister section (generative)</h1>
-  <h4>Gdy jesteśmy już dobrze przygotowani i rozgrzani, przechodzimy do następnego etapu, jakim są wprawki dykcyjne. </h4>
-  {% for k in twister %}
-      <p>> {{ k.text|linebreaksbr }}</p>
-    {% endfor %}
+
+<div class="p-5 mb-4 bg-light rounded-3">
+      <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Pomysły na tipsy i triksy</h1>
+        <p class="col-md-8 fs-4">
+          - uslysz swoj glos i zakochaj sie w nim<br>
+          - w epoce cyfrowej - zalezy nam na tym abyscie jak najwiecej rozmawiali - 'kultura zywego slowa'<br>
+          - spiewaj pod prysznicem, gadaj do szamponu<br>
+          - dzwon, nie pisz<br>
+        </p>
+      </div>
 </div>
 {% endblock %}

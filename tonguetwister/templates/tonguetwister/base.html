@@ -14,12 +14,21 @@
   <link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon" />
 </head>
 <body>
-<nav class="navbar navbar-light bg-light">
+<nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">
-      <img src="{% static 'assets/ttlogo.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top">
-      TongueTwister
-    </a>
+    <a class="navbar-brand" href="#"><img src="{% static 'assets/ttlogo.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top">
+      TongueTwister</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link active" aria-current="page" href="#">Home</a>
+        <a class="nav-link" href="#">Do pobrania</a>
+        <a class="nav-link" href="#">O nas</a>
+        <a class="nav-link" href="#">Kontakt</a>
+      </div>
+    </div>
   </div>
 </nav>
  <div id="content">
