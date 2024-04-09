@@ -26,13 +26,11 @@
         <p class="fs-4">Twój głos zabrzmi teraz lepiej. Sprawdź to i zacznij … <strong>ziewać</strong>! <br>Tak, właśnie teraz otwórz szeroko buzię, przeciągnij się i pozwól sobie wydać kilka dzikich dźwięków. Możesz też zacząć mlaskać albo mruczeć.</p>
         <div class="card text-white bg-secondary mt-3 mb-3 w-100">
             <div class="card-body">
-                <p class="text-center mb-0">Płuca napowietrzone? Żuchwa rozgrzana? Daj nam znać ile masz czasu i ochoty pogadać, kliknij odpowiedni przycisk poniżej.</p>
+                <p class="text-center mb-0">Płuca napowietrzone? Żuchwa rozgrzana? Możemy iść dalej, kliknij w przycisk poniżej.</p>
             </div>
         </div>
         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-danger btn-lg text-uppercase fw-bold text-dark" href="#apparatus">5 min</a>
-            <a class="btn btn-success btn-lg text-uppercase fw-bold text-dark" href="#apparatus">15 min</a>
-            <a class="btn btn-warning btn-lg text-uppercase fw-bold text-dark" href="#apparatus">25 min</a>
+            <a class="btn btn-dark btn-lg text-uppercase fw-bold" href="#apparatus">Dalej</a>
         </div>
     </div>
 </div>
@@ -42,9 +40,12 @@
 <div class="p-3 mb-4 bg-light border rounded-3" id="apparatus">
     <div class="container-fluid py-1">
         <h2>Rozgrzej artykulatory</h2>
-        <p class="col-md-16 fs-4">Język, wargi, żuchwa, usta są jak akumulator w aucie. Bez odpowiedniego rozgrzania nie odpalisz prawidłowo swojej wymowy.</p>
+        <p class="col-md-16 fs-4">Język, wargi, usta są jak akumulator w aucie. Bez odpowiedniego rozgrzania nie odpalisz prawidłowo swojej wymowy.</p>
         <p class="col-md-16 fs-4">
             {% for i in apparatus %}
+            <p class="col-md-8 fs-6"> -> {{ i.text }}</p>
+            {% endfor %}
+        {% for i in apparatus_next %}
             <p class="col-md-8 fs-6"> -> {{ i.text }}</p>
             {% endfor %}
         </p>
