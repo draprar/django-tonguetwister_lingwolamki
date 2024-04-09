@@ -1,70 +1,111 @@
 {% extends "tonguetwister/base.html" %}
 
 {% block content %}
-<div class="p-1 mb-4 bg-light rounded-1">
-      <div class="container-fluid py-5">
-        <p class="col-md-8 fs-4"><b>Cześć! Dziękujemy Ci za wybór Naszej aplikacji. Skoro tu jesteś, to znaczy że chcesz popracować nad swoją wymową. Tounge Twister ma dla Ciebie zestaw ćwiczeń artykulacyjnych, głosowych i oddechowych. Naszym celem jest poprawa Twoich umiejętności komunikacyjnych oraz zwiększenie pewności siebie. Usłysz swój głos i zakochaj się w nim.</b></p>
-          <button type="button" class="btn btn-primary mb-4">Zaczynamy?</button>
-          <p class="col-md-8 fs-4">Zachęcamy Ciebie, do codziennych 15 - minutowych ćwiczeń. <br><br>Zacznij już teraz i wykonaj po <b>10 krążeń głową</b>: do przodu, do tyłu i w bok. <br><br>Przejdź następnie do szybkiego, dynamicznego wdechu z uniesieniem rąk do góry. Wypuść powietrze, wydychając je długo i powoli, jednocześnie opuszczając ręce. <br><b>PAMIĘTAJ!</b> Jeśli poczujesz dyskomfort lub ból - natychmiast przerwij ćwiczenie. <br><br></p>
-          <div class="card text-white bg-dark mt-3 mb-3" style="max-width: 30rem;">
-          <div class="card-body">
-              <p class="card-text">Te ćwiczenia dodały Ci energii i zmiejszyły napięcie? Gratulacje! </p>
-          </div>
+
+<!-- ABOUT -->
+<div class="p-3 mb-4 bg-light border rounded-3" id="about">
+    <div class="container-fluid py-1">
+        <h2>Cześć!</h2>
+        <p class="col-md-16 fs-4">Dziękujemy Ci za wybór naszej aplikacji. Skoro tu jesteś, to znaczy że chcesz popracować nad swoją wymową. TTwister ma dla Ciebie zestaw ćwiczeń artykulacyjnych, głosowych i oddechowych. Naszym celem jest poprawa Twoich umiejętności komunikacyjnych oraz zwiększenie pewności siebie. Usłysz swój głos i zakochaj się w nim.</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-dark btn-lg text-uppercase fw-bold" href="#stretching">Zaczynamy</a>
+        </div>
+    </div>
+</div>
+
+<!-- FIRST SECTION -->
+
+<div class="p-3 mb-4 bg-light border rounded-3" id="stretching">
+    <div class="container-fluid py-1">
+        <p class="fs-4">Zachęcamy Ciebie do codziennych ćwiczeń. Na własnych językach przekonaliśmy się, że regularne ćwiczenia poprawiły naszą dykcję. Zacznij już teraz od rozgrzewki i <strong>wykonaj po 10 krążeń głową: do przodu, do tyłu i w bok.</strong></p>
+        <div class="card text-white bg-secondary mt-3 mb-3 w-100">
+            <div class="card-body">
+                <p class="text-center mb-0">Te ćwiczenia dodały Ci energii i zmiejszyły napięcie? Gratulacje!</p>
             </div>
-              <p class="col-md-8 fs-4">Twój głos zabrzmi teraz lepiej. Sprawdź to i zacznij … <b>ziewać</b>! Tak, właśnie teraz otwórz szeroko buzię, przeciągnij się i pozwól sobie wydać kilka dzikich dźwięków. Możesz też zacząć mlaskać albo mruczeć.</p>
-        <button type="button" class="btn btn-primary">Ciśniemy dalej!</button>
-      </div>
+        </div>
+        <p class="fs-4">Twój głos zabrzmi teraz lepiej. Sprawdź to i zacznij … <strong>ziewać</strong>! <br>Tak, właśnie teraz otwórz szeroko buzię, przeciągnij się i pozwól sobie wydać kilka dzikich dźwięków. Możesz też zacząć mlaskać albo mruczeć.</p>
+        <div class="card text-white bg-secondary mt-3 mb-3 w-100">
+            <div class="card-body">
+                <p class="text-center mb-0">Płuca napowietrzone? Żuchwa rozgrzana? Daj nam znać ile masz czasu i ochoty pogadać, kliknij odpowiedni przycisk poniżej.</p>
+            </div>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-danger btn-lg text-uppercase fw-bold text-dark" href="#apparatus">5 min</a>
+            <a class="btn btn-success btn-lg text-uppercase fw-bold text-dark" href="#apparatus">15 min</a>
+            <a class="btn btn-warning btn-lg text-uppercase fw-bold text-dark" href="#apparatus">25 min</a>
+        </div>
+    </div>
 </div>
 
-<div class="p-5 mb-4 bg-light rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Daj nam znac ile masz czasu i ochoty pogadać</h1>
-        <p class="col-md-8 fs-6">Kliknięcie w przycisk wygeneruje określoną liczbę pozycji z bazy danych</p>
-        <button type="button" class="btn btn-primary">5 min</button>
-        <button type="button" class="btn btn-secondary">10 min</button>
-        <button type="button" class="btn btn-success">15 min</button>
-      </div>
-</div>
+<!-- SECOND SECTION -->
 
-<div class="p-5 mb-4 bg-light rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Pierwsza sekcja</h1>
-        <p class="col-md-8 fs-4">Rozgrzanie mięśni twarzy i żuchwy</p>
+<div class="p-3 mb-4 bg-light border rounded-3" id="apparatus">
+    <div class="container-fluid py-1">
+        <h2>Pierwsza sekcja</h2>
+        <p class="col-md-16 fs-4">Rozgrzanie mięśni twarzy i żuchwy.</p>
+        <p class="col-md-16 fs-4">
             {% for i in apparatus %}
             <p class="col-md-8 fs-6"> -> {{ i.text }}</p>
             {% endfor %}
         </p>
-        <button type="button" class="btn btn-primary">cisniemy dalej</button>
-      </div>
+        <div class="card text-white bg-secondary mt-3 mb-3 w-100">
+            <div class="card-body">
+                <p class="text-center mb-0">WoW! Dobra robota! Jeżeli czujesz ogień w twarzy, kliknij niżej, aby przejść do następnej sekcji.</p>
+            </div>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-dark btn-lg text-uppercase fw-bold" href="#articulate">Dalej</a>
+        </div>
+    </div>
 </div>
 
-<div class="p-5 mb-4 bg-light rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Druga sekcja</h1>
-        <p class="col-md-8 fs-4">Powoli, starannie wymawiamy kolejno podane sylaby, zwracając uwagę na prawidłowość wybuchu, czyli rozwarcie.</p>
+<!-- THIRD SECTION -->
+
+<div class="p-3 mb-4 bg-light border rounded-3" id="articulate">
+    <div class="container-fluid py-1">
+        <h2>Sybalizowanie</h2>
+        <p class="col-md-16 fs-4">Powoli, starannie wymawiamy kolejno podane sylaby, zwracając uwagę na prawidłowość wybuchu, czyli rozwarcie.</p>
+        <p class="col-md-16 fs-4">
             {% for j in articulation %}
-            <p class="col-md-8 fs-6"> -> {{ j.text }}</p>
+            <p class="fs-6"> -> {{ j.text }}</p>
             {% endfor %}
         </p>
-        <button type="button" class="btn btn-primary">cisniemy dalej</button>
-      </div>
+        <div class="card text-white bg-secondary mt-3 mb-3 w-100">
+            <div class="card-body">
+                <p class="text-center mb-0">Nice! Posybalizowane? Możemy iść dalej :)?</p>
+            </div>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-dark btn-lg text-uppercase fw-bold" href="#twister">Dalej</a>
+        </div>
+    </div>
 </div>
 
-<div class="p-5 mb-4 bg-light rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Zemsta logopedy</h1>
-        <p class="col-md-8 fs-4">Gdy jesteśmy już dobrze przygotowani i rozgrzani, przechodzimy do następnego etapu, jakim są wprawki dykcyjne, lamance jezykowe.</p>
+<!-- FOURTH SECTION -->
+
+<div class="p-3 mb-4 bg-light border rounded-3" id="twister">
+    <div class="container-fluid py-1">
+        <h2>Zemsta logopedy</h2>
+        <p class="col-md-16 fs-4">Gdy jesteśmy już dobrze przygotowani i rozgrzani, przechodzimy do następnego etapu, jakim są wprawki dykcyjne, lamance jezykowe.</p>
+        <p class="col-md-16 fs-4">
             {% for k in twister %}
-            <p class="col-md-8 fs-6"> -> {{ k.text|linebreaksbr }}</p>
+            <p class="fs-6"> -> {{ k.text }}</p>
             {% endfor %}
         </p>
-        <button type="button" class="btn btn-primary">cisniemy dalej</button>
-      </div>
+        <div class="card text-white bg-secondary mt-3 mb-3 w-100">
+            <div class="card-body">
+                <p class="text-center mb-0">Chapeu bas! Winszujemy! To już koniec dzisiejszej praktyki. (ale jeśli klikniesz dalej, możesz znaleźć słowo na dziś)</p>
+            </div>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-dark btn-lg text-uppercase fw-bold" href="#end">Dalej</a>
+        </div>
+    </div>
 </div>
 
-<div class="p-5 mb-4 bg-light rounded-3">
+<div class="p-5 mb-4 bg-light rounded-3" id="end">
       <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">Pomysły na tipsy i triksy</h1>
+        <h1 class="display-5 fw-bold">Pomysły na tipsy i triksy albo losowo wygenerowane ciężkie słowo, albo staropolskie z definicją w ramach funu</h1>
         <p class="col-md-8 fs-4">
           - uslysz swoj glos i zakochaj sie w nim<br>
           - w epoce cyfrowej - zalezy nam na tym abyscie jak najwiecej rozmawiali - 'kultura zywego slowa'<br>
