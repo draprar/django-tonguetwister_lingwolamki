@@ -1,0 +1,22 @@
+{% for twister in page_obj %}
+
+<tr>
+    <td>-> {{ twister.text }}</td>
+</tr>
+
+{% endfor %}
+
+{% if page_obj.has_next %}
+    <tr id="load-more">
+        <td colspan="1" class="text-center">
+            <button class="btn btn-primary"
+                    hx-get="{% url 'main' %}?page={{page_obj.next_page_number}}"
+                    hx-target="#load-more"
+                    hx-swap="outerHTML">Wincyj!</button>
+        </td>
+    </tr>
+{% else %}
+<tr>
+    <td>Wsio :)</td>
+</tr>
+{% endif %}

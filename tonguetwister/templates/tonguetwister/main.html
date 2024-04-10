@@ -1,39 +1,7 @@
 {% extends "tonguetwister/base.html" %}
+{% load static %}
 
 {% block content %}
-
-<!-- ABOUT -->
-<div class="p-3 mb-4 bg-light border rounded-3" id="about">
-    <div class="container-fluid py-1">
-        <h2>Cześć!</h2>
-        <p class="col-md-16 fs-4">Dziękujemy Ci za wybór naszej aplikacji. Skoro tu jesteś, to znaczy że chcesz popracować nad swoją wymową. TTwister ma dla Ciebie zestaw ćwiczeń artykulacyjnych, głosowych i oddechowych. Naszym celem jest poprawa Twoich umiejętności komunikacyjnych oraz zwiększenie pewności siebie. Usłysz swój głos i zakochaj się w nim.</p>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-dark btn-lg text-uppercase fw-bold" href="#stretching">Zaczynamy</a>
-        </div>
-    </div>
-</div>
-
-<!-- FIRST SECTION -->
-
-<div class="p-3 mb-4 bg-light border rounded-3" id="stretching">
-    <div class="container-fluid py-1">
-        <p class="fs-4">Zachęcamy Ciebie do codziennych ćwiczeń. Na własnych językach przekonaliśmy się, że regularne ćwiczenia poprawiły naszą dykcję. Zacznij już teraz od rozgrzewki i <strong>wykonaj po 10 krążeń głową: do przodu, do tyłu i w bok.</strong></p>
-        <div class="card text-white bg-secondary mt-3 mb-3 w-100">
-            <div class="card-body">
-                <p class="text-center mb-0">Te ćwiczenia dodały Ci energii i zmiejszyły napięcie? Gratulacje!</p>
-            </div>
-        </div>
-        <p class="fs-4">Twój głos zabrzmi teraz lepiej. Sprawdź to i zacznij … <strong>ziewać</strong>! <br>Tak, właśnie teraz otwórz szeroko buzię, przeciągnij się i pozwól sobie wydać kilka dzikich dźwięków. Możesz też zacząć mlaskać albo mruczeć.</p>
-        <div class="card text-white bg-secondary mt-3 mb-3 w-100">
-            <div class="card-body">
-                <p class="text-center mb-0">Płuca napowietrzone? Żuchwa rozgrzana? Możemy iść dalej, kliknij w przycisk poniżej.</p>
-            </div>
-        </div>
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-            <a class="btn btn-dark btn-lg text-uppercase fw-bold" href="#apparatus">Dalej</a>
-        </div>
-    </div>
-</div>
 
 <!-- SECOND SECTION -->
 
@@ -42,12 +10,76 @@
         <h2>Rozgrzej artykulatory</h2>
         <p class="col-md-16 fs-4">Język, wargi, usta są jak akumulator w aucie. Bez odpowiedniego rozgrzania nie odpalisz prawidłowo swojej wymowy.</p>
         <p class="col-md-16 fs-4">
-            {% for i in apparatus %}
-            <p class="col-md-8 fs-6"> -> {{ i.text }}</p>
-            {% endfor %}
-        {% for i in apparatus_next %}
-            <p class="col-md-8 fs-6"> -> {{ i.text }}</p>
-            {% endfor %}
+            <div class="accordion accordion-flush" id="accordionFlushExample">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingOne">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+        Chcę 10
+      </button>
+    </h2>
+    <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+          WARGI
+<br>
+
+
+1. Zrób „dzióbek” z ust. Wykonaj kilka kółek tylko samymi wargami. Głowa jest nieruchoma.
+<br>
+2. Całusek od żabki. Ułóż usta tak, jakbyś chciał przesłać komuś całusa, trochę przesadnie – możesz też przy tym wydawać dźwięki, cmokać.
+<br>
+3. Rozciągnij usta w szerokim uśmiechu.
+<br>
+4. Parskanie - parsknij se jak koń.
+<br>
+5. Masz wąs? - spróbuj utrzymać długopis między nosem a górną wargę
+<br><br>
+JĘZYK
+<br>
+Wytknij to! Dotknij językiem brody, a potem w unieś w kierunku nosa - naprzemiennie kilka razy.<br>
+Wytknij to! Dotknij językiem brody, a potem unieś w kierunku prawego ucho - naprzemiennie kilka razy. <br>
+Wytknij to! Dotknij językiem brody, a potem unieś w kierunku lewego ucha - naprzemiennie kilka razy. <br>
+Oblizujemy wargi ruchem kolistym, coraz szerzej otwierając usta.<br>
+5. Wymów bardzo wyraźnie, przesadnie otwierając buzię; naprzemian samogłoski: <br>
+<br>
+u - i
+<br>
+i - o
+<br>
+e - a    <br>
+    </div>
+  </div>
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="flush-headingTwo">
+      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+        Chcę kolejne 10
+      </button>
+    </h2>
+    <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
+      <div class="accordion-body">
+WARGI<br>
+         6.  Nic nie powiem! Mocno zaciśnij i rozciągnij wargi, aż poczujesz opór w kącikach ust.
+<br>
+7. Górną wargą zasłoń górne zęby a dolną wargą zasłoń dolne zęby.
+<br>
+8. Ułóż dolną wargę a górną a górną wargę na dolną.
+<br>
+9. Żuj gumę. Wykonaj ruch ,,żucia gumy’ z zamkniętymi ustami.
+<br>
+10. Joker!  Zaokrąglij wargi w kształcie dziubka/ryjka a następnie uśmiechnij się jak Joker - przesadnie, przy zamkniętych ustach.
+<br><br>
+JĘZYK<br>
+6. Policz zęby - czubkiem języka dotykaj kolejno zęby górne i dolne.
+<br>
+7. Ślizgawka - czubek języka ,,ślizga się’’ po podniebieniu; do tyłu i do przodu.
+<br>
+8. Malarz - Twój język jest jak pędzel, który maluje różne kształty, wystarczy żet tylko go wypchniesz.
+<br>
+9. Rakieta leci. Język unosi się raz w górę, a raz w dół. Trenuj przy otwartych ustach.
+<br>
+10. W rytmach li li la. Unieś czubek języka do dziąseł za górnymi zębami i wymawiaj, wyśpiewaj co wolisz - li-li-li-li-la.
+        </div>
+  </div>
+</div>
         </p>
         <div class="card text-white bg-secondary mt-3 mb-3 w-100">
             <div class="card-body">
@@ -67,9 +99,308 @@
         <h2>Właściwie teraz ćwicz głos</h2>
         <p class="col-md-16 fs-4">Podczas wypowiedzi pamiętaj, aby się nie spieszyć. Nie opuszczaj końcówek. Nie podnoś głosu ani nie mów zbyt cicho.</p>
         <p class="col-md-16 fs-4">
-            {% for j in articulation %}
-            <p class="fs-6"> -> {{ j.text }}</p>
-            {% endfor %}
+Powoli, starannie wymawiamy kolejno podane sylaby, zwracając uwagę na prawidłowość wybuchu, czyli rozwarcie.<br>
+Ba, be, bi, bo, bu, by, bą, bę,<br>
+aba, ebe, ibi, obo, ubu, yby, abą, obe<br>
+<br>
+
+
+2. Powtarzaj bardzo szybko zbitki sylab<br>
+
+Te De, Te De, Te De<br>
+
+Ni Ny, Ni Ny, Ni Ny<br>
+
+Ka Ga, Ka Ga, Ka Ga<br>
+
+
+1/2 TU MOŻNA GENEROWAĆ WCHUJ ANALOGICZNYCH ĆWICZEŃ<br>
+
+
+
+Nala pata da<br>
+
+Nolo poto do<br>
+
+Nele pete de<br>
+
+Nyly pyty dy<br>
+
+
+
+3. Wypowiedz na głos te wyrazy. Pamiętaj o przecinkach, robiąc przerwy pomiędzy wyrazami.<br>
+
+
+
+Po obiedzie, po biedzie.<br>
+
+U Ani, ułani.<br>
+
+Na uczcie, nauczcie.<br>
+
+
+
+
+
+Za Anią, za nią, z Anią.<br>
+
+Za Anią stał Staś.<br>
+
+Za nią biegł pies.<br>
+
+Szedł z Anią w inną stronę
+<br>
+
+
+3a.<br>
+
+
+
+W Oli, woli, w olimpiadzie.<br>
+
+W Oli oczach jest radość życia.<br>
+
+On woli ananasy.<br>
+
+
+
+3b.<br>
+
+
+
+Za Iną, z Iną, z inną.<br>
+
+Za Iną stała długa kolejka.<br>
+
+Z Iną warto porozmawiać.<br>
+
+Jadę z inną dziewczyną na wakacje.<br>
+
+
+
+3c
+<br>
+
+
+Za uchem, zuchem, z uchem.
+<br>
+Za uchem brzęczała mucha.<br>
+
+Jestem zuchem z wielkim uchem.
+<br>
+Miś z uchem lekko burym.
+<br>
+
+
+4. Swobodnie wymawiaj: mniam, mniam, mniam, jakbyś delektował się
+
+jakimś smakołykiem
+<br>
+
+
+5. Dodawaj do głoski m samogłoski, pamiętając o utrzymaniu dźwięku na
+
+jednym tonie:<br>
+
+mmmaaa,<br>
+
+mmmooo,<br>
+
+mmmuuu.<br>
+
+mmmeee<br>
+
+mmmiiiiii<br>
+
+mmmyyy<br>
+
+
+
+5a. nnnaaa<br>
+
+I DALEJ<br>
+
+
+
+5b. bbbaaaa<br>
+
+I DALEJ<br>
+
+
+
+5c. dddaaa<br>
+
+I DALEJ<br>
+
+6. Połącz samogłoski z imionami<br>
+
+
+
+(u)Ali<br>
+
+(u)Eli<br>
+
+(u)Irce
+<br>
+
+
+(o)Ali<br>
+
+(o)Eli<br>
+
+(o)Irce<br>
+
+
+
+
+
+6a.<br>
+
+(i)Ala<br>
+
+(i)Ela<br>
+
+(i)Irka<br>
+
+
+
+(a)Ala<br>
+
+(a)Ela<br>
+
+(a)Irka<br>
+
+
+
+
+
+7. Ćwicz dykcję<br>
+
+
+
+Bra bro bre bru bry<br>
+
+Abra obro ebre ubru ybry<br>
+
+Abr obr ebr ubr obr<br>
+
+
+
+7a.<br>
+
+Ża aża żo że<br>
+
+Eże żu ożo ży
+<br>
+Yży ożo użu<br>
+
+
+
+7b.
+<br>
+Dzie edzie odzio<br>
+
+Adzia dziu dziu<br>
+
+Dzio udziu dziu<br>
+
+
+
+
+
+8. Przeczytaj, przesadnie podkreślając końcówki<br>
+
+
+
+mam,<br>
+odłam,<br>
+rum,<br>
+
+kot,<br>
+odlot,<br>
+pot,<br>
+miot,<br>
+
+
+
+8a.<br>
+
+lek,<br>
+lok,<br>
+kruk,<br>
+bok,<br>
+
+dach,<br>
+mech,<br>
+słuch,<br>
+ruch,<br>
+
+
+
+
+
+
+
+8b.<br>
+
+żłób,<br>
+grób,<br>
+dziób,<br>
+chleb,<br>
+grzyb,<br>
+
+sklep<br>
+
+
+
+9. Przeczytaj zdania wolno i wyraźnie oddzielając kończące spółgłoski i samogłoski pomiędzy wyrazami.<br>
+
+
+
+Dom mój jodłowy.<br>
+
+List ten nawet trochę zdziwił Łucję.<br>
+
+
+
+9a.<br>
+
+Blask korony widział Łukasz szczęśliwy.<br>
+
+Włos siwy spadał łowczemu Urbanowi na kark kornie zgięty.<br>
+
+
+
+9b.
+<br>
+Chór rybaków wołał, łódź dziobem malowanym majaczyła w mroku.<br>
+
+Kres sennego oszołomienia.<br>
+
+Mróz zelżał, bez zwłoki idźmy.<br>
+
+
+
+10. Mówimy tekst na odpowiednią intencję - radość.<br>
+
+10a. Smutek<br>
+
+10b. Złość<br>
+
+10c. Znudzenie<br>
+
+
+
+(Fragment ,,Kłamczucha’’ J. Brzechwa)<br>
+
+
+
+„Proszę pana, proszę pana,<br>
+Zaszła u nas wielka zmiana:<br>
+Moja starsza siostra Bronka<br>
+Zamieniła się w skowronka,<br>
+Siedzi cały dzień na buku<br>
+I powtarza: kuku, kuku!”<br>
         </p>
         <div class="card text-white bg-secondary mt-3 mb-3 w-100">
             <div class="card-body">
@@ -88,11 +419,16 @@
     <div class="container-fluid py-1">
         <h2>Zemsta logopedy</h2>
         <p class="col-md-16 fs-4">Łamańce językowe, wierszyki i zdania do samodzielnego ćwiczenia. Życzymy Ci połamania języka.</p>
-        <p class="col-md-16 fs-4">
-            {% for k in twister %}
-            <p class="fs-6"> -> {{ k.text }}</p>
-            {% endfor %}
-        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Wincyj kliknij by załadować</th>
+                </tr>
+            </thead>
+        <tbody>
+        {% include 'tonguetwister/partials/list.html' %}
+        </tbody>
+</table>
         <div class="card text-white bg-secondary mt-3 mb-3 w-100">
             <div class="card-body">
                 <p class="text-center mb-0">Chapeu bas! Winszujemy! To już koniec dzisiejszej praktyki. (ale jeśli klikniesz dalej, możesz znaleźć słowo na dziś)</p>

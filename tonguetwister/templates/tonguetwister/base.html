@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
   <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
   <link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon" />
 </head>
@@ -20,6 +21,41 @@
       TongueTwister</a>
   </div>
 </nav>
+
+
+<!-- ABOUT -->
+<div class="p-3 mb-4 bg-light border rounded-3" id="about">
+    <div class="container-fluid py-1">
+        <h2>Cześć!</h2>
+        <p class="col-md-16 fs-4">Dziękujemy Ci za wybór naszej aplikacji. Skoro tu jesteś, to znaczy że chcesz popracować nad swoją wymową. TongueTwister ma dla Ciebie zestaw ćwiczeń artykulacyjnych, głosowych i oddechowych. Naszym celem jest poprawa Twoich umiejętności komunikacyjnych oraz zwiększenie pewności siebie. Usłysz swój głos i zakochaj się w nim.</p>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-dark btn-lg text-uppercase fw-bold" href="#stretching">Zaczynamy</a>
+        </div>
+    </div>
+</div>
+
+<!-- FIRST SECTION -->
+
+<div class="p-3 mb-4 bg-light border rounded-3" id="stretching">
+    <div class="container-fluid py-1">
+        <p class="fs-4">Zachęcamy Ciebie do codziennych ćwiczeń. Na własnych językach przekonaliśmy się, że regularne ćwiczenia poprawiły naszą dykcję. Zacznij już teraz od rozgrzewki i <strong>wykonaj po 10 krążeń głową: do przodu, do tyłu i w bok.</strong></p>
+        <div class="card text-white bg-secondary mt-3 mb-3 w-100">
+            <div class="card-body">
+                <p class="text-center mb-0">Te ćwiczenia dodały Ci energii i zmiejszyły napięcie? Gratulacje!</p>
+            </div>
+        </div>
+        <p class="fs-4">Twój głos zabrzmi teraz lepiej. Sprawdź to i zacznij … <strong>ziewać</strong>! <br>Tak, właśnie teraz otwórz szeroko buzię, przeciągnij się i pozwól sobie wydać kilka dzikich dźwięków. Możesz też zacząć mlaskać albo mruczeć.</p>
+        <div class="card text-white bg-secondary mt-3 mb-3 w-100">
+            <div class="card-body">
+                <p class="text-center mb-0">Płuca napowietrzone? Żuchwa rozgrzana? Możemy iść dalej, kliknij w przycisk poniżej.</p>
+            </div>
+        </div>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a class="btn btn-dark btn-lg text-uppercase fw-bold" href="#apparatus">Dalej</a>
+        </div>
+    </div>
+</div>
+
  <div id="content">
         {% block content %}{% endblock %}
  </div>
