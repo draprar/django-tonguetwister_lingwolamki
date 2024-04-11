@@ -1,22 +1,20 @@
 {% for twister in page_obj %}
 
-<tr>
-    <td>-> {{ twister.text }}</td>
-</tr>
+ <p class="col-md-16 fs-4">
+     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 24 24">
+        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8m15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0M4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5z"/>
+    </svg>
+     {{ twister.text }}</p>
 
 {% endfor %}
 
 {% if page_obj.has_next %}
-    <tr id="load-more">
-        <td colspan="1" class="text-center">
-            <button class="btn btn-primary"
-                    hx-get="{% url 'main' %}?page={{page_obj.next_page_number}}"
-                    hx-target="#load-more"
-                    hx-swap="outerHTML">Wincyj!</button>
-        </td>
-    </tr>
+    <p class="col-md-16 fs-4" id="load-more">
+        <button class="btn btn-dark btn-lg text-uppercase fw-bold"
+                hx-get="{% url 'main' %}?page={{page_obj.next_page_number}}"
+                hx-target="#load-more"
+                hx-swap="outerHTML">Chcę jeszcze!</button>
+    </p>
 {% else %}
-<tr>
-    <td>Wsio :)</td>
-</tr>
+    <p class="col-md-16 fs-4 text-danger"><strong>Finisz bazy łamańców :o Chapeu bas!</strong></p>
 {% endif %}
