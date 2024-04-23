@@ -12,7 +12,7 @@ def main(request):
     context = {'page_obj': page_obj}
 
     if request.htmx:
-        return render(request, 'tonguetwister/partials/list.html', context)
+        return render(request, 'tonguetwister/partials/gen/list.html', context)
     return render(request, 'tonguetwister/main.html', context)
 
 
