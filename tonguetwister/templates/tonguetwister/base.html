@@ -10,15 +10,76 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Orbitron:wght@500&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+  <script src="https://unpkg.com/htmx.org@1.6.1"></script>
   <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
   <link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon" />
 </head>
 <body>
 
-<!-- NAVBAR
+<header>
 {% include 'tonguetwister/partials/static/navbar.html' %}
--->
+</header>
+
+<main>
+
+  <div id="myCarousel" class="carousel slide">
+    <div class="carousel-inner">
+
+      <div class="carousel-item active">
+        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777" rx="7"/></svg>
+        <div class="container">
+          <div class="carousel-caption text-start">
+            <h2>Cześć!</h2>
+            <p class="col-md-16 fs-4">Dziękujemy Ci za wybór naszej aplikacji. Skoro tu jesteś, to znaczy, że chcesz popracować nad swoją wymową. TongueTwister ma dla Ciebie zestaw ćwiczeń artykulacyjnych, głosowych i oddechowych. Naszym celem jest poprawa Twoich umiejętności komunikacyjnych oraz zwiększenie pewności siebie. Usłysz swój głos i zakochaj się w nim.</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                  <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+                    <span class="btn btn-dark btn-lg text-uppercase fw-bold" aria-hidden="true">Zaczynamy</span>
+                  </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777" rx="15"/></svg>
+        <div class="container">
+          <div class="carousel-caption text-start">
+            <p class="fs-4">Zachęcamy Ciebie do codziennych ćwiczeń. Na własnych językach przekonaliśmy się, że regularne ćwiczenia poprawiły naszą dykcję. Zacznij już teraz od rozgrzewki i <strong>wykonaj po 10 krążeń głową: do przodu, do tyłu i w bok.</strong></p>
+            <div class="card text-white bg-secondary mt-3 mb-3 w-100">
+              <div class="card-body">
+                <p class="text-center mb-0">Te ćwiczenia dodały Ci energii i zmiejszyły napięcie? Gratulacje!</p>
+              </div>
+            </div>
+            <p class="fs-4">Twój głos zabrzmi teraz lepiej. Sprawdź to i zacznij … <strong>ziewać</strong>! <br>Tak, właśnie teraz otwórz szeroko buzię, przeciągnij się i pozwól sobie wydać kilka dzikich dźwięków. Możesz też zacząć mlaskać albo mruczeć.</p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a class="btn btn-dark btn-lg text-uppercase fw-bold" href="#apparatus">Dalej</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <svg class="bd-placeholder-img" width="100%" height="60%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="#777" rx="15"/></svg>
+
+        <div class="container">
+          <div class="carousel-caption text-end">
+            <h1>One more for good measure.</h1>
+            <p>Some representative placeholder content for the third slide of this carousel.</p>
+            <p><a class="btn btn-lg btn-primary" href="#">Browse gallery</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+
+
+  <!-- FOOTER -->
+{% include 'tonguetwister/partials/static/footer.html' %}
+</main>
+
 <!-- ABOUT
 <div class="p-3 mb-4 bg-light border rounded-3" id="about">
     <div class="container-fluid py-1">
@@ -51,7 +112,6 @@
         {% block content %}{% endblock %}
  </div>
 -->
-<!-- FOOTER
-{% include 'tonguetwister/partials/static/footer.html' %}-->
+
 </body>
 </html>
