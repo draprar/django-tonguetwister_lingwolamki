@@ -12,9 +12,8 @@
   <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/htmx.org@1.6.1"></script>
   <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css" integrity="sha512-17EgCFERpgZKcm0j0fEq1YCJuyAWdz9KUtv1EjVuaOz8pDnh/0nZxmU6BBXwaaxqoi9PQXnRWqlcDB027hgv9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 <body>
 
@@ -23,61 +22,33 @@
 </header>
 
 <main>
-<div class="content-slider">
-  <div class="container">
-    <div>
-      {% include 'tonguetwister/partials/static/first-section.html' %}
+<div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">{% include 'tonguetwister/partials/static/first-section.html' %}</div>
+      <div class="swiper-slide">{% include 'tonguetwister/partials/static/second-section.html' %}</div>
+      <div class="swiper-slide">{% include 'tonguetwister/partials/static/third-section.html' %}</div>
+      <div class="swiper-slide">{% include 'tonguetwister/partials/static/fourth-section.html' %}</div>
+      <div class="swiper-slide">{% block content %}{% endblock %}</div>
+      <div class="swiper-slide">{% include 'tonguetwister/partials/static/sixth-section.html' %}</div>
     </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-pagination"></div>
   </div>
-
-  <div class="container">
-    <div>
-      {% include 'tonguetwister/partials/static/second-section.html' %}
-    </div>
-  </div>
-
-  <div class="container">
-    <div>
-      {% include 'tonguetwister/partials/static/third-section.html' %}
-    </div>
-  </div>
-
-  <div class="container">
-    <div>
-      {% include 'tonguetwister/partials/static/fourth-section.html' %}
-    </div>
-  </div>
-
-  <div class="container">
-    <div>
-      {% block content %}{% endblock %}
-    </div>
-  </div>
-
-  <div class="container">
-    <div>
-      {% include 'tonguetwister/partials/static/sixth-section.html' %}
-    </div>
-  </div>
-
-</div>
-
 </main>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-migrate/3.4.1/jquery-migrate.min.js" integrity="sha512-KgffulL3mxrOsDicgQWA11O6q6oKeWcV00VxgfJw4TcM8XRQT8Df9EsrYxDf7tpVpfl3qcYD96BpyPvA4d1FDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js" integrity="sha512-HGOnQO9+SP1V92SrtZfjqxxtLmVzqZpjFFekvzZVWoiASSQgSr4cw9Kqd2+l8Llp4Gm0G8GIFJ4ddwZilcdb8A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script>
-
-$(document).ready(function(){
-  $('.content-slider').slick({
-    dots: true,
-    infinite: true,
-    speed: 300,
-    slidesToShow: 1,
-    adaptiveHeight: true
-  });
-});
+var swiper = new Swiper(".mySwiper", {
+      autoHeight: true,
+      pagination: {
+        el: ".swiper-pagination",
+        type: "progressbar",
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+    });
 </script>
 </body>
 </html>
