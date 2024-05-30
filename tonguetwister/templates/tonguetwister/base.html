@@ -12,8 +12,8 @@
   <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/htmx.org@1.6.1"></script>
   <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
-  <link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon" />
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
 </head>
 <body>
 
@@ -24,31 +24,22 @@
 <main>
 <div class="swiper mySwiper">
     <div class="swiper-wrapper">
-      <div class="swiper-slide">{% include 'tonguetwister/partials/static/first-section.html' %}</div>
-      <div class="swiper-slide">{% include 'tonguetwister/partials/static/second-section.html' %}</div>
-      <div class="swiper-slide">{% include 'tonguetwister/partials/static/third-section.html' %}</div>
-      <div class="swiper-slide">{% include 'tonguetwister/partials/static/fourth-section.html' %}</div>
-      <div class="swiper-slide">{% block content %}{% endblock %}</div>
-      <div class="swiper-slide">{% include 'tonguetwister/partials/static/sixth-section.html' %}</div>
+      <div class="swiper-slide text-center col-md-16 fs-4">{% include 'tonguetwister/partials/static/first-section.html' %}</div>
+      <div class="swiper-slide text-center">{% include 'tonguetwister/partials/static/second-section.html' %}</div>
+      <div class="swiper-slide text-center">{% include 'tonguetwister/partials/static/third-section.html' %}</div>
+      <div class="swiper-slide text-center">{% include 'tonguetwister/partials/static/fourth-section.html' %}</div>
+      <div class="swiper-slide text-center">{% block content %}{% endblock %}</div>
+      <div class="swiper-slide text-center">{% include 'tonguetwister/partials/static/sixth-section.html' %}</div>
     </div>
     <div class="swiper-button-next"></div>
     <div class="swiper-button-prev"></div>
     <div class="swiper-pagination"></div>
   </div>
 </main>
+
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script>
-var swiper = new Swiper(".mySwiper", {
-      autoHeight: true,
-      pagination: {
-        el: ".swiper-pagination",
-        type: "progressbar",
-      },
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-      },
-    });
-</script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
+
 </body>
 </html>
