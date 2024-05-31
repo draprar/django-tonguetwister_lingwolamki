@@ -14,6 +14,7 @@
   <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
   <link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
@@ -41,5 +42,29 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{% static 'js/main.js' %}"></script>
 
+    <script>
+        $(document).ready(function(){
+            let offset = {{ records|length }};
+            $('#load-more-btn').click(function(){
+                $.ajax({
+                    url: '{% url "load_more_records" %}',
+                    data: {
+                        'offset': offset
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.length > 0) {
+                            for (let i = 0; i < data.length; i++) {
+                                $('#records-container').append('<div class="record">' + data[i].text + '</div>');
+                            }
+                            offset += data.length;
+                        } else {
+                            $('#load-more-btn').hide();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
