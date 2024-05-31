@@ -13,3 +13,9 @@ class Articulator(models.Model):
 
     def __str__(self):
         return self.text
+
+class Exercise(models.Model):
+    text = models.TextField()
+
+    def __str__(self):
+        return self.text

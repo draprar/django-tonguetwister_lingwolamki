@@ -15,115 +15,12 @@
                 aba, ebe, ibi, obo, ubu, yby, abą, obe<br></p>
         </p>
 
-      <p class="d-inline-flex gap-1 justify-content-evenly">
-            <button class="btn btn-dark btn-lg text-uppercase fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFirstFive" aria-expanded="false" aria-controls="collapseFirstFive">
-                Chcę (pierwsze) pięć!
-            </button>
-            <button class="btn btn-dark btn-lg text-uppercase fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecondFive" aria-expanded="false" aria-controls="collapseSecondFive">
-                Chcę jeszcze pięć!
-            </button>
-        </p>
-<div class="collapse" id="collapseFirstFive">
-            <div class="card card-body">
-1. Wypowiedz na głos te wyrazy. Pamiętaj o przecinkach, robiąc przerwy pomiędzy wyrazami.<br>
-Po obiedzie, po biedzie.<br>
-U Ani, ułani.<br>
-Na uczcie, nauczcie.<br>
-Za Anią, za nią, z Anią.<br>
-2. Swobodnie wymawiaj: <br>
-mniam, mniam, mniam - jakbyś delektował się jakimś smakołykiem.😋<br>
-3. Poćwicz dykcję.<br>
-Bra bro bre bru bry<br>
-Abra obro ebre ubru ybry<br>
-Abr obr ebr ubr obr<br>
-4. Przeczytaj, przesadnie podkreślając końcówki.<br>
-mam,<br>
-odłam,<br>
-rum,<br>
-kot,<br>
-odlot,<br>
-pot,<br>
-miot<br>
-
-5. Mówimy tekst na odpowiednią intencję - radość.<br>
-„Proszę pana, proszę pana,<br>
-Zaszła u nas wielka zmiana:<br>
-Moja starsza siostra Bronka<br>
-Zamieniła się w skowronka,<br>
-Siedzi cały dzień na buku<br>
-I powtarza: kuku, kuku!”<br>
-            </div>
-            </div>
-<div class="collapse" id="collapseSecondFive">
-            <div class="card card-body">
-6. Dodawaj do głoski m samogłoski, pamiętając o utrzymaniu dźwięku na jednym tonie: <br>
-mmmaaa, <br>
-
-mmmooo, <br>
-
-mmmuuu.<br>
-
-mmmeee<br>
-
-mmmiiiiii<br>
-
-mmmyyy<br>
-
-                7. Przeczytaj zdania wolno i wyraźnie oddzielając kończące spółgłoski i samogłoski pomiędzy wyrazami.<br>
-
-
-
-Dom mój jodłowy.<br>
-
-List ten nawet trochę zdziwił Łucję.<br>
-
-Blask korony widział Łukasz szczęśliwy.<br>
-
-
-
-8. Mówimy tekst na odpowiednią intencję - złość 😡 <br>
-
-
-
-Pan pomidor wlazł na tyczkę<br>
-
-I przedrzeźnia ogrodniczkę.<br>
-
-„Jak pan może,<br>
-
-Panie pomidorze?!”<br>
-
-
-
-9. Przeczytaj wyrazy wolno i wyraźnie akcentując ,,cz”<br>
-
-
-
-czarny,<br>
-czuwać,<br>
-czekan,<br>
-czysty,<br>
-cząstka,<br>
-część,<br>
-
-zaczarować,<br>
-koczownik,<br>
-poczucie<br>
-
-
-
-                10. Wykrzycz to! Usłysz to i bądź z siebie dumny.<br>
-
-
-
-Brawo!<br>
-
-Gratulacje!<br>
-
-Świetnie!<br>
-            </div>
-            </div>
-
+<div id="exercises-container">
+    {% for exercise in exercises %}
+    <div class="exercise">{{ exercise.text }}</div>
+    {% endfor %}
+</div>
+<button id="load-more-exercises-btn" class="btn btn-dark btn-lg text-uppercase fw-bold">Więcej</button>
 
         <div class="card text-white bg-secondary mt-3 mb-3 w-100">
             <div class="card-body">

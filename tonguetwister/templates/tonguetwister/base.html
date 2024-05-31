@@ -66,5 +66,29 @@
             });
         });
     </script>
+ <script>
+        $(document).ready(function(){
+            let offset = {{ exercises|length }};
+            $('#load-more-exercises-btn').click(function(){
+                $.ajax({
+                    url: '{% url "load_more_exercises" %}',
+                    data: {
+                        'offset': offset
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.length > 0) {
+                            for (let i = 0; i < data.length; i++) {
+                                $('#exercises-container').append('<div class="exercise">' + data[i].text + '</div>');
+                            }
+                            offset += data.length;
+                        } else {
+                            $('#load-more-exercises-btn').hide();
+                        }
+                    }
+                });
+            });
+        });
+        </script>
 </body>
 </html>
