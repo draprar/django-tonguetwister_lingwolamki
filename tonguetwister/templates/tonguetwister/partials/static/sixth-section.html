@@ -3,197 +3,20 @@
 <h2>Bonus</h2>
         <p class="col-md-16 fs-4">Kliknij w przycisk, aby otworzyć bonus.</p>
         <p class="col-md-16 fs-4"></p>
+<div id="trivia-container">
+    {% for record in trivua %}
+    <div class="one-trivia col-md-16 fs-4">{{ record.text }}</div>
+    {% endfor %}
+</div>
 
-        <p class="d-flex gap-1 flex-column">
-            <button class="btn btn-dark btn-lg text-uppercase fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTip" aria-expanded="false" aria-controls="collapseTip">
-                Porady językowe
-            </button>
-            <button class="btn btn-dark btn-lg text-uppercase fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFact" aria-expanded="false" aria-controls="collapseFact">
-                Ciekawostki językowe
-            </button>
-            <button class="btn btn-dark btn-lg text-uppercase fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExercise" aria-expanded="false" aria-controls="collapseExercise">
-                Dodatkowe ćwiczenia
-            </button>
-        </p>
-        <div class="collapse" id="collapseTip">
-            <div class="card card-body">
-☑️ Wybierz telefon do przyjaciela zamiast sms. najlepszym sposobem trenowania swojej mowy jest używanie jej, przy każdej możliwej okazji.
-<br>
-☑️ Po co ćwiczyć swój głos?
-<br>
-- budowanie pewności siebie<br>
-- mówiąc lepiej staniesz się skuteczniejszym: sprzedawcą, partnerem, rodzicem.<br>
-- pracując nad głosem - rozwijasz nie tylko umiejętność mówienia ale też słuchania.<br>
-- możesz zwiększyć wytrzymałość swojego głosu. Jest to szczególnie ważne, jeśli pracujesz głosem.<br>
-☑️ Za co Twój głos będzie Ci wdzięczny?<br>
-- śpij minimum 7 godzin dziennie.<br>
-- odpoczywaj.<br>
-- pij dużo niegazowej wody.<br>
-- zadbaj o odpowiednią wilgotność pomieszczeń, szczególnie sypialni.<br>
+<button id="load-more-trivia-btn" class="btn btn-dark btn-lg text-uppercase fw-bold">Porady językowe</button>
+<div id="funfacts-container">
+    {% for funfact in funfacts %}
+    <div class="funfact col-md-16 fs-4">{{ funfact.text }}</div>
+    {% endfor %}
+</div>
+<button id="load-more-funfacts-btn" class="btn btn-dark btn-lg text-uppercase fw-bold">Ciekawostki</button>
 
-☑️ Do ćwiczeń emocji głosu możesz użyć też przedmiotów, takich jak: korek po winie, papierki, chusteczki. A do ćwiczeń ust: kremy czekoladowe lub błyszczyki.
-<br>
-☑️ Lekki uśmiech! dzięki niemu każdy głos zabrzmi milej, a wypowiedź stanie się bardziej wiarygodna.
-<br>
-☑️ Czego nie znosi Twój głos?
-- dymu, papierosów – uszkadza to błony śluzowe.
-<br>
-- nadmiaru kofeiny, słodkich i gazowanych napojów, które wysuszają gardło.
-<br>
-- zbyt częstego odchrząkiwania – nadweręża to struny głosowe - zamiast tego wypij szklankę wody
-<br>
-☑️ Czy wiesz, że obniżony głos wzbudza większe zaufanie? Mówiąc lekko obniżonym głowę staniesz się również bardziej wiarygodny i atrakcyjny.
-<br>
-☑️ Zapamiętaj! Chrypka, ból gardła, dyskomfort czy poważniejsze problemy takie jak jąkanie, seplenienie czy problemy z mową to zawsze sygnał do tego, aby skonsultować się ze specjalistą i przerwać ćwiczenia.
-            </div>
-        </div>
-        <div class="collapse" id="collapseFact">
-            <div class="card card-body">
-☑️ W dawnych czasach, Demostenes pracował nad wyraźnym mówieniem, trzymając kamienie w ustach.
-<br>
-☑️ Jakość naszego głosu zależy w dużej mierze od Naszego nastawienia do otoczenia. Na tworzenie głosu wypływa również przekonanie o Nas samych i to czy oraz jak chcemy komunikować się z innymi.
-<br>
-☑️ Ćwiczenia oddechowe poprawiają nie tylko jakość oddychania ale też regulują akcję serca i przemianę materii.
-<br>
-☑️ Ćwiczenia emisji głosu pozwalają utrzymać prawidłową postawę ciała. Pamiętaj o tym aby trzymać się prosto!
-<br>
-☑️ Polacy mają dużą słabość do tworzenia nowych słów czyli neologizmów. Uwielbiamy też zdrabniać słowa.
-<br>
-☑️ Język polski; obok chińskiego, węgierskiego i fińskiego - to jeden z najtrudniejszych do nauki języków świata? 👏
-<br>
-☑️ Polski alfabet wynosi 32 litery.
-<br>
-☑️ Pierwsze polskie zdanie brzmi: ,, Daj, ać ja pobruszę, a ty poczywaj”, co oznacza „Pozwój, niech ja pomielę, a ty odpocznij” Ta fraza pochodząca z XIII wieku opisuje fragment życia codziennego małżeństwa z tamtych czasów.
-            </div>
-        </div>
-         <div class="collapse" id="collapseExercise">
-            <div class="card card-body">
-
-☑️ Wypowiedz na głos te wyrazy. Pamiętaj o przecinkach, robiąc przerwy pomiędzy wyrazami.<br>
-
-
-
-Za Iną, z Iną, z inną.<br>
-
-Za Iną stała długa kolejka.<br>
-
-Z Iną warto porozmawiać.
-<br>
-Jadę z inną dziewczyną na wakacje.
-<br>
-
-
-Za uchem, zuchem, z uchem.
-<br>
-Za uchem brzęczała mucha.
-<br>
-Jestem zuchem z wielkim uchem.
-<br>
-Miś z uchem lekko burym.
-<br>
-
-
-☑️ Dodawaj do głoski m samogłoski, pamiętając o utrzymaniu dźwięku na jednym tonie:
-<br>
-
-
-nnnaaa
-<br>
-nnnooo
-<br>
-nnnuuu
-<br>
-nnneee
-<br>
-nnniii
-<br>
-nnnyyy
-<br>
-
-
-☑️ Połącz samogłoski z imionami
-<br>
-(i)Ala
-<br>
-(i)Ela
-<br>
-(i)Irka
-<br>
-
-
-(a)Ala
-<br>
-(a)Ela
-<br>
-(a)Irka
-<br>
-
-
-☑️ Ćwicz dykcję
-<br>
-Ża aża żo że
-<br>
-Eże żu ożo ży
-<br>
-Yży ożo użu
-<br>
-
-
-☑️ Przeczytaj, przesadnie podkreślając końcówki
-<br>
-lek,<br>
-lok,<br>
-kruk,<br>
-bok,<br>
-
-
-
-☑️ Przeczytaj zdania wolno i wyraźnie oddzielając kończące spółgłoski i samogłoski pomiędzy wyrazami.
-<br>
-
-
-Chór rybaków wołał, łódź dziobem malowanym majaczyła w mroku.
-<br>
-Kres sennego oszołomienia.
-<br>
-Mróz zelżał, bez zwłoki idźmy.
-<br>
-
-
-☑️ Mówimy tekst na odpowiednią intencję.
-<br>
-😔Smutek
-<br>
-🥱Znudzenie
-<br>
-
-
-(Fragment ,,Kłamczucha’’ J. Brzechwa)
-<br>
-
-
-„Proszę pana, proszę pana,<br>
-Zaszła u nas wielka zmiana:<br>
-Moja starsza siostra Bronka<br>
-Zamieniła się w skowronka,<br>
-Siedzi cały dzień na buku<br>
-I powtarza: kuku, kuku!”<br>
-
-
-<br>
-(Fragment ,,Na straganie””J. Brzechwa)
-<br>
-
-
-Pan pomidor wlazł na tyczkę
-<br>
-I przedrzeźnia ogrodniczkę.
-<br>
-„Jak pan może,
-<br>
-Panie pomidorze?!”
-<br>
-            </div></div>
 
         <div class="card text-white bg-secondary mt-3 mb-3 w-100">
             <div class="card-body">

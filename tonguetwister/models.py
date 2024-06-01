@@ -19,3 +19,17 @@ class Exercise(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class Trivia(models.Model):
+    text = models.TextField()
+
+    def __str__(self):
+        return self.text
+
+
+class Funfact(models.Model):
+    text = models.TextField()
+
+    def __str__(self):
+        return self.text

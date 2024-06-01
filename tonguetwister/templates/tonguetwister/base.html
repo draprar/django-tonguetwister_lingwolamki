@@ -55,7 +55,7 @@
                     success: function(data) {
                         if (data.length > 0) {
                             for (let i = 0; i < data.length; i++) {
-                                $('#records-container').append('<div class="record">' + data[i].text + '</div>');
+                                $('#records-container').append('<div class="record col-md-16 fs-4">' + data[i].text + '</div>');
                             }
                             offset += data.length;
                         } else {
@@ -79,11 +79,59 @@
                     success: function(data) {
                         if (data.length > 0) {
                             for (let i = 0; i < data.length; i++) {
-                                $('#exercises-container').append('<div class="exercise">' + data[i].text + '</div>');
+                                $('#exercises-container').append('<div class="exercise col-md-16 fs-4">' + data[i].text + '</div>');
                             }
                             offset += data.length;
                         } else {
                             $('#load-more-exercises-btn').hide();
+                        }
+                    }
+                });
+            });
+        });
+        </script>
+ <script>
+        $(document).ready(function(){
+            let offset = {{ trivia|length }};
+            $('#load-more-trivia-btn').click(function(){
+                $.ajax({
+                    url: '{% url "load_more_trivia" %}',
+                    data: {
+                        'offset': offset
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.length > 0) {
+                            for (let i = 0; i < data.length; i++) {
+                                $('#trivia-container').append('<div class="one-trivia col-md-16 fs-4">' + data[i].text + '</div>');
+                            }
+                            offset += data.length;
+                        } else {
+                            $('#load-more-trivia-btn').hide();
+                        }
+                    }
+                });
+            });
+        });
+        </script>
+<script>
+        $(document).ready(function(){
+            let offset = {{ funfacts|length }};
+            $('#load-more-funfacts-btn').click(function(){
+                $.ajax({
+                    url: '{% url "load_more_funfacts" %}',
+                    data: {
+                        'offset': offset
+                    },
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.length > 0) {
+                            for (let i = 0; i < data.length; i++) {
+                                $('#funfacts-container').append('<div class="funfact col-md-16 fs-4">' + data[i].text + '</div>');
+                            }
+                            offset += data.length;
+                        } else {
+                            $('#load-more-funfacts-btn').hide();
                         }
                     }
                 });
