@@ -8,13 +8,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Orbitron:wght@500&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/htmx.org@1.6.1"></script>
   <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
   <link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 
@@ -27,10 +25,10 @@
     <div class="swiper-wrapper">
       <div class="swiper-slide text-center col-md-16 fs-4">{% include 'tonguetwister/partials/static/first-section.html' %}</div>
       <div class="swiper-slide text-center">{% include 'tonguetwister/partials/static/second-section.html' %}</div>
-      <div class="swiper-slide text-center">{% include 'tonguetwister/partials/static/third-section.html' %}</div>
-      <div class="swiper-slide text-center">{% include 'tonguetwister/partials/static/fourth-section.html' %}</div>
+      <div class="swiper-slide text-center">{% include 'tonguetwister/partials/gen/third-section.html' %}</div>
+      <div class="swiper-slide text-center">{% include 'tonguetwister/partials/gen/fourth-section.html' %}</div>
       <div class="swiper-slide text-center">{% block content %}{% endblock %}</div>
-      <div class="swiper-slide text-center">{% include 'tonguetwister/partials/static/sixth-section.html' %}</div>
+      <div class="swiper-slide text-center">{% include 'tonguetwister/partials/gen/sixth-section.html' %}</div>
     </div>
     <div class="swiper-button-next"></div>
     <div class="swiper-button-prev"></div>
@@ -40,103 +38,12 @@
 
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/main.js' %}"></script>
+<script src="{% static 'js/loadMoreRecords.js' %}"></script>
+<script src="{% static 'js/loadMoreExercises.js' %}"></script>
+<script src="{% static 'js/loadMoreTrivia.js' %}"></script>
+<script src="{% static 'js/loadMoreFacts.js' %}"></script>
 
-    <script>
-        $(document).ready(function(){
-            let offset = {{ records|length }};
-            $('#load-more-btn').click(function(){
-                $.ajax({
-                    url: '{% url "load_more_records" %}',
-                    data: {
-                        'offset': offset
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data.length > 0) {
-                            for (let i = 0; i < data.length; i++) {
-                                $('#records-container').append('<div class="record col-md-16 fs-4">' + data[i].text + '</div>');
-                            }
-                            offset += data.length;
-                        } else {
-                            $('#load-more-btn').hide();
-                        }
-                    }
-                });
-            });
-        });
-    </script>
- <script>
-        $(document).ready(function(){
-            let offset = {{ exercises|length }};
-            $('#load-more-exercises-btn').click(function(){
-                $.ajax({
-                    url: '{% url "load_more_exercises" %}',
-                    data: {
-                        'offset': offset
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data.length > 0) {
-                            for (let i = 0; i < data.length; i++) {
-                                $('#exercises-container').append('<div class="exercise col-md-16 fs-4">' + data[i].text + '</div>');
-                            }
-                            offset += data.length;
-                        } else {
-                            $('#load-more-exercises-btn').hide();
-                        }
-                    }
-                });
-            });
-        });
-        </script>
- <script>
-        $(document).ready(function(){
-            let offset = {{ trivia|length }};
-            $('#load-more-trivia-btn').click(function(){
-                $.ajax({
-                    url: '{% url "load_more_trivia" %}',
-                    data: {
-                        'offset': offset
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data.length > 0) {
-                            for (let i = 0; i < data.length; i++) {
-                                $('#trivia-container').append('<div class="one-trivia col-md-16 fs-4">' + data[i].text + '</div>');
-                            }
-                            offset += data.length;
-                        } else {
-                            $('#load-more-trivia-btn').hide();
-                        }
-                    }
-                });
-            });
-        });
-        </script>
-<script>
-        $(document).ready(function(){
-            let offset = {{ funfacts|length }};
-            $('#load-more-funfacts-btn').click(function(){
-                $.ajax({
-                    url: '{% url "load_more_funfacts" %}',
-                    data: {
-                        'offset': offset
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data.length > 0) {
-                            for (let i = 0; i < data.length; i++) {
-                                $('#funfacts-container').append('<div class="funfact col-md-16 fs-4">' + data[i].text + '</div>');
-                            }
-                            offset += data.length;
-                        } else {
-                            $('#load-more-funfacts-btn').hide();
-                        }
-                    }
-                });
-            });
-        });
-        </script>
 </body>
 </html>

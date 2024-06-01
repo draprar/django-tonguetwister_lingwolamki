@@ -1,0 +1,31 @@
+{% load static %}
+
+<h2>Bonus</h2>
+<p class="col-md-16 fs-4">Kliknij w przycisk, aby otworzyć bonus.</p>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="m12 17.586-7.293-7.293-1.414 1.414L12 20.414l8.707-8.707-1.414-1.414L12 17.586z"/><path d="m20.707 5.707-1.414-1.414L12 11.586 4.707 4.293 3.293 5.707 12 14.414l8.707-8.707z"/></svg>
+
+<div id="trivia-container">
+    {% for record in trivia %}
+        <div class="one-trivia col-md-16 fs-5">{{ record.text }}</div>
+    {% endfor %}
+</div>
+<br>
+<button id="load-more-trivia-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ trivia|length }}" data-url="{% url 'load_more_trivia' %}" onclick="changeTriviaButtonText()">Porada językowa</button>
+
+<br>
+
+<div id="funfacts-container">
+    {% for funfact in funfacts %}
+    <div class="funfact col-md-16 fs-5">{{ funfact.text }}</div>
+    {% endfor %}
+</div>
+<br>
+<button id="load-more-funfacts-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ funfacts|length }}" data-url="{% url 'load_more_funfacts' %}" onclick="changeFactsButtonText()">Ciekawostka</button>
+
+
+        <div class="card text-white bg-secondary mt-3 mb-3 w-100">
+            <div class="card-body">
+                <p class="text-center mb-0">Na ten moment jest to koniec przygody, mamy nadzieję, że Ci się podobało i zapraszamy ponownie :)</p>
+            </div>
+        </div>
