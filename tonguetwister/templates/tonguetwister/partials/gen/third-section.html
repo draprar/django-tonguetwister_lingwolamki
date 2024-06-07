@@ -7,14 +7,14 @@
 
 <div id="records-container">
     {% for articulator in records %}
-        <div class="record col-md-16 fs-5 fw-light">{{ articulator.text }}</div>
+        <div class="record col-md-16 fs-5 fw-light" id="record">{{ articulator.text }}</div>
     {% endfor %}
 </div>
 <br>
 <button id="load-more-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ records|length }}" data-url="{% url 'load_more_records' %}" onclick="changeRecordsButtonText()">Zaczynamy</button>
 
-<div class="card text-white bg-secondary mt-3 mb-3 w-100">
+<div class="card text-white bg-secondary mt-3 mb-3 w-100" id="card" style="display: none;">
     <div class="card-body">
-         <p class="text-center mb-0">WoW! Dobra robota! Czujesz ogień w gębie i rozpalenie na kolejne ćwiczenia? To zapraszamy Cię na słówko.</p>
+         <p class="text-center mb-0">WoW! Dobra robota! Czujesz ogień w gębie i rozpalenie na kolejne ćwiczenia? To zapraszamy Cię na słówko w prawo.</p>
     </div>
 </div>

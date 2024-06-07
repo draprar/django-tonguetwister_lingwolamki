@@ -14,8 +14,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         $('#records-container').append('<div class="record col-md-16 fs-4">' + data[i].text + '</div>');
                     }
                     offset += data.length;
+
+                    let records = $('#records-container .record');
+                    while (records.length > 1) {
+                        records.first().remove();
+                        records = $('#records-container .record');
+                    }
+
                 } else {
                     $('#load-more-btn').hide();
+                    $('#records-container .record').hide();
+                    $('.card').show();
                 }
             }
         });

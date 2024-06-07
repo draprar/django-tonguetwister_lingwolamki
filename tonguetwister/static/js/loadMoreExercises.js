@@ -14,8 +14,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         $('#exercises-container').append('<div class="exercise col-md-16 fs-4">' + data[i].text + '</div>');
                     }
                     offset += data.length;
+
+                    let exercises = $('#exercises-container .exercise');
+                    while (exercises.length > 1) {
+                        exercises.first().remove();
+                        exercises = $('#exercises-container .exercise');
+                    }
+
                 } else {
                     $('#load-more-exercises-btn').hide();
+                    $('#exercises-container .exercise').hide();
+                    $('.card-exercises').show();
                 }
             }
         });
