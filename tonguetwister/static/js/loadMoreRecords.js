@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     $('#load-more-btn').hide();
                     $('#records-container .record').hide();
-                    $('.card').show();
+                    $('#container-records').show();
                 }
             }
         });

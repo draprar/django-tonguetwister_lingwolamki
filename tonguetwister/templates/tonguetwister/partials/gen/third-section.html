@@ -6,15 +6,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="m12 17.586-7.293-7.293-1.414 1.414L12 20.414l8.707-8.707-1.414-1.414L12 17.586z"/><path d="m20.707 5.707-1.414-1.414L12 11.586 4.707 4.293 3.293 5.707 12 14.414l8.707-8.707z"/></svg>
 
 <div id="records-container">
-    {% for articulator in records %}
-        <div class="record col-md-16 fs-5 fw-light" id="record">{{ articulator.text }}</div>
+    {% for record in records %}
+        <div class="record col-md-16 fs-5 fw-light" id="record">{{ records.text }}</div>
     {% endfor %}
 </div>
 <br>
 <button id="load-more-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ records|length }}" data-url="{% url 'load_more_records' %}" onclick="changeRecordsButtonText()">Zaczynamy</button>
 
-<div class="card text-white bg-secondary mt-3 mb-3 w-100" id="card" style="display: none;">
-    <div class="card-body">
-         <p class="text-center mb-0">WoW! Dobra robota! Czujesz ogień w gębie i rozpalenie na kolejne ćwiczenia? To zapraszamy Cię na słówko w prawo.</p>
-    </div>
+<div class="container text-white bg-secondary mt-3 fs-4 mb-3 w-100" id="#container-records" style="display: none;">
+    <p class="text-center mb-0">WoW! Dobra robota! Czujesz ogień w gębie i rozpalenie na kolejne ćwiczenia? To zapraszamy Cię na słówko w prawo.</p>
 </div>

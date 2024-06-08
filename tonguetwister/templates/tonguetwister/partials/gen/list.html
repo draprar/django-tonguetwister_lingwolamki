@@ -1,6 +1,8 @@
-{% for twister in page_obj %}
- <p class="col-md-16 fs-4">{{ twister.text }}</p>
-{% endfor %}
+<div id="twisters-container">
+    {% for twister in page_obj %}
+        <p class="col-md-16 fs-4 twister">{{ twister.text }}</p>
+    {% endfor %}
+</div>
 
 {% if page_obj.has_next %}
     <p class="col-md-16 fs-5" id="load-more">
@@ -11,5 +13,5 @@
                 id="recalculate-height">Chcę jeszcze!</button>
     </p>
 {% else %}
-    <p class="col-md-16 fs-4 text-danger"><strong>Finisz bazy łamańców :o Chapeu bas!</strong></p>
+    <p class="col-md-16 fs-4 text-danger" id="end-message"><strong>Finisz bazy łamańców :o Chapeu bas!</strong></p>
 {% endif %}

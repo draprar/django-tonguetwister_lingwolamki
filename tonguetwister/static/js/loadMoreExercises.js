@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     $('#load-more-exercises-btn').hide();
                     $('#exercises-container .exercise').hide();
-                    $('.card-exercises').show();
+                    $('#container-exercises').show();
                 }
             }
         });
