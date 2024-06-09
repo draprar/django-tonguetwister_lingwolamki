@@ -16,10 +16,10 @@ document.addEventListener('htmx:afterSettle', function(evt) {
             records[records.length - 1].style.display = 'none';
         }
 
-        let endMessage = document.createElement('p');
-        endMessage.className = 'col-md-16 fs-4 text-danger';
-        endMessage.innerHTML = '<strong>Finisz bazy łamańców :o Chapeu bas!</strong>';
-        document.getElementById('twisters-container').appendChild(endMessage);
+        let cardTwisters = document.getElementById('card-twisters');
+        if (cardTwisters) {
+            cardTwisters.style.display = 'block';
+        }
     }
 });
 

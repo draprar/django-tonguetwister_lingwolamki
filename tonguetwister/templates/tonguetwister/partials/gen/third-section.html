@@ -13,6 +13,8 @@
 <br>
 <button id="load-more-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ records|length }}" data-url="{% url 'load_more_records' %}" onclick="changeRecordsButtonText()">Zaczynamy</button>
 
-<div class="container text-white bg-secondary mt-3 fs-4 mb-3 w-100" id="#container-records" style="display: none;">
-    <p class="text-center mb-0">WoW! Dobra robota! Czujesz ogień w gębie i rozpalenie na kolejne ćwiczenia? To zapraszamy Cię na słówko w prawo.</p>
+<div id="card-records" class="card text-white bg-secondary mt-3 mb-3 w-100" style="display: none;">
+    <div class="card-body">
+        <p class="card-text text-center mb-0">WoW! Dobra robota! Czujesz ogień w gębie i rozpalenie na kolejne ćwiczenia? To zapraszamy Cię na słówko w prawo.</p>
+    </div>
 </div>

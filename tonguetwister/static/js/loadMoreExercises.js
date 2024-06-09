@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                 } else {
+                    $('#card-exercises').show();
                     $('#load-more-exercises-btn').hide();
                     $('#exercises-container .exercise').hide();
-                    $('#container-exercises').show();
                 }
             }
         });

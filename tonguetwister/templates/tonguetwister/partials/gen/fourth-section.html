@@ -13,6 +13,8 @@
 <br>
 <button id="load-more-exercises-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ exercises|length }}" data-url="{% url 'load_more_exercises' %}" onclick="changeExercisesButtonText()">Zaczynamy</button>
 
-<div class="container text-white bg-secondary mt-3 fs-4 mb-3 w-100" id="container-exercises" style="display: none;">
-    <p class="text-center mb-0">Hurra! Prawdziwa zabawa zaczyna się właśnie teraz. Czy poradzisz sobie z zemstą logopedy?</p>
+<div id="card-exercises" class="card text-white bg-secondary mt-3 mb-3 w-100" style="display: none;">
+    <div class="card-body">
+        <p class="card-text text-center mb-0">Hurra! Prawdziwa zabawa zaczyna się właśnie teraz. Czy poradzisz sobie z zemstą logopedy?</p>
+    </div>
 </div>

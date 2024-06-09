@@ -22,9 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                 } else {
+                    $('#card-records').show();
                     $('#load-more-btn').hide();
                     $('#records-container .record').hide();
-                    $('#container-records').show();
                 }
             }
         });
