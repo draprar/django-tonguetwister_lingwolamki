@@ -6,6 +6,6 @@ In fact, I decided to share the link to the application (this is also how we coo
 
 Moreover, if you have any comments or ideas - we will be happy to listen to you :)
 
-Enjoy your visit: https://warownie.pythonanywhere.com/
+Enjoy your visit: https://tonguetwister.pythonanywhere.com/
 
 ~ P&M
