@@ -29,10 +29,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    function changeExercisesButtonText() {
-        var button = document.getElementById("load-more-exercises-btn");
-        button.textContent = "Więcej";
-    }
-    document.getElementById("load-more-exercises-btn").onclick = changeExercisesButtonText;
 });

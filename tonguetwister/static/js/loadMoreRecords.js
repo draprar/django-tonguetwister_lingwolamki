@@ -29,10 +29,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    function changeRecordsButtonText() {
-        var button = document.getElementById("load-more-btn");
-        button.textContent = "Więcej";
-    }
-    document.getElementById("load-more-btn").onclick = changeRecordsButtonText;
 });

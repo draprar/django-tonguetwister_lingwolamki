@@ -7,11 +7,11 @@
 
 <div id="records-container">
     {% for record in records %}
-        <div class="record col-md-16 fs-5 fw-light" id="record">{{ records.text }}</div>
+        <div class="record col-md-16 fs-4" id="record">{{ record.text }}</div>
     {% endfor %}
 </div>
 <br>
-<button id="load-more-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ records|length }}" data-url="{% url 'load_more_records' %}" onclick="changeRecordsButtonText()">Zaczynamy</button>
+<button id="load-more-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ records|length }}" data-url="{% url 'load_more_records' %}">Chcę jeszcze!</button>
 
 <div id="card-records" class="card text-white bg-secondary mt-3 mb-3 w-100" style="display: none;">
     <div class="card-body">

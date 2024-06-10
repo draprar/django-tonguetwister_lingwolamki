@@ -6,8 +6,8 @@ from .models import Twister, Articulator, Exercise, Trivia, Funfact
 
 def main(request):
     twisters = Twister.objects.all().order_by('id')
-    records = Articulator.objects.all()[:0]
-    exercises = Exercise.objects.all()[:0]
+    records = Articulator.objects.all()[:1]
+    exercises = Exercise.objects.all()[:1]
     trivia = Trivia.objects.all()[:0]
     funfacts = Funfact.objects.all()[:0]
     paginator = Paginator(twisters, 1)

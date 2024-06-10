@@ -7,11 +7,11 @@
 
 <div id="exercises-container">
     {% for exercise in exercises %}
-        <div class="exercise col-md-16 fs-6 fw-light" id="exercise">{{ exercise.text }}</div>
+        <div class="exercise col-md-16 fs-4" id="exercise">{{ exercise.text }}</div>
     {% endfor %}
 </div>
 <br>
-<button id="load-more-exercises-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ exercises|length }}" data-url="{% url 'load_more_exercises' %}" onclick="changeExercisesButtonText()">Zaczynamy</button>
+<button id="load-more-exercises-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ exercises|length }}" data-url="{% url 'load_more_exercises' %}">Chcę jeszcze!</button>
 
 <div id="card-exercises" class="card text-white bg-secondary mt-3 mb-3 w-100" style="display: none;">
     <div class="card-body">
