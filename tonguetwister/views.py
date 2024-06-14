@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from .models import Twister, Articulator, Exercise, Trivia, Funfact
+from django.contrib.auth.decorators import login_required
 from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm
 
 
@@ -64,6 +65,7 @@ def error_404_view(request, exception):
     return render(request, 'tonguetwister/404.html', data)
 
 
+@login_required
 def add_articulator(request):
     if request.method == 'POST':
         form = ArticulatorForm(request.POST)
@@ -75,6 +77,7 @@ def add_articulator(request):
     return render(request, 'tonguetwister/forms/add_articulator.html', {'form': form})
 
 
+@login_required
 def add_exercise(request):
     if request.method == 'POST':
         form = ExerciseForm(request.POST)
@@ -86,6 +89,7 @@ def add_exercise(request):
     return render(request, 'tonguetwister/forms/add_exercise.html', {'form': form})
 
 
+@login_required
 def add_twister(request):
     if request.method == 'POST':
         form = TwisterForm(request.POST)
@@ -97,6 +101,7 @@ def add_twister(request):
     return render(request, 'tonguetwister/forms/add_twister.html', {'form': form})
 
 
+@login_required
 def add_trivia(request):
     if request.method == 'POST':
         form = TriviaForm(request.POST)
@@ -108,6 +113,7 @@ def add_trivia(request):
     return render(request, 'tonguetwister/forms/add_trivia.html', {'form': form})
 
 
+@login_required
 def add_funfact(request):
     if request.method == 'POST':
         form = FunfactForm(request.POST)
