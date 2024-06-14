@@ -6,11 +6,25 @@
     <span class="text-body-secondary">Stworzono z wykorzystaniem: Python 3.10 (język programowania), Django 4.2.11 (framework), PostgreSQL 16.1 (baza danych), HTML, CSS&Bootstrap i JavaScript (front-end).</span>
   </div>
 </div>
+<div class="collapse" id="navbarToggleExternalContentPlus" data-bs-theme="dark">
+  <div class="bg-dark p-4">
+    <ul>
+      <li><a href="{% url 'add_articulator' %}" class="text-white link-offset-2 text-decoration-none">Add Articulator</a></li>
+      <li><a href="{% url 'add_exercise' %}" class="text-white link-offset-2 text-decoration-none">Add Exercise</a></li>
+      <li><a href="{% url 'add_twister' %}" class="text-white link-offset-2 text-decoration-none">Add Twister</a></li>
+      <li><a href="{% url 'add_trivia' %}" class="text-white link-offset-2 text-decoration-none">Add Trivia</a></li>
+      <li><a href="{% url 'add_funfact' %}" class="text-white link-offset-2 text-decoration-none">Add Bonus</a></li>
+    </ul>
+  </div>
+</div>
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
       <a class="navbar-brand" href="#"><img src="{% static 'assets/ttlogo.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top">
       TongueTwister</a>
+    </button>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContentPlus" aria-controls="navbarToggleExternalContentPlus" aria-expanded="false" aria-label="Toggle navigation">
+      <a class="navbar-brand" href="#">+</a>
     </button>
   </div>
 </nav>
