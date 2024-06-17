@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from .models import Twister, Articulator, Exercise, Trivia, Funfact
 from django.contrib.auth.decorators import login_required
+from .models import Twister, Articulator, Exercise, Trivia, Funfact
 from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm
 
 
@@ -66,64 +66,200 @@ def error_404_view(request, exception):
 
 
 @login_required
-def add_articulator(request):
-    if request.method == 'POST':
+def articulator_list(request):
+    articulators = Articulator.objects.all()
+    return render(request, 'tonguetwister/articulators/articulator_list.html', {'articulators': articulators})
+
+
+@login_required
+def articulator_add(request):
+    if request.method == "POST":
         form = ArticulatorForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('success')
+            return redirect('articulator_list')
     else:
         form = ArticulatorForm()
-    return render(request, 'tonguetwister/forms/add_articulator.html', {'form': form})
+    return render(request, 'tonguetwister/articulators/articulator_form.html', {'form': form})
 
 
 @login_required
-def add_exercise(request):
-    if request.method == 'POST':
+def articulator_edit(request, pk):
+    articulator = get_object_or_404(Articulator, pk=pk)
+    if request.method == "POST":
+        form = ArticulatorForm(request.POST, instance=articulator)
+        if form.is_valid():
+            form.save()
+            return redirect('articulator_list')
+    else:
+        form = ArticulatorForm(instance=articulator)
+    return render(request, 'tonguetwister/articulators/articulator_form.html', {'form': form})
+
+
+@login_required
+def articulator_delete(request, pk):
+    articulator = get_object_or_404(Articulator, pk=pk)
+    if request.method == "POST":
+        articulator.delete()
+        return redirect('articulator_list')
+    return render(request, 'tonguetwister/articulators/articulator_confirm_delete.html', {'articulator': articulator})
+
+
+@login_required
+def exercise_list(request):
+    exercises = Exercise.objects.all()
+    return render(request, 'tonguetwister/exercises/exercise_list.html', {'exercises': exercises})
+
+
+@login_required
+def exercise_add(request):
+    if request.method == "POST":
         form = ExerciseForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('success')
+            return redirect('exercise_list')
     else:
         form = ExerciseForm()
-    return render(request, 'tonguetwister/forms/add_exercise.html', {'form': form})
+    return render(request, 'tonguetwister/exercises/exercise_form.html', {'form': form})
 
 
 @login_required
-def add_twister(request):
-    if request.method == 'POST':
+def exercise_edit(request, pk):
+    exercise = get_object_or_404(Exercise, pk=pk)
+    if request.method == "POST":
+        form = ExerciseForm(request.POST, instance=exercise)
+        if form.is_valid():
+            form.save()
+            return redirect('exercise_list')
+    else:
+        form = ExerciseForm(instance=exercise)
+    return render(request, 'tonguetwister/exercises/exercise_form.html', {'form': form})
+
+
+@login_required
+def exercise_delete(request, pk):
+    exercise = get_object_or_404(Exercise, pk=pk)
+    if request.method == "POST":
+        exercise.delete()
+        return redirect('exercise_list')
+    return render(request, 'tonguetwister/exercises/exercise_confirm_delete.html', {'object': exercise})
+
+
+@login_required
+def twister_list(request):
+    twisters = Twister.objects.all()
+    return render(request, 'tonguetwister/twisters/twister_list.html', {'twisters': twisters})
+
+
+@login_required
+def twister_add(request):
+    if request.method == "POST":
         form = TwisterForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('success')
+            return redirect('twister_list')
     else:
         form = TwisterForm()
-    return render(request, 'tonguetwister/forms/add_twister.html', {'form': form})
+    return render(request, 'tonguetwister/twisters/twister_form.html', {'form': form})
 
 
 @login_required
-def add_trivia(request):
-    if request.method == 'POST':
+def twister_edit(request, pk):
+    twister = get_object_or_404(Twister, pk=pk)
+    if request.method == "POST":
+        form = TwisterForm(request.POST, instance=twister)
+        if form.is_valid():
+            form.save()
+            return redirect('twister_list')
+    else:
+        form = TwisterForm(instance=twister)
+    return render(request, 'tonguetwister/twisters/twister_form.html', {'form': form})
+
+
+@login_required
+def twister_delete(request, pk):
+    twister = get_object_or_404(Twister, pk=pk)
+    if request.method == "POST":
+        twister.delete()
+        return redirect('twister_list')
+    return render(request, 'tonguetwister/twisters/twister_confirm_delete.html', {'object': twister})
+
+
+@login_required
+def trivia_list(request):
+    trivia = Trivia.objects.all()
+    return render(request, 'tonguetwister/trivia/trivia_list.html', {'trivia': trivia})
+
+
+@login_required
+def trivia_add(request):
+    if request.method == "POST":
         form = TriviaForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('success')
+            return redirect('trivia_list')
     else:
         form = TriviaForm()
-    return render(request, 'tonguetwister/forms/add_trivia.html', {'form': form})
+    return render(request, 'tonguetwister/trivia/trivia_form.html', {'form': form})
 
 
 @login_required
-def add_funfact(request):
-    if request.method == 'POST':
+def trivia_edit(request, pk):
+    trivia = get_object_or_404(Trivia, pk=pk)
+    if request.method == "POST":
+        form = TriviaForm(request.POST, instance=trivia)
+        if form.is_valid():
+            form.save()
+            return redirect('trivia_list')
+    else:
+        form = TriviaForm(instance=trivia)
+    return render(request, 'tonguetwister/trivia/trivia_form.html', {'form': form})
+
+
+@login_required
+def trivia_delete(request, pk):
+    trivia = get_object_or_404(Trivia, pk=pk)
+    if request.method == "POST":
+        trivia.delete()
+        return redirect('trivia_list')
+    return render(request, 'tonguetwister/trivia/trivia_confirm_delete.html', {'object': trivia})
+
+
+@login_required
+def funfact_list(request):
+    funfacts = Funfact.objects.all()
+    return render(request, 'tonguetwister/funfacts/funfact_list.html', {'funfacts': funfacts})
+
+
+@login_required
+def funfact_add(request):
+    if request.method == "POST":
         form = FunfactForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('success')
+            return redirect('funfact_list')
     else:
         form = FunfactForm()
-    return render(request, 'tonguetwister/forms/add_funfact.html', {'form': form})
+    return render(request, 'tonguetwister/funfacts/funfact_form.html', {'form': form})
 
 
-def success(request):
-    return render(request, 'tonguetwister/forms/success.html')
+@login_required
+def funfact_edit(request, pk):
+    funfact = get_object_or_404(Funfact, pk=pk)
+    if request.method == "POST":
+        form = FunfactForm(request.POST, instance=funfact)
+        if form.is_valid():
+            form.save()
+            return redirect('funfact_list')
+    else:
+        form = FunfactForm(instance=funfact)
+    return render(request, 'tonguetwister/funfacts/funfact_form.html', {'form': form})
+
+
+@login_required
+def funfact_delete(request, pk):
+    funfact = get_object_or_404(Funfact, pk=pk)
+    if request.method == "POST":
+        funfact.delete()
+        return redirect('funfact_list')
+    return render(request, 'tonguetwister/funfacts/funfact_confirm_delete.html', {'object': funfact})
