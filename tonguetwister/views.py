@@ -8,7 +8,7 @@ from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, Funfa
 
 def main(request):
     twisters = Twister.objects.all().order_by('id')
-    records = Articulator.objects.all()[:1]
+    articulators = Articulator.objects.all()[:1]
     exercises = Exercise.objects.all()[:1]
     trivia = Trivia.objects.all()[:0]
     funfacts = Funfact.objects.all()[:0]
@@ -17,7 +17,7 @@ def main(request):
     page_obj = paginator.get_page(page_number)
 
     context = {'page_obj': page_obj,
-               'records': records,
+               'articulators': articulators,
                'exercises': exercises,
                'trivia': trivia,
                'funfacts': funfacts,
