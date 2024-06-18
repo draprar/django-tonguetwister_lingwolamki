@@ -142,7 +142,7 @@ def exercise_delete(request, pk):
     if request.method == "POST":
         exercise.delete()
         return redirect('exercise_list')
-    return render(request, 'tonguetwister/exercises/exercise_confirm_delete.html', {'object': exercise})
+    return render(request, 'tonguetwister/exercises/exercise_confirm_delete.html', {'exercise': exercise})
 
 
 @login_required
@@ -182,7 +182,7 @@ def twister_delete(request, pk):
     if request.method == "POST":
         twister.delete()
         return redirect('twister_list')
-    return render(request, 'tonguetwister/twisters/twister_confirm_delete.html', {'object': twister})
+    return render(request, 'tonguetwister/twisters/twister_confirm_delete.html', {'twister': twister})
 
 
 @login_required
@@ -218,11 +218,11 @@ def trivia_edit(request, pk):
 
 @login_required
 def trivia_delete(request, pk):
-    trivia = get_object_or_404(Trivia, pk=pk)
+    t = get_object_or_404(Trivia, pk=pk)
     if request.method == "POST":
-        trivia.delete()
+        t.delete()
         return redirect('trivia_list')
-    return render(request, 'tonguetwister/trivia/trivia_confirm_delete.html', {'object': trivia})
+    return render(request, 'tonguetwister/trivia/trivia_confirm_delete.html', {'t': t})
 
 
 @login_required
@@ -262,4 +262,4 @@ def funfact_delete(request, pk):
     if request.method == "POST":
         funfact.delete()
         return redirect('funfact_list')
-    return render(request, 'tonguetwister/funfacts/funfact_confirm_delete.html', {'object': funfact})
+    return render(request, 'tonguetwister/funfacts/funfact_confirm_delete.html', {'funfact': funfact})
