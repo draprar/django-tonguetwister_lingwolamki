@@ -22,6 +22,18 @@ body {
   background-color: #3C4454;
 }
 
+.swiper-pagination-progressbar .swiper-pagination-progressbar-fill {
+  background: #b22629 !important;
+}
+
+.swiper-button-next {
+  color: #b22629 !important;
+}
+
+.swiper-button-prev {
+  color: #b22629 !important;
+}
+
 .modal {
     display: none;
     position: fixed;
