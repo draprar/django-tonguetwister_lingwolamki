@@ -2,6 +2,10 @@ body {
   color: #5a5a5a;
 }
 
+.swiper-slide {
+  margin: 10px 0 0 0;
+  }
+
 #topBtn {
   display: none;
   position: fixed;
