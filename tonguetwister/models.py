@@ -41,19 +41,21 @@ class Funfact(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    login_streak = models.PositiveIntegerField(default=0)
+    login_streak = models.PositiveIntegerField(default=1)
     last_login_date = models.DateField(auto_now=True)
 
     def update_login_streak(self):
-        if self.last_login_date == timezone.now().date():
+        today = timezone.now().date()
+
+        if self.last_login_date == today:
             return
 
-        if self.last_login_date == timezone.now().date() - timedelta(days=1):
+        if self.last_login_date == today - timedelta(days=1):
             self.login_streak += 1
         else:
             self.login_streak = 1
 
-        self.last_login_date = timezone.now().date()
+        self.last_login_date = today
         self.save()
 
     def __str__(self):
