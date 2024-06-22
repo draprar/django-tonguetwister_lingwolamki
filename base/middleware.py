@@ -1,4 +1,6 @@
 from django.contrib.auth.middleware import get_user
+from datetime import timedelta
+from django.utils import timezone
 
 
 class LoginStreakMiddleware:
@@ -9,10 +11,17 @@ class LoginStreakMiddleware:
         user = get_user(request)
         if user.is_authenticated:
             profile = user.profile
-            if profile.login_streak is None:
-                profile.login_streak = 1
+            today = timezone.now().date()
+
+            if profile.last_login_date == today:
+                pass
             else:
-                profile.login_streak += 1
-            profile.save()
+                if profile.last_login_date == today - timedelta(days=1):
+                    profile.login_streak += 1
+                else:
+                    profile.login_streak = 1
+
+                profile.last_login_date = today
+                profile.save()
         response = self.get_response(request)
         return response
