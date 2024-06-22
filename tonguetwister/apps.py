@@ -1,6 +1,8 @@
 from django.apps import AppConfig
 
 
-class TonguetwisterConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
+class TongueTwisterConfig(AppConfig):
     name = 'tonguetwister'
+
+    def ready(self):
+        import tonguetwister.signals

@@ -1,9 +1,12 @@
 from django.urls import path, include
 from . import views
+from .views import login_view, register_view
 
 
 urlpatterns = [
     path('', views.main, name='main'),
+    path('login/', login_view, name='login'),
+    path('register/', register_view, name='register'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('load-more-records/', views.load_more_records, name='load_more_records'),
     path('load-more-exercises/', views.load_more_exercises, name='load_more_exercises'),

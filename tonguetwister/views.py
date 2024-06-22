@@ -1,9 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
+from .forms import CustomUserCreationForm
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User, Group
 from .models import Twister, Articulator, Exercise, Trivia, Funfact
 from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm
+from django import forms
+
+
+def is_admin(user):
+    return user.is_staff or user.is_superuser
 
 
 def main(request):
@@ -65,13 +74,13 @@ def error_404_view(request, exception):
     return render(request, 'tonguetwister/404.html', data)
 
 
-@login_required
+@user_passes_test(is_admin)
 def articulator_list(request):
     articulators = Articulator.objects.all()
     return render(request, 'tonguetwister/articulators/articulator_list.html', {'articulators': articulators})
 
 
-@login_required
+@user_passes_test(is_admin)
 def articulator_add(request):
     if request.method == "POST":
         form = ArticulatorForm(request.POST)
@@ -83,7 +92,7 @@ def articulator_add(request):
     return render(request, 'tonguetwister/articulators/articulator_form.html', {'form': form})
 
 
-@login_required
+@user_passes_test(is_admin)
 def articulator_edit(request, pk):
     articulator = get_object_or_404(Articulator, pk=pk)
     if request.method == "POST":
@@ -96,7 +105,7 @@ def articulator_edit(request, pk):
     return render(request, 'tonguetwister/articulators/articulator_form.html', {'form': form})
 
 
-@login_required
+@user_passes_test(is_admin)
 def articulator_delete(request, pk):
     articulator = get_object_or_404(Articulator, pk=pk)
     if request.method == "POST":
@@ -105,13 +114,13 @@ def articulator_delete(request, pk):
     return render(request, 'tonguetwister/articulators/articulator_confirm_delete.html', {'articulator': articulator})
 
 
-@login_required
+@user_passes_test(is_admin)
 def exercise_list(request):
     exercises = Exercise.objects.all()
     return render(request, 'tonguetwister/exercises/exercise_list.html', {'exercises': exercises})
 
 
-@login_required
+@user_passes_test(is_admin)
 def exercise_add(request):
     if request.method == "POST":
         form = ExerciseForm(request.POST)
@@ -123,7 +132,7 @@ def exercise_add(request):
     return render(request, 'tonguetwister/exercises/exercise_form.html', {'form': form})
 
 
-@login_required
+@user_passes_test(is_admin)
 def exercise_edit(request, pk):
     exercise = get_object_or_404(Exercise, pk=pk)
     if request.method == "POST":
@@ -136,7 +145,7 @@ def exercise_edit(request, pk):
     return render(request, 'tonguetwister/exercises/exercise_form.html', {'form': form})
 
 
-@login_required
+@user_passes_test(is_admin)
 def exercise_delete(request, pk):
     exercise = get_object_or_404(Exercise, pk=pk)
     if request.method == "POST":
@@ -145,13 +154,13 @@ def exercise_delete(request, pk):
     return render(request, 'tonguetwister/exercises/exercise_confirm_delete.html', {'exercise': exercise})
 
 
-@login_required
+@user_passes_test(is_admin)
 def twister_list(request):
     twisters = Twister.objects.all()
     return render(request, 'tonguetwister/twisters/twister_list.html', {'twisters': twisters})
 
 
-@login_required
+@user_passes_test(is_admin)
 def twister_add(request):
     if request.method == "POST":
         form = TwisterForm(request.POST)
@@ -163,7 +172,7 @@ def twister_add(request):
     return render(request, 'tonguetwister/twisters/twister_form.html', {'form': form})
 
 
-@login_required
+@user_passes_test(is_admin)
 def twister_edit(request, pk):
     twister = get_object_or_404(Twister, pk=pk)
     if request.method == "POST":
@@ -176,7 +185,7 @@ def twister_edit(request, pk):
     return render(request, 'tonguetwister/twisters/twister_form.html', {'form': form})
 
 
-@login_required
+@user_passes_test(is_admin)
 def twister_delete(request, pk):
     twister = get_object_or_404(Twister, pk=pk)
     if request.method == "POST":
@@ -185,13 +194,13 @@ def twister_delete(request, pk):
     return render(request, 'tonguetwister/twisters/twister_confirm_delete.html', {'twister': twister})
 
 
-@login_required
+@user_passes_test(is_admin)
 def trivia_list(request):
     trivia = Trivia.objects.all()
     return render(request, 'tonguetwister/trivia/trivia_list.html', {'trivia': trivia})
 
 
-@login_required
+@user_passes_test(is_admin)
 def trivia_add(request):
     if request.method == "POST":
         form = TriviaForm(request.POST)
@@ -203,7 +212,7 @@ def trivia_add(request):
     return render(request, 'tonguetwister/trivia/trivia_form.html', {'form': form})
 
 
-@login_required
+@user_passes_test(is_admin)
 def trivia_edit(request, pk):
     trivia = get_object_or_404(Trivia, pk=pk)
     if request.method == "POST":
@@ -216,7 +225,7 @@ def trivia_edit(request, pk):
     return render(request, 'tonguetwister/trivia/trivia_form.html', {'form': form})
 
 
-@login_required
+@user_passes_test(is_admin)
 def trivia_delete(request, pk):
     t = get_object_or_404(Trivia, pk=pk)
     if request.method == "POST":
@@ -225,13 +234,13 @@ def trivia_delete(request, pk):
     return render(request, 'tonguetwister/trivia/trivia_confirm_delete.html', {'t': t})
 
 
-@login_required
+@user_passes_test(is_admin)
 def funfact_list(request):
     funfacts = Funfact.objects.all()
     return render(request, 'tonguetwister/funfacts/funfact_list.html', {'funfacts': funfacts})
 
 
-@login_required
+@user_passes_test(is_admin)
 def funfact_add(request):
     if request.method == "POST":
         form = FunfactForm(request.POST)
@@ -243,7 +252,7 @@ def funfact_add(request):
     return render(request, 'tonguetwister/funfacts/funfact_form.html', {'form': form})
 
 
-@login_required
+@user_passes_test(is_admin)
 def funfact_edit(request, pk):
     funfact = get_object_or_404(Funfact, pk=pk)
     if request.method == "POST":
@@ -256,10 +265,51 @@ def funfact_edit(request, pk):
     return render(request, 'tonguetwister/funfacts/funfact_form.html', {'form': form})
 
 
-@login_required
+@user_passes_test(is_admin)
 def funfact_delete(request, pk):
     funfact = get_object_or_404(Funfact, pk=pk)
     if request.method == "POST":
         funfact.delete()
         return redirect('funfact_list')
     return render(request, 'tonguetwister/funfacts/funfact_confirm_delete.html', {'funfact': funfact})
+
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
+
+    def save(self, commit=True):
+        user = super(CustomUserCreationForm, self).save(commit=False)
+        user.email = self.cleaned_data["email"]
+        if commit:
+            user.save()
+            regular_users_group = Group.objects.get(name='Regular Users')
+            user.groups.add(regular_users_group)
+        return user
+
+
+def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('main')
+        else:
+            return render(request, 'registration/login.html', {'error': 'Invalid username or password'})
+    return render(request, 'registration/login.html')
+
+
+def register_view(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
