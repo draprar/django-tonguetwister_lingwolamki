@@ -8,6 +8,11 @@
     <link href="{% static 'css/registration.css' %}" rel="stylesheet"/>
 </head>
 <body>
+        {% if error %}
+            <div class="alert alert-danger mt-3" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
     <div class="login-container">
         <h1>Logowanie</h1>
         <form method="post">
@@ -22,12 +27,7 @@
             </div><br>
             <button type="submit" class="btn btn-dark btn-block">Zaloguj</button>
         </form>
-        <button class="btn btn-dark btn-block" style="height: 50px; font-size: 18px;"><a class="navbar-brand" href="/"><img src="{% static 'assets/ttlogo.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"> Wróć</a></button>
-        {% if error %}
-            <div class="alert alert-danger mt-3" role="alert">
-                {{ error }}
-            </div>
-        {% endif %}
+        <button class="btn btn-dark btn-block" style="height: 50px; font-size: 18px;" id="back-login"><a class="navbar-brand" href="/"><img src="{% static 'assets/ttlogo.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"> Wróć</a></button>
     </div>
 </body>
 </html>

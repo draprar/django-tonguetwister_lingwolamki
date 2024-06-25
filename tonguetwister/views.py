@@ -292,6 +292,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 def login_view(request):
+    error = None
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -300,8 +301,8 @@ def login_view(request):
             login(request, user)
             return redirect('main')
         else:
-            return render(request, 'registration/login.html', {'error': 'Invalid username or password'})
-    return render(request, 'registration/login.html')
+            error = 'Invalid username or password'
+    return render(request, 'registration/login.html', {'error': error})
 
 
 def register_view(request):
@@ -310,6 +311,8 @@ def register_view(request):
         if form.is_valid():
             form.save()
             return redirect('login')
+        else:
+            return render(request, 'registration/register.html', {'form': form})
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})

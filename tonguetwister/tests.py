@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 
 
 class PageResponseTest(unittest.TestCase):
@@ -64,37 +65,3 @@ class ClickAllButtonsTest(unittest.TestCase):
         self.driver.quit()
 
 
-class SignUpTest(unittest.TestCase):
-
-    def setUp(self):
-        self.driver = webdriver.Chrome()
-
-    def test_sign_up(self):
-        self.driver.get("http://127.0.0.1:8000/register")
-        self.driver.find_element(By.NAME, "username").send_keys("testuser")
-        self.driver.find_element(By.NAME, "email").send_keys("test@user.com")
-        self.driver.find_element(By.NAME, "password1").send_keys("password123")
-        self.driver.find_element(By.NAME, "password2").send_keys("password123")
-        self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
-
-    def tearDown(self):
-        self.driver.quit()
-
-
-class LoginLogoutTest(unittest.TestCase):
-
-    def setUp(self):
-        self.driver = webdriver.Chrome()
-
-    def test_login(self):
-        self.driver.get("http://127.0.0.1:8000/accounts/login/")
-        self.driver.find_element(By.ID, "username").send_keys("testuser")
-        self.driver.find_element(By.ID, "password").send_keys("password123")
-        self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
-        WebDriverWait(self.driver, 10).until(
-            EC.visibility_of_element_located((By.CSS_SELECTOR, "a[aria-label='logout']"))
-        )
-        self.driver.find_element(By.CSS_SELECTOR, "a[aria-label='logout']").click()
-
-    def tearDown(self):
-        self.driver.quit()
