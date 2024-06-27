@@ -17,6 +17,6 @@
     {% csrf_token %}
     <button type="submit" class="btn btn-danger">Potwierdzam</button>
   </form>
-  <a href="{% url 'funfact_list' %}" class="link-secondary link-offset-2 link-underline-opacity-0">Anuluj</a>
+  <a href="{% url 'funfact_list' %}" class="link-secondary link-offset-2 link-underline-opacity-0" type="cancel">Anuluj</a>
 </body>
 </html>

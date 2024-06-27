@@ -1,0 +1,10 @@
+test_add_modify_delete_articulator (__main__.AddModifyDeleteTest) ... ok
+test_add_modify_delete_exercise (__main__.AddModifyDeleteTest) ... ok
+test_add_modify_delete_funfact (__main__.AddModifyDeleteTest) ... ok
+test_add_modify_delete_trivia (__main__.AddModifyDeleteTest) ... ok
+test_add_modify_delete_twister (__main__.AddModifyDeleteTest) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 56.330s
+
+OK

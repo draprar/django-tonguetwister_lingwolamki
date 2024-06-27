@@ -11,13 +11,13 @@
 <header>
 <div class="container-fluid">
     <button class="btn btn-dark btn-lg btn-block" type="button">
-      <a class="navbar-brand" href="/"><img src="{% static 'assets/ttlogo.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top"> Wróć na stronę główną</a>
+      <a class="navbar-brand" href="/" type="go-back"><img src="{% static 'assets/ttlogo.png' %}" alt="" width="30" height="24" class="d-inline-block align-text-top"> Wróć na stronę główną</a>
     </button>
   </div><br>
 </header>
 <div class="container-fluid">
     <button class="btn btn-success btn-lg btn-block" type="button">
-      <a href="{% url 'trivia_add' %}" class="link-dark link-offset-2 link-underline-opacity-0"><strong>Dodaj poradę</strong></a>
+      <a href="{% url 'trivia_add' %}" class="link-dark link-offset-2 link-underline-opacity-0" id="add-trivia"><strong>Dodaj poradę</strong></a>
     </button>
   </div><br>
 <h4>Lista porad:</h4>
