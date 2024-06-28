@@ -11,14 +11,17 @@ class AddModifyDeleteTest(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
+        self.url = "http://127.0.0.1:8000/"
+        self.username = "prt"
+        self.password = "1"
 
     def test_add_modify_delete_articulator(self):
-        self.driver.get("http://127.0.0.1:8000/")
+        self.driver.get(self.url)
 
         # Login
         self.driver.find_element(By.LINK_TEXT, "Logowanie").click()
-        self.driver.find_element(By.NAME, "username").send_keys("prt")
-        self.driver.find_element(By.NAME, "password").send_keys("1")
+        self.driver.find_element(By.NAME, "username").send_keys(self.username)
+        self.driver.find_element(By.NAME, "password").send_keys(self.password)
         self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         WebDriverWait(self.driver, 5).until(
             EC.visibility_of_element_located((By.LINK_TEXT, "Wyloguj"))
@@ -56,12 +59,12 @@ class AddModifyDeleteTest(unittest.TestCase):
         self.driver.find_element(By.LINK_TEXT, "Wyloguj").click()
 
     def test_add_modify_delete_exercise(self):
-        self.driver.get("http://127.0.0.1:8000/")
+        self.driver.get(self.url)
 
         # Login
         self.driver.find_element(By.LINK_TEXT, "Logowanie").click()
-        self.driver.find_element(By.NAME, "username").send_keys("prt")
-        self.driver.find_element(By.NAME, "password").send_keys("1")
+        self.driver.find_element(By.NAME, "username").send_keys(self.username)
+        self.driver.find_element(By.NAME, "password").send_keys(self.password)
         self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         WebDriverWait(self.driver, 5).until(
             EC.visibility_of_element_located((By.LINK_TEXT, "Wyloguj"))
@@ -99,12 +102,12 @@ class AddModifyDeleteTest(unittest.TestCase):
         self.driver.find_element(By.LINK_TEXT, "Wyloguj").click()
 
     def test_add_modify_delete_twister(self):
-        self.driver.get("http://127.0.0.1:8000/")
+        self.driver.get(self.url)
 
         # Login
         self.driver.find_element(By.LINK_TEXT, "Logowanie").click()
-        self.driver.find_element(By.NAME, "username").send_keys("prt")
-        self.driver.find_element(By.NAME, "password").send_keys("1")
+        self.driver.find_element(By.NAME, "username").send_keys(self.username)
+        self.driver.find_element(By.NAME, "password").send_keys(self.password)
         self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         WebDriverWait(self.driver, 5).until(
             EC.visibility_of_element_located((By.LINK_TEXT, "Wyloguj"))
@@ -142,12 +145,12 @@ class AddModifyDeleteTest(unittest.TestCase):
         self.driver.find_element(By.LINK_TEXT, "Wyloguj").click()
 
     def test_add_modify_delete_trivia(self):
-        self.driver.get("http://127.0.0.1:8000/")
+        self.driver.get(self.url)
 
         # Login
         self.driver.find_element(By.LINK_TEXT, "Logowanie").click()
-        self.driver.find_element(By.NAME, "username").send_keys("prt")
-        self.driver.find_element(By.NAME, "password").send_keys("1")
+        self.driver.find_element(By.NAME, "username").send_keys(self.username)
+        self.driver.find_element(By.NAME, "password").send_keys(self.password)
         self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         WebDriverWait(self.driver, 5).until(
             EC.visibility_of_element_located((By.LINK_TEXT, "Wyloguj"))
@@ -185,12 +188,12 @@ class AddModifyDeleteTest(unittest.TestCase):
         self.driver.find_element(By.LINK_TEXT, "Wyloguj").click()
 
     def test_add_modify_delete_funfact(self):
-        self.driver.get("http://127.0.0.1:8000/")
+        self.driver.get(self.url)
 
         # Login
         self.driver.find_element(By.LINK_TEXT, "Logowanie").click()
-        self.driver.find_element(By.NAME, "username").send_keys("prt")
-        self.driver.find_element(By.NAME, "password").send_keys("1")
+        self.driver.find_element(By.NAME, "username").send_keys(self.username)
+        self.driver.find_element(By.NAME, "password").send_keys(self.password)
         self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         WebDriverWait(self.driver, 5).until(
             EC.visibility_of_element_located((By.LINK_TEXT, "Wyloguj"))
@@ -236,15 +239,18 @@ class AddModifyDeleteMobileTest(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
         self.driver.maximize_window()
+        self.url = "http://127.0.0.1:8000/"
+        self.username = "prt"
+        self.password = "1"
 
     def test_add_modify_delete_mobile_articulator(self):
-        self.driver.get("http://127.0.0.1:8000/")
+        self.driver.get(self.url)
         self.driver.set_window_size(375, 667)
 
         # Login
         self.driver.find_element(By.CSS_SELECTOR, "a[aria-label='login']").click()
-        self.driver.find_element(By.NAME, "username").send_keys("prt")
-        self.driver.find_element(By.NAME, "password").send_keys("1")
+        self.driver.find_element(By.NAME, "username").send_keys(self.username)
+        self.driver.find_element(By.NAME, "password").send_keys(self.password)
         self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         WebDriverWait(self.driver, 5).until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, "a[aria-label='logout']"))
@@ -282,13 +288,13 @@ class AddModifyDeleteMobileTest(unittest.TestCase):
         self.driver.find_element(By.CSS_SELECTOR, "a[aria-label='logout']").click()
 
     def test_add_modify_delete_mobile_exercise(self):
-        self.driver.get("http://127.0.0.1:8000/")
+        self.driver.get(self.url)
         self.driver.set_window_size(375, 667)
 
         # Login
         self.driver.find_element(By.CSS_SELECTOR, "a[aria-label='login']").click()
-        self.driver.find_element(By.NAME, "username").send_keys("prt")
-        self.driver.find_element(By.NAME, "password").send_keys("1")
+        self.driver.find_element(By.NAME, "username").send_keys(self.username)
+        self.driver.find_element(By.NAME, "password").send_keys(self.password)
         self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         WebDriverWait(self.driver, 5).until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, "a[aria-label='logout']"))
@@ -326,13 +332,13 @@ class AddModifyDeleteMobileTest(unittest.TestCase):
         self.driver.find_element(By.CSS_SELECTOR, "a[aria-label='logout']").click()
 
     def test_add_modify_delete_mobile_twister(self):
-        self.driver.get("http://127.0.0.1:8000/")
+        self.driver.get(self.url)
         self.driver.set_window_size(375, 667)
 
         # Login
         self.driver.find_element(By.CSS_SELECTOR, "a[aria-label='login']").click()
-        self.driver.find_element(By.NAME, "username").send_keys("prt")
-        self.driver.find_element(By.NAME, "password").send_keys("1")
+        self.driver.find_element(By.NAME, "username").send_keys(self.username)
+        self.driver.find_element(By.NAME, "password").send_keys(self.password)
         self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         WebDriverWait(self.driver, 5).until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, "a[aria-label='logout']"))
@@ -370,13 +376,13 @@ class AddModifyDeleteMobileTest(unittest.TestCase):
         self.driver.find_element(By.CSS_SELECTOR, "a[aria-label='logout']").click()
 
     def test_add_modify_delete_mobile_trivia(self):
-        self.driver.get("http://127.0.0.1:8000/")
+        self.driver.get(self.url)
         self.driver.set_window_size(375, 667)
 
         # Login
         self.driver.find_element(By.CSS_SELECTOR, "a[aria-label='login']").click()
-        self.driver.find_element(By.NAME, "username").send_keys("prt")
-        self.driver.find_element(By.NAME, "password").send_keys("1")
+        self.driver.find_element(By.NAME, "username").send_keys(self.username)
+        self.driver.find_element(By.NAME, "password").send_keys(self.password)
         self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         WebDriverWait(self.driver, 5).until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, "a[aria-label='logout']"))
@@ -414,13 +420,13 @@ class AddModifyDeleteMobileTest(unittest.TestCase):
         self.driver.find_element(By.CSS_SELECTOR, "a[aria-label='logout']").click()
 
     def test_add_modify_delete_mobile_funfact(self):
-        self.driver.get("http://127.0.0.1:8000/")
+        self.driver.get(self.url)
         self.driver.set_window_size(375, 667)
 
         # Login
         self.driver.find_element(By.CSS_SELECTOR, "a[aria-label='login']").click()
-        self.driver.find_element(By.NAME, "username").send_keys("prt")
-        self.driver.find_element(By.NAME, "password").send_keys("1")
+        self.driver.find_element(By.NAME, "username").send_keys(self.username)
+        self.driver.find_element(By.NAME, "password").send_keys(self.password)
         self.driver.find_element(By.CSS_SELECTOR, "button[type='submit']").click()
         WebDriverWait(self.driver, 5).until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, "a[aria-label='logout']"))
