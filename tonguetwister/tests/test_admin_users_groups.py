@@ -126,7 +126,7 @@ class AddDeleteGroup(unittest.TestCase):
 if __name__ == "__main__":
     test_dir = os.path.join(os.getcwd(), 'tests_outcomes')
     os.makedirs(test_dir, exist_ok=True)
-    test_outcome_file = os.path.join(test_dir, 'test_admin_outcome.txt')
+    test_outcome_file = os.path.join(test_dir, 'test_admin_users_groups_outcome.txt')
 
     with open(test_outcome_file, 'w') as f:
         runner = unittest.TextTestRunner(stream=f, verbosity=2)
