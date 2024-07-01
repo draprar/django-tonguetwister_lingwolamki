@@ -40,6 +40,8 @@ class SignupLoginLogoutTest(unittest.TestCase):
         except TimeoutException:
             settings_not_visible = False
 
+        self.assertTrue(settings_not_visible, "Settings button is visible")
+
         # Logout
         WebDriverWait(self.driver, 5).until(
             EC.visibility_of_element_located((By.LINK_TEXT, "Wyloguj"))
