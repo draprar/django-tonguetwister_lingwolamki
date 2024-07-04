@@ -5,15 +5,20 @@
 
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="m12 17.586-7.293-7.293-1.414 1.414L12 20.414l8.707-8.707-1.414-1.414L12 17.586z"/><path d="m20.707 5.707-1.414-1.414L12 11.586 4.707 4.293 3.293 5.707 12 14.414l8.707-8.707z"/></svg>
 <br><br>
-<div id="records-container">
+<div id="articulators-container">
     {% for articulator in articulators %}
-        <div class="record col-md-16 fs-4" id="record">{{ articulator.text }}</div>
+        <div class="articulator col-md-16 fs-4" id="articulator-{{ articulator.id }}">{{ articulator.text }}</div>
+        {% if articulator in user_articulators %}
+            <button class="btn btn-danger toggle-articulator-btn" data-id="{{ articulator.id }}">-</button>
+        {% else %}
+            <button class="btn btn-success toggle-articulator-btn" data-id="{{ articulator.id }}">+</button>
+        {% endif %}
     {% endfor %}
 </div>
 <br>
-<button id="load-more-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ records|length }}" data-url="{% url 'load_more_records' %}">Chcę jeszcze!</button>
+<button id="load-more-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ articulators|length }}" data-url="{% url 'load_more_articulators' %}">Chcę jeszcze!</button>
 
-<div id="card-records" class="card text-white bg-secondary mt-3 mb-3 w-100" style="display: none;">
+<div id="card-articulator" class="card text-white bg-secondary mt-3 mb-3 w-100" style="display: none;">
     <div class="card-body">
         <p class="card-text text-center mb-0">WoW! 😎 Dobra robota! 👍 Czujesz ogień w gębie i rozpalenie na kolejne ćwiczenia? 🤩<br>Zapraszamy Cię na kolejne słówko 👉</p>
     </div>

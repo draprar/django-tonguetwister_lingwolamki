@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.http import JsonResponse
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test, login_required
+from django.views.decorators.csrf import csrf_exempt
 from .forms import CustomUserCreationForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
-from .models import Twister, Articulator, Exercise, Trivia, Funfact
+from .models import (Twister, Articulator, Exercise, Trivia, Funfact, UserProfileArticulator, UserProfileTwister,
+                     UserProfileExercise)
 from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm
 from django import forms
 
@@ -37,11 +39,11 @@ def main(request):
     return render(request, 'tonguetwister/main.html', context)
 
 
-def load_more_records(request):
+def load_more_articulators(request):
     offset = int(request.GET.get('offset', 0))
     limit = 1
-    records = Articulator.objects.all()[offset:offset + limit]
-    data = list(records.values())
+    articulators = Articulator.objects.all()[offset:offset + limit]
+    data = list(articulators.values())
     return JsonResponse(data, safe=False)
 
 
@@ -272,6 +274,72 @@ def funfact_delete(request, pk):
         funfact.delete()
         return redirect('funfact_list')
     return render(request, 'tonguetwister/funfacts/funfact_confirm_delete.html', {'funfact': funfact})
+
+
+@login_required
+def user_content(request):
+    articulators = UserProfileArticulator.objects.filter(user=request.user)
+    exercises = UserProfileExercise.objects.filter(user=request.user)
+    twisters = UserProfileTwister.objects.filter(user=request.user)
+    return render(request, 'tonguetwister/users/user_content.html', {
+        'articulators': articulators,
+        'exercises': exercises,
+        'twisters': twisters
+    })
+
+
+@login_required
+@csrf_exempt
+def add_articulator(request, articulator_id):
+    user = request.user
+    articulator = get_object_or_404(Articulator, id=articulator_id)
+    if UserProfileArticulator.objects.filter(user=user, articulator=articulator).exists():
+        return JsonResponse({'status': 'Duplicate articulator'})
+    UserProfileArticulator.objects.create(user=user, articulator=articulator)
+    return JsonResponse({'status': 'Articulator added'})
+
+
+@login_required
+@csrf_exempt
+def delete_articulator(request, articulator_id):
+    user = request.user
+    articulator = get_object_or_404(UserProfileArticulator, articulator__id=articulator_id, user=user)
+    articulator.delete()
+    return JsonResponse({'status': 'Articulator deleted'})
+
+
+@login_required
+@csrf_exempt
+def add_exercise(request, exercise_id):
+    user = request.user
+    exercise = Exercise.objects.get(id=exercise_id)
+    UserProfileExercise.objects.create(user=user, exercise=exercise)
+    return JsonResponse({'status': 'Exercise added'})
+
+
+@login_required
+@csrf_exempt
+def delete_exercise(request, exercise_id):
+    exercise = get_object_or_404(UserProfileExercise, id=exercise_id, user=request.user)
+    exercise.delete()
+    return JsonResponse({'status': 'Exercise deleted'})
+
+
+@login_required
+@csrf_exempt
+def add_twister(request, exercise_id):
+    user = request.user
+    twister = Twister.objects.get(id=exercise_id)
+    UserProfileTwister.objects.create(user=user, twister=twister)
+    return JsonResponse({'status': 'Twister added'})
+
+
+@login_required
+@csrf_exempt
+def delete_twister(request, twister_id):
+    twister = get_object_or_404(UserProfileTwister, id=twister_id, user=request.user)
+    twister.delete()
+    return JsonResponse({'status': 'Twister deleted'})
 
 
 class CustomUserCreationForm(UserCreationForm):

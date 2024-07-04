@@ -8,7 +8,7 @@ urlpatterns = [
     path('login/', login_view, name='login'),
     path('register/', register_view, name='register'),
     path('accounts/', include('django.contrib.auth.urls')),
-    path('load-more-records/', views.load_more_records, name='load_more_records'),
+    path('load-more-articulators/', views.load_more_articulators, name='load_more_articulators'),
     path('load-more-exercises/', views.load_more_exercises, name='load_more_exercises'),
     path('load-more-trivia/', views.load_more_trivia, name='load_more_trivia'),
     path('load-more-funfacts/', views.load_more_funfacts, name='load_more_funfacts'),
@@ -32,4 +32,12 @@ urlpatterns = [
     path('funfacts/add/', views.funfact_add, name='funfact_add'),
     path('funfacts/<int:pk>/edit/', views.funfact_edit, name='funfact_edit'),
     path('funfacts/<int:pk>/delete/', views.funfact_delete, name='funfact_delete'),
+    path('user-content/', views.user_content, name='user_content'),
+    path('add-articulator/<int:articulator_id>/', views.add_articulator, name='add_articulator'),
+    path('delete-articulator/<int:articulator_id>/', views.delete_articulator, name='delete_articulator'),
+    path('add-exercise/<int:exercise_id>/', views.add_exercise, name='add_exercise'),
+    path('delete-exercise/<int:exercise_id>/', views.delete_exercise, name='delete_exercise'),
+    path('add-twister/<int:twister_id>/', views.add_twister, name='add_twister'),
+    path('delete-twister/<int:twister_id>/', views.delete_twister, name='delete_twister'),
+
 ]

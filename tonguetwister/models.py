@@ -60,3 +60,18 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.username} Profile'
+
+
+class UserProfileArticulator(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    articulator = models.ForeignKey(Articulator, on_delete=models.CASCADE)
+
+
+class UserProfileExercise(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
+
+
+class UserProfileTwister(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    twister = models.ForeignKey(Twister, on_delete=models.CASCADE)
