@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.http import HttpResponse
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.views.decorators.csrf import csrf_exempt
 from .forms import CustomUserCreationForm
@@ -18,33 +19,69 @@ def is_admin(user):
 
 
 def main(request):
-    twisters = Twister.objects.all().order_by('id')
-    articulators = Articulator.objects.all()[:1]
-    exercises = Exercise.objects.all()[:1]
-    trivia = Trivia.objects.all()[:0]
-    funfacts = Funfact.objects.all()[:0]
-    paginator = Paginator(twisters, 1)
-    page_number = request.GET.get('page', 1)
-    page_obj = paginator.get_page(page_number)
+    try:
+        twisters = Twister.objects.all().order_by('id')
+        articulators = Articulator.objects.all()[:1]
+        if request.user.is_authenticated:
+            user_articulators_texts = list(
+                UserProfileArticulator.objects.filter(user=request.user).values_list('articulator__text', flat=True))
+        else:
+            user_articulators_texts = []
+        exercises = Exercise.objects.all()[:1]
+        trivia = Trivia.objects.all()[:0]
+        funfacts = Funfact.objects.all()[:0]
+        paginator = Paginator(twisters, 1)
+        page_number = request.GET.get('page', 1)
+        page_obj = paginator.get_page(page_number)
 
-    context = {'page_obj': page_obj,
-               'articulators': articulators,
-               'exercises': exercises,
-               'trivia': trivia,
-               'funfacts': funfacts,
-               }
+        context = {'page_obj': page_obj,
+                   'articulators': articulators,
+                   'user_articulators_texts': user_articulators_texts,
+                   'exercises': exercises,
+                   'trivia': trivia,
+                   'funfacts': funfacts,
+                   }
 
-    if request.htmx:
-        return render(request, 'tonguetwister/partials/gen/list.html', context)
-    return render(request, 'tonguetwister/main.html', context)
+        if request.htmx:
+            return render(request, 'tonguetwister/partials/gen/list.html', context)
+        return render(request, 'tonguetwister/main.html', context)
+
+    except Exception as e:
+        # Log the exception
+        print(f"Exception occurred: {str(e)}")
+        # Return an HttpResponse with an error message or redirect to an error page
+        return HttpResponse("Internal Server Error", status=500)
 
 
 def load_more_articulators(request):
-    offset = int(request.GET.get('offset', 0))
-    limit = 1
-    articulators = Articulator.objects.all()[offset:offset + limit]
-    data = list(articulators.values())
-    return JsonResponse(data, safe=False)
+    try:
+        offset = int(request.GET.get('offset', 0))
+        limit = 1
+        articulators = Articulator.objects.all()[offset:offset + limit]
+
+        if request.user.is_authenticated:
+            user_articulators_texts = set(
+                UserProfileArticulator.objects.filter(user=request.user).values_list('articulator__text', flat=True)
+            )
+        else:
+            user_articulators_texts = set()  # Empty set for non-authenticated users
+
+        data = []
+        for articulator in articulators:
+            is_added = articulator.text in user_articulators_texts
+            data.append({
+                'id': articulator.id,
+                'text': articulator.text,
+                'is_added': is_added,
+            })
+
+        return JsonResponse(data, safe=False)
+
+    except Exception as e:
+        # Log the exception
+        print(f"Exception occurred in load_more_articulators: {str(e)}")
+        # Return a JsonResponse with an error message
+        return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 
 def load_more_exercises(request):
@@ -278,11 +315,17 @@ def funfact_delete(request, pk):
 
 @login_required
 def user_content(request):
-    articulators = UserProfileArticulator.objects.filter(user=request.user)
+    all_articulators = Articulator.objects.all()
+    user_articulators = UserProfileArticulator.objects.filter(user=request.user).select_related('articulator')
+    user_articulators_texts = list(
+        UserProfileArticulator.objects.filter(user=request.user).values_list('articulator__text', flat=True))
+    print(user_articulators_texts)
     exercises = UserProfileExercise.objects.filter(user=request.user)
     twisters = UserProfileTwister.objects.filter(user=request.user)
     return render(request, 'tonguetwister/users/user_content.html', {
-        'articulators': articulators,
+        'articulators': all_articulators,
+        'user_articulators': user_articulators,
+        'user_articulators_texts': user_articulators_texts,
         'exercises': exercises,
         'twisters': twisters
     })
@@ -300,12 +343,17 @@ def add_articulator(request, articulator_id):
 
 
 @login_required
-@csrf_exempt
+@csrf_exempt  # Note: csrf_exempt is applied for testing; use csrf_protect in production
 def delete_articulator(request, articulator_id):
     user = request.user
-    articulator = get_object_or_404(UserProfileArticulator, articulator__id=articulator_id, user=user)
-    articulator.delete()
-    return JsonResponse({'status': 'Articulator deleted'})
+    try:
+        articulator = get_object_or_404(UserProfileArticulator, id=articulator_id, user=user)
+        articulator.delete()
+        return JsonResponse({'status': 'Articulator deleted'})
+    except UserProfileArticulator.DoesNotExist:
+        return JsonResponse({'status': 'Articulator not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'Error deleting articulator', 'message': str(e)}, status=500)
 
 
 @login_required

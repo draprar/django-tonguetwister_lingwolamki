@@ -17,7 +17,7 @@
 
 <h2>Rozgrzewanie artykulatorów</h2>
 <div id="user-articulators-container">
-    {% for articulator in articulators %}
+    {% for articulator in user_articulators %}
         <div class="user-articulator col-md-16 fs-4" id="articulator-{{ articulator.id }}">
             {{ articulator.articulator.text }}
             <button class="btn btn-danger delete-articulator-btn" data-id="{{ articulator.id }}">-</button>
@@ -26,31 +26,6 @@
         <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń artykulacyjnych.</p>
     {% endfor %}
 </div>
-
-<h2>Właściwe ćwiczenie głosu</h2>
-<div id="user-exercises-container">
-    {% for exercise in exercises %}
-        <div class="user-exercise col-md-16 fs-4" id="exercise-{{ exercise.id }}">
-            {{ exercise.exercise.text }}
-            <button class="btn btn-danger delete-exercise-btn" data-id="{{ exercise.id }}">-</button>
-        </div>
-    {% empty %}
-        <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń właściwych.</p>
-    {% endfor %}
-</div>
-
-<h2>Łamańce językowe</h2>
-<div id="user-twisters-container">
-    {% for twister in twisters %}
-        <div class="user-twister col-md-16 fs-4" id="twister-{{ twister.id }}">
-            {{ twister.twister.text }}
-            <button class="btn btn-danger delete-twister-btn" data-id="{{ twister.id }}">-</button>
-        </div>
-    {% empty %}
-        <p class="col-md-16 fs-4">Nie masz zapisanych łamańców językowych.</p>
-    {% endfor %}
-</div>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         document.querySelectorAll('.delete-articulator-btn').forEach(function(button) {
@@ -66,47 +41,10 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'Articulator deleted') {
-                        location.reload(); // Reload the page
+                        location.reload(); // Reload the page to reflect changes
                     }
-                });
-            });
-        });
-
-        document.querySelectorAll('.delete-exercise-btn').forEach(function(button) {
-            button.addEventListener('click', function() {
-                const exerciseId = this.dataset.id;
-                fetch(`/delete-exercise/${exerciseId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                        'Content-Type': 'application/json'
-                    },
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'Exercise deleted') {
-                        location.reload(); // Reload the page
-                    }
-                });
-            });
-        });
-
-        document.querySelectorAll('.delete-twister-btn').forEach(function(button) {
-            button.addEventListener('click', function() {
-                const twisterId = this.dataset.id;
-                fetch(`/delete-twister/${twisterId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                        'Content-Type': 'application/json'
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'Twister deleted') {
-                        location.reload(); // Reload the page
-                    }
-                });
+                .catch(error => console.error('Error:', error));
             });
         });
     });

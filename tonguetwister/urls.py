@@ -39,5 +39,4 @@ urlpatterns = [
     path('delete-exercise/<int:exercise_id>/', views.delete_exercise, name='delete_exercise'),
     path('add-twister/<int:twister_id>/', views.add_twister, name='add_twister'),
     path('delete-twister/<int:twister_id>/', views.delete_twister, name='delete_twister'),
-
 ]
