@@ -10,44 +10,24 @@
 <body>
 <button class="btn" onclick="topFunction()" id="topBtn"><i class="fa fa-arrow-up"></i></button>
 
-<header></header>
+<header>
+{% include 'tonguetwister/partials/static/navbar.html' %}
+</header>
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
 <h1><strong>Moja zawartość</strong></h1>
-<button class="btn btn-dark btn-block" style="height: 50px; font-size: 18px;" id="back-registration"><a class="navbar-brand" href="/"><img src="{% static 'assets/ttlogo.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"> Wróć</a></button>
 
 <h2>Rozgrzewanie artykulatorów</h2>
 <div id="user-articulators-container">
-    {% for articulator in user_articulators %}
-        <div class="user-articulator col-md-16 fs-4" id="articulator-{{ articulator.id }}">
-            {{ articulator.articulator.text }}
-            <button class="btn btn-danger delete-articulator-btn" data-id="{{ articulator.id }}">-</button>
+    {% for user_articulator in user_articulators %}
+        <div class="user-articulator col-md-16 fs-4" id="articulator-{{ user_articulator.id }}">
+            {{ user_articulator.articulator.text }}
+            <button class="btn btn-danger delete-articulator-btn" data-id="{{ user_articulator.id }}">-</button>
         </div>
     {% empty %}
         <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń artykulacyjnych.</p>
     {% endfor %}
 </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.delete-articulator-btn').forEach(function(button) {
-            button.addEventListener('click', function() {
-                const articulatorId = this.dataset.id;
-                fetch(`/delete-articulator/${articulatorId}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': '{{ csrf_token }}',
-                        'Content-Type': 'application/json'
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'Articulator deleted') {
-                        location.reload(); // Reload the page to reflect changes
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            });
-        });
-    });
-</script>
+<script src="{% static 'js/loadAddDeleteArticulators.js' %}"></script>
 </body>
 </html>

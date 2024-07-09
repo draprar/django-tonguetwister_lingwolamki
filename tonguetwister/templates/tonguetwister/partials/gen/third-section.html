@@ -9,9 +9,9 @@
     {% for articulator in articulators %}
         <div class="articulator col-md-16 fs-4" id="articulator-{{ articulator.id }}">{{ articulator.text }}</div>
         {% if articulator.text in user_articulators_texts %}
-            <button class="btn btn-danger toggle-articulator-btn" data-id="{{ articulator.id }}">-</button>
+            <button class="btn btn-secondary toggle-articulator-btn" data-id="{{ articulator.id }}" data-user-articulator-id="{{ user_articulator.id }}" disabled>W powtórkach 😄</button>
         {% else %}
-            <button class="btn btn-success toggle-articulator-btn" data-id="{{ articulator.id }}">+</button>
+            <button class="btn btn-success toggle-articulator-btn" data-id="{{ articulator.id }}">Dodaj do powtórek</button>
         {% endif %}
     {% endfor %}
 </div>

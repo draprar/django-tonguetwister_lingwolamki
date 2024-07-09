@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.http import HttpResponse
 from django.contrib.auth.decorators import user_passes_test, login_required
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_protect
 from .forms import CustomUserCreationForm
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
@@ -12,6 +12,9 @@ from .models import (Twister, Articulator, Exercise, Trivia, Funfact, UserProfil
                      UserProfileExercise)
 from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm
 from django import forms
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def is_admin(user):
@@ -332,32 +335,27 @@ def user_content(request):
 
 
 @login_required
-@csrf_exempt
+@csrf_protect
 def add_articulator(request, articulator_id):
     user = request.user
     articulator = get_object_or_404(Articulator, id=articulator_id)
     if UserProfileArticulator.objects.filter(user=user, articulator=articulator).exists():
         return JsonResponse({'status': 'Duplicate articulator'})
-    UserProfileArticulator.objects.create(user=user, articulator=articulator)
-    return JsonResponse({'status': 'Articulator added'})
+    user_articulator = UserProfileArticulator.objects.create(user=user, articulator=articulator)
+    return JsonResponse({'status': 'Articulator added', 'userArticulatorId': user_articulator.id})
 
 
 @login_required
-@csrf_exempt  # Note: csrf_exempt is applied for testing; use csrf_protect in production
+@csrf_protect
 def delete_articulator(request, articulator_id):
     user = request.user
-    try:
-        articulator = get_object_or_404(UserProfileArticulator, id=articulator_id, user=user)
-        articulator.delete()
-        return JsonResponse({'status': 'Articulator deleted'})
-    except UserProfileArticulator.DoesNotExist:
-        return JsonResponse({'status': 'Articulator not found'}, status=404)
-    except Exception as e:
-        return JsonResponse({'status': 'Error deleting articulator', 'message': str(e)}, status=500)
+    articulator = get_object_or_404(UserProfileArticulator, id=articulator_id, user=user)
+    articulator.delete()
+    return JsonResponse({'status': 'Articulator deleted'})
 
 
 @login_required
-@csrf_exempt
+@csrf_protect
 def add_exercise(request, exercise_id):
     user = request.user
     exercise = Exercise.objects.get(id=exercise_id)
@@ -366,7 +364,7 @@ def add_exercise(request, exercise_id):
 
 
 @login_required
-@csrf_exempt
+@csrf_protect
 def delete_exercise(request, exercise_id):
     exercise = get_object_or_404(UserProfileExercise, id=exercise_id, user=request.user)
     exercise.delete()
@@ -374,7 +372,7 @@ def delete_exercise(request, exercise_id):
 
 
 @login_required
-@csrf_exempt
+@csrf_protect
 def add_twister(request, exercise_id):
     user = request.user
     twister = Twister.objects.get(id=exercise_id)
@@ -383,7 +381,7 @@ def add_twister(request, exercise_id):
 
 
 @login_required
-@csrf_exempt
+@csrf_protect
 def delete_twister(request, twister_id):
     twister = get_object_or_404(UserProfileTwister, id=twister_id, user=request.user)
     twister.delete()
