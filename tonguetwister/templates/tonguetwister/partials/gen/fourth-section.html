@@ -2,11 +2,17 @@
 
 <h1><strong>WŁAŚCIWIE ĆWICZ GŁOS</strong></h1>
 <p class="col-md-16 fs-4">Podczas wykonywania ćwiczeń pamiętaj, aby się nie spieszyć 🧘 Nie opuszczać końcówek 😒 nie podnosić głosu 😤 ani nie mówić zbyt cicho 😏</p>
+
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"><path d="m12 17.586-7.293-7.293-1.414 1.414L12 20.414l8.707-8.707-1.414-1.414L12 17.586z"/><path d="m20.707 5.707-1.414-1.414L12 11.586 4.707 4.293 3.293 5.707 12 14.414l8.707-8.707z"/></svg>
 <br><br>
 <div id="exercises-container">
     {% for exercise in exercises %}
-        <div class="exercise col-md-16 fs-4" id="exercise">{{ exercise.text }}</div>
+        <div class="exercise col-md-16 fs-4" id="exercise-{{ exercise.id }}">{{ exercise.text }}</div>
+        {% if exercise.text in user_exercises_texts %}
+            <button class="btn btn-secondary toggle-exercise-btn" data-id="{{ exercise.id }}" data-user-exercise-id="{{ user_exercise.id }}" disabled>W powtórkach 😄</button>
+        {% else %}
+            <button class="btn btn-success toggle-exercise-btn" data-id="{{ exercise.id }}">Dodaj do powtórek</button>
+        {% endif %}
     {% endfor %}
 </div>
 <br>

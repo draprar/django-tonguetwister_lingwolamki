@@ -322,15 +322,17 @@ def user_content(request):
     user_articulators = UserProfileArticulator.objects.filter(user=request.user).select_related('articulator')
     user_articulators_texts = list(
         UserProfileArticulator.objects.filter(user=request.user).values_list('articulator__text', flat=True))
-    print(user_articulators_texts)
-    exercises = UserProfileExercise.objects.filter(user=request.user)
-    twisters = UserProfileTwister.objects.filter(user=request.user)
-    return render(request, 'tonguetwister/users/user_content.html', {
+    all_exercises = Exercise.objects.all()
+    user_exercises = UserProfileExercise.objects.filter(user=request.user).select_related('exercise')
+    user_exercises_texts = list(
+        UserProfileExercise.objects.filter(user=request.user).values_list('exercise__text', flat=True))
+    return render(request, 'tonguetwister/users/user-content.html', {
         'articulators': all_articulators,
         'user_articulators': user_articulators,
         'user_articulators_texts': user_articulators_texts,
-        'exercises': exercises,
-        'twisters': twisters
+        'exercises': all_exercises,
+        'user_exercises': user_exercises,
+        'user_exercises_texts': user_exercises_texts,
     })
 
 
@@ -358,9 +360,11 @@ def delete_articulator(request, articulator_id):
 @csrf_protect
 def add_exercise(request, exercise_id):
     user = request.user
-    exercise = Exercise.objects.get(id=exercise_id)
-    UserProfileExercise.objects.create(user=user, exercise=exercise)
-    return JsonResponse({'status': 'Exercise added'})
+    exercise = get_object_or_404(Exercise, id=exercise_id)
+    if UserProfileExercise.objects.filter(user=user, exercise=exercise).exists():
+        return JsonResponse({'status': 'Duplicate exercise'})
+    user_exercise = UserProfileExercise.objects.create(user=user, exercise=exercise)
+    return JsonResponse({'status': 'Exercise added', 'userExerciseId': user_exercise.id})
 
 
 @login_required

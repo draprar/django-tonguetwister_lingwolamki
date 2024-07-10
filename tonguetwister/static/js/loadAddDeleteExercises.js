@@ -2,15 +2,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     function handleToggleButtonClick(event) {
-        const button = event.target.closest('.toggle-articulator-btn');
+        const button = event.target.closest('.toggle-exercise-btn');
         if (!button || button.disabled) return;
 
-        const articulatorId = button.dataset.id;
+        const exerciseId = button.dataset.id;
         const action = button.textContent.trim();
         button.disabled = true;
 
         if (action === 'Dodaj do powtórek') {
-            fetch(`/add-articulator/${articulatorId}/`, {
+            fetch(`/add-exercise/${exerciseId}/`, {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': csrfToken,
@@ -26,18 +26,18 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 console.log('Response data for adding:', data);
                 button.disabled = false;
-                if (data.status === 'Articulator added') {
+                if (data.status === 'Exercise added') {
                     button.disabled = true;
                     button.textContent = 'W powtórkach 😄';
                     button.classList.replace('btn-success', 'btn-secondary');
-                } else if (data.status === 'Duplicate articulator') {
-                    alert('This articulator is already added.');
+                } else if (data.status === 'Duplicate exercise') {
+                    alert('This exercise is already added.');
                 } else {
-                    alert('Error adding articulator: ' + data.message);
+                    alert('Error adding exercise: ' + data.message);
                 }
             })
             .catch(error => {
-                console.error('Error adding articulator:', error);
+                console.error('Error adding exercise:', error);
                 button.disabled = false;
             });
         } else if (action === 'W powtórkach 😄') {
@@ -45,47 +45,47 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function addArticulatorToDOM(articulator) {
-        if (document.getElementById(`articulator-${articulator.id}`)) {
-            console.log(`Articulator ${articulator.id} already exists`);
+    function addExerciseToDOM(exercise) {
+        if (document.getElementById(`exercise-${exercise.id}`)) {
+            console.log(`Exercise ${exercise.id} already exists`);
             return;
         }
 
-        const articulatorContainer = document.createElement('div');
-        articulatorContainer.id = `articulators-container-${articulator.id}`;
-        articulatorContainer.classList.add('articulators-container', 'col-md-16', 'fs-4');
+        const exerciseContainer = document.createElement('div');
+        exerciseContainer.id = `exercises-container-${exercise.id}`;
+        exerciseContainer.classList.add('exercises-container', 'col-md-16', 'fs-4');
 
-        const articulatorDiv = document.createElement('div');
-        articulatorDiv.classList.add('articulator');
-        articulatorDiv.textContent = articulator.text;
-        articulatorDiv.id = `articulator-${articulator.id}`;
+        const exerciseDiv = document.createElement('div');
+        exerciseDiv.classList.add('exercise');
+        exerciseDiv.textContent = exercise.text;
+        exerciseDiv.id = `exercise-${exercise.id}`;
 
         const button = document.createElement('button');
-        button.classList.add('btn', 'toggle-articulator-btn');
-        button.dataset.id = articulator.id;
+        button.classList.add('btn', 'toggle-exercise-btn');
+        button.dataset.id = exercise.id;
 
-        button.textContent = articulator.is_added ? 'W powtórkach 😄' : 'Dodaj do powtórek';
-        button.classList.add(articulator.is_added ? 'btn-secondary' : 'btn-success');
-        button.disabled = articulator.is_added;
+        button.textContent = exercise.is_added ? 'W powtórkach 😄' : 'Dodaj do powtórek';
+        button.classList.add(exercise.is_added ? 'btn-secondary' : 'btn-success');
+        button.disabled = exercise.is_added;
 
         button.addEventListener('click', handleToggleButtonClick);
 
-        articulatorContainer.appendChild(articulatorDiv);
-        articulatorContainer.appendChild(button);
+        exerciseContainer.appendChild(exerciseDiv);
+        exerciseContainer.appendChild(button);
 
-        document.getElementById('articulators-container').appendChild(articulatorContainer);
+        document.getElementById('exercises-container').appendChild(exerciseContainer);
     }
 
-    const articulatorsContainer = document.getElementById('articulators-container');
-    if (articulatorsContainer) {
-        articulatorsContainer.addEventListener('click', function(event) {
-            if (event.target.matches('.toggle-articulator-btn')) {
+    const exercisesContainer = document.getElementById('exercises-container');
+    if (exercisesContainer) {
+        exercisesContainer.addEventListener('click', function(event) {
+            if (event.target.matches('.toggle-exercise-btn')) {
                 handleToggleButtonClick(event);
             }
         });
     }
 
-    let loadMoreBtn = document.getElementById('load-more-btn');
+    let loadMoreBtn = document.getElementById('load-more-exercises-btn');
     let offset, url;
     if (loadMoreBtn) {
         offset = parseInt(loadMoreBtn.getAttribute('data-offset'));
@@ -100,27 +100,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
-                document.getElementById('articulators-container').innerHTML = '';
+                document.getElementById('exercises-container').innerHTML = '';
 
                 if (data.length > 0) {
-                    data.forEach(articulator => addArticulatorToDOM(articulator));
+                    data.forEach(exercise => addExerciseToDOM(exercise));
                     offset += data.length;
                     loadMoreBtn.setAttribute('data-offset', offset.toString());
                 } else {
-                    document.getElementById('card-articulator').style.display = 'block';
+                    document.getElementById('card-exercises').style.display = 'block';
                     loadMoreBtn.style.display = 'none';
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Error fetching articulators. Please try again.');
+                alert('Error fetching exercises. Please try again.');
             });
         });
     } else {
-        document.querySelectorAll('.delete-articulator-btn').forEach(function(button) {
+        document.querySelectorAll('.delete-exercise-btn').forEach(function(button) {
             button.addEventListener('click', function() {
-                const articulatorId = this.getAttribute('data-id');
-                fetch(`/delete-articulator/${articulatorId}/`, {
+                const exerciseId = this.getAttribute('data-id');
+                fetch(`/delete-exercise/${exerciseId}/`, {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': csrfToken,
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (data.status === 'Articulator deleted') {
+                    if (data.status === 'Exercise deleted') {
                         location.reload();
                     } else {
                         alert('Error: ' + data.message);

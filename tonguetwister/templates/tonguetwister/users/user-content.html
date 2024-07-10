@@ -28,6 +28,18 @@
         <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń artykulacyjnych.</p>
     {% endfor %}
 </div>
+<h2>Ćwiczenia właściwe</h2>
+<div id="user-exercises-container">
+    {% for user_exercise in user_exercises %}
+        <div class="user-exercise col-md-16 fs-4" id="exercise-{{ user_exercise.id }}">
+            {{ user_exercise.exercise.text }}
+            <button class="btn btn-danger delete-exercise-btn" data-id="{{ user_exercise.id }}">-</button>
+        </div>
+    {% empty %}
+        <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń właściwych.</p>
+    {% endfor %}
+</div>
 <script src="{% static 'js/loadAddDeleteArticulators.js' %}"></script>
+<script src="{% static 'js/loadAddDeleteExercises.js' %}"></script>
 </body>
 </html>
