@@ -67,7 +67,7 @@ def load_more_articulators(request):
                 UserProfileArticulator.objects.filter(user=request.user).values_list('articulator__text', flat=True)
             )
         else:
-            user_articulators_texts = set()  # Empty set for non-authenticated users
+            user_articulators_texts = set()
 
         data = []
         for articulator in articulators:
@@ -81,18 +81,37 @@ def load_more_articulators(request):
         return JsonResponse(data, safe=False)
 
     except Exception as e:
-        # Log the exception
         print(f"Exception occurred in load_more_articulators: {str(e)}")
-        # Return a JsonResponse with an error message
         return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 
 def load_more_exercises(request):
-    offset = int(request.GET.get('offset', 0))
-    limit = 1
-    exercises = Exercise.objects.all()[offset:offset + limit]
-    data = list(exercises.values())
-    return JsonResponse(data, safe=False)
+    try:
+        offset = int(request.GET.get('offset', 0))
+        limit = 1
+        exercises = Exercise.objects.all()[offset:offset + limit]
+
+        if request.user.is_authenticated:
+            user_exercises_texts = set(
+                UserProfileExercise.objects.filter(user=request.user).values_list('exercise__text', flat=True)
+            )
+        else:
+            user_exercises_texts = set()
+
+        data = []
+        for exercise in exercises:
+            is_added = exercise.text in user_exercises_texts
+            data.append({
+                'id': exercise.id,
+                'text': exercise.text,
+                'is_added': is_added,
+            })
+
+        return JsonResponse(data, safe=False)
+
+    except Exception as e:
+        print(f"Exception occurred in load_more_articulators: {str(e)}")
+        return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 
 def load_more_trivia(request):
