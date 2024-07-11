@@ -15,6 +15,13 @@ document.addEventListener('htmx:afterSettle', function(evt) {
         if (records.length > 0) {
             records[records.length - 1].style.display = 'none';
         }
+
+        const successSound = document.getElementById('success-sound-twisters');
+        if (successSound) {
+            successSound.play().catch(error => {
+                console.error('Error playing success sound:', error);
+            });
+        }
     }
 });
 

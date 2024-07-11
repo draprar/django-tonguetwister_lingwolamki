@@ -21,7 +21,6 @@
 </head>
 <body>
 <button class="btn" onclick="topFunction()" id="topBtn"><i class="fa fa-arrow-up"></i></button>
-<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
 <header>
 {% include 'tonguetwister/partials/static/navbar.html' %}
@@ -45,9 +44,7 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/main.js' %}"></script>
-<script src="{% static 'js/loadAddDeleteArticulators.js' %}"></script>
-<script src="{% static 'js/loadAddDeleteExercises.js' %}"></script>
-<script src="{% static 'js/loadMoreTwisters.js' %}"></script>
+
 <script src="{% static 'js/loadMoreBonuses.js' %}"></script>
 <script src="{% static 'js/top.js' %}"></script>
 

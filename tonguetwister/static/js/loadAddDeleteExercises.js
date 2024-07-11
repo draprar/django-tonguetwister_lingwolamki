@@ -109,6 +109,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 } else {
                     document.getElementById('card-exercises').style.display = 'block';
                     loadMoreBtn.style.display = 'none';
+
+                    const successSound = document.getElementById('success-sound-exercises');
+                    successSound.play();
                 }
             })
             .catch(error => {

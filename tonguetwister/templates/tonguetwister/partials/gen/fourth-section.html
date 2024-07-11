@@ -1,5 +1,5 @@
 {% load static %}
-
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 <h1><strong>WŁAŚCIWIE ĆWICZ GŁOS</strong></h1>
 <p class="col-md-16 fs-4">Podczas wykonywania ćwiczeń pamiętaj, aby się nie spieszyć 🧘 Nie opuszczać końcówek 😒 nie podnosić głosu 😤 ani nie mówić zbyt cicho 😏</p>
 
@@ -8,7 +8,7 @@
 <div id="exercises-container">
     {% for exercise in exercises %}
         <div class="exercise col-md-16 fs-4" id="exercise-{{ exercise.id }}">{{ exercise.text }}</div>
-        {% if exercise.text in user_exercises_texts %}
+        {% if user_exercise %}
             <button class="btn btn-secondary toggle-exercise-btn" data-id="{{ exercise.id }}" data-user-exercise-id="{{ user_exercise.id }}" disabled>W powtórkach 😄</button>
         {% else %}
             <button class="btn btn-success toggle-exercise-btn" data-id="{{ exercise.id }}">Dodaj do powtórek</button>
@@ -19,7 +19,9 @@
 <button id="load-more-exercises-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ exercises|length }}" data-url="{% url 'load_more_exercises' %}">Chcę jeszcze!</button>
 
 <div id="card-exercises" class="card text-white bg-secondary mt-3 mb-3 w-100" style="display: none;">
+    <audio id="success-sound-exercises" src="{% static 'sounds/fanfare.mp3' %}" preload="auto"></audio>
     <div class="card-body">
         <p class="card-text text-center mb-0">Hurra! 🎉 Prawdziwa zabawa zaczyna się właśnie teraz 🥳 Czy poradzisz sobie z zemstą logopedy? 👀</p>
     </div>
 </div>
+<script src="{% static 'js/loadAddDeleteExercises.js' %}"></script>

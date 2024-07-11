@@ -79,6 +79,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 modal.style.display = 'none';
             }
         }
+
+        const successSound = document.getElementById('success-sound-end');
+        successSound.play();
     }
 
     function changeTriviaButtonText() {

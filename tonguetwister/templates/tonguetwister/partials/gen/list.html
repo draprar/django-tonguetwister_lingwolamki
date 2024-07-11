@@ -1,3 +1,5 @@
+{% load static %}
+
 <div id="twisters-container">
     {% for twister in page_obj %}
         <p class="col-md-16 fs-4 twister">{{ twister.text }}</p>
@@ -17,7 +19,10 @@
         
 <div id="card-twisters" class="card text-white bg-secondary mt-3 mb-3 w-100">
     <div class="card-body">
+        <audio id="success-sound-twisters" src="{% static 'sounds/fanfare.mp3' %}" preload="auto"></audio>
         <p class="card-text text-center mb-0">Gratulacje 👏 od samego Króla Karola i Saszy z suchej Szosy! 👑 <br> My też jesteśmy z Ciebie dumni 🖖 <br> Mamy nadzieję, że spodobały Ci się językowe potyczki 👅 a w nagrodę sprawdź, jaki bonusik na Ciebie czeka 🤑</p>
     </div>
 </div>
 {% endif %}
+
+<script src="{% static 'js/loadMoreTwisters.js' %}"></script>
