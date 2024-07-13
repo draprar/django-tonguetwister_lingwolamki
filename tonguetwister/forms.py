@@ -82,3 +82,9 @@ class LoginForm(forms.Form):
         required=True,
         widget=forms.PasswordInput(attrs={'class': 'form-control', 'id': 'password', 'placeholder': 'Hasło'})
     )
+
+
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=50)
+    email = forms.EmailField()
+    message = forms.CharField(widget=forms.Textarea)

@@ -1,18 +1,21 @@
+from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
-from django.http import JsonResponse, Http404
+from django.core.mail import send_mail
+from django.http import JsonResponse
 from django.http import HttpResponse
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.views.decorators.csrf import csrf_protect
-from .forms import CustomUserCreationForm
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
 from .models import (Twister, Articulator, Exercise, Trivia, Funfact, UserProfileArticulator, UserProfileTwister,
                      UserProfileExercise)
-from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm
+from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm, ContactForm
 from django import forms
 import logging
+
 
 logger = logging.getLogger(__name__)
 
@@ -453,3 +456,34 @@ def register_view(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
+
+
+def info(request):
+    return render(request, 'tonguetwister/partials/static/info.html')
+
+
+def materials(request):
+    return render(request, 'tonguetwister/partials/static/materials.html')
+
+
+def contact(request):
+    if request.method == "POST":
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+
+            send_mail(
+                subject=f'Kontakt od {name}',
+                message=message,
+                from_email=email,
+                recipient_list=[settings.EMAIL_HOST_USER],
+            )
+
+            messages.success(request, 'Twoja wiadomość została wysłana')
+            return redirect('contact')
+    else:
+        form = ContactForm()
+
+    return render(request, 'tonguetwister/partials/static/contact.html', {'form': form})

@@ -1,11 +1,9 @@
 # Django-tonguetwister Web App
 
-Thank you for visiting. TongueTwister will be an application supporting work on your pronunciation - it has a set of articulation, voice and breathing exercises for you. Our goal is to improve your communication skills and increase your self-confidence. Hear your voice and fall in love with it.
+Thank you for visiting. LingwoŁamki will be an application supporting work on your pronunciation - it has a set of articulation, voice and breathing exercises for you.
 
-In fact, I decided to share the link to the application (this is also how we cooperate), maybe it will be useful to someone at this stage of its creation.
+In fact, I decided to share the link to the application at this stage of its creation - maybe it will be useful to someone. Moreover, if you have any comments or ideas - I will be happy to listen to you :)
 
-Moreover, if you have any comments or ideas - we will be happy to listen to you :)
+Enjoy your visit: https://lingwolamki.pythonanywhere.com/
 
-Enjoy your visit: https://tonguetwister.pythonanywhere.com/
-
-~ P&M
+~M
