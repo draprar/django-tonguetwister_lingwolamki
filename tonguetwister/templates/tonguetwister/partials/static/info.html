@@ -1,0 +1,29 @@
+{% load static %}
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LingwoŁamki - przedłuż swój język - Informacje</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+</head>
+<body>
+<button class="btn" onclick="topFunction()" id="topBtn"><i class="fa fa-arrow-up"></i></button>
+
+<header>
+{% include 'tonguetwister/partials/static/navbar.html' %}
+</header>
+<div class="materials col-md-16 fs-4">
+    <ul style="list-style: none;">
+        <li><strong>Stworzono z wykorzystaniem:</strong></li>
+        <li>- Python 3.10 (język programowania)</li>
+        <li>- Django 4.2.11 (framework)</li>
+        <li>- PostgreSQL 16.1 (baza danych)</li>
+        <li>- HTML, CSS&Bootstrap i JavaScript (front-end)</li>
+    </ul>
+</div>
+<footer>
+{% include 'tonguetwister/partials/static/footer.html' %}
+</footer>
+</body>
+</html>
