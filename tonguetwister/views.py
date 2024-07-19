@@ -473,15 +473,19 @@ def contact(request):
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             message = form.cleaned_data['message']
+            subject = f'Kontakt od {name}'
 
-            send_mail(
-                subject=f'Kontakt od {name}',
-                message=message,
-                from_email=email,
-                recipient_list=[settings.EMAIL_HOST_USER],
-            )
-
-            messages.success(request, 'Twoja wiadomość została wysłana')
+            try:
+                send_mail(
+                    subject=subject,
+                    message=message,
+                    from_email=settings.EMAIL_HOST_USER,  # This should be the email you're sending from
+                    recipient_list=[settings.EMAIL_HOST_USER],  # This is where you receive the emails
+                    fail_silently=False,
+                )
+                messages.success(request, 'Twoja wiadomość została wysłana')
+            except Exception as e:
+                messages.error(request, f'Błąd przy wysyłaniu wiadomości: {e}')
             return redirect('contact')
     else:
         form = ContactForm()

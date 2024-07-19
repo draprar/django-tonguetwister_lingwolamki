@@ -14,13 +14,13 @@
     {% include 'tonguetwister/partials/static/navbar.html' %}
 </header>
 
-{% if messages %}
 <div class="container mt-3">
-    {% for message in messages %}
-    <div class="alert alert-success">{{ message }}</div>
-    {% endfor %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 </div>
-{% endif %}
 
 <div class="container mt-5">
     <h1>Puść gołębia</h1>
@@ -30,8 +30,9 @@
         <button type="submit" class="btn btn-primary">Wyślij</button>
     </form>
 </div>
+
 <footer>
-{% include 'tonguetwister/partials/static/footer.html' %}
+    {% include 'tonguetwister/partials/static/footer.html' %}
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
