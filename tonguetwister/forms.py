@@ -1,5 +1,5 @@
 from django import forms
-from .models import Articulator, Exercise, Twister, Trivia, Funfact
+from .models import Articulator, Exercise, Twister, Trivia, Funfact, Profile
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
@@ -88,3 +88,9 @@ class ContactForm(forms.Form):
     name = forms.CharField(max_length=50)
     email = forms.EmailField()
     message = forms.CharField(widget=forms.Textarea)
+
+
+class AvatarUploadForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['avatar']

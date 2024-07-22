@@ -12,7 +12,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
 from .models import (Twister, Articulator, Exercise, Trivia, Funfact, UserProfileArticulator, UserProfileTwister,
                      UserProfileExercise)
-from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm, ContactForm
+from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm, ContactForm, AvatarUploadForm
 from django import forms
 import logging
 
@@ -340,6 +340,14 @@ def funfact_delete(request, pk):
 
 @login_required
 def user_content(request):
+    if request.method == 'POST':
+        form = AvatarUploadForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect('user_content')
+    else:
+        form = AvatarUploadForm(instance=request.user.profile)
+
     all_articulators = Articulator.objects.all()
     user_articulators = UserProfileArticulator.objects.filter(user=request.user).select_related('articulator')
     user_articulators_texts = list(
@@ -349,6 +357,7 @@ def user_content(request):
     user_exercises_texts = list(
         UserProfileExercise.objects.filter(user=request.user).values_list('exercise__text', flat=True))
     return render(request, 'tonguetwister/users/user-content.html', {
+        'form': form,
         'articulators': all_articulators,
         'user_articulators': user_articulators,
         'user_articulators_texts': user_articulators_texts,

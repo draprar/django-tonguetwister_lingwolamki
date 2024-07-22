@@ -11,12 +11,17 @@
 <button class="btn" onclick="topFunction()" id="topBtn"><i class="fa fa-arrow-up"></i></button>
 
 <header>
-{% include 'tonguetwister/partials/static/navbar.html' %}
+    {% include 'tonguetwister/partials/static/navbar.html' %}
 </header>
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
 <h1><strong>Moja zawartość</strong></h1>
-
+<h2>Wgraj awatar</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Dodaj</button>
+</form>
 <h2>Rozgrzewanie artykulatorów</h2>
 <div id="user-articulators-container">
     {% for user_articulator in user_articulators %}

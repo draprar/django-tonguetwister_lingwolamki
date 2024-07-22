@@ -43,6 +43,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     login_streak = models.PositiveIntegerField(default=1)
     last_login_date = models.DateField(auto_now=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
     def update_login_streak(self):
         today = timezone.now().date()
