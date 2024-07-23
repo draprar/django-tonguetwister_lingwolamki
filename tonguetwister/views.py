@@ -1,20 +1,21 @@
+from django import forms
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
-from django.http import JsonResponse
-from django.http import HttpResponse
-from django.contrib.auth.decorators import user_passes_test, login_required
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
+from django.template.loader import render_to_string
 from .models import (Twister, Articulator, Exercise, Trivia, Funfact, UserProfileArticulator, UserProfileTwister,
                      UserProfileExercise)
 from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm, ContactForm, AvatarUploadForm
-from django import forms
 import logging
+from weasyprint import HTML
 
 
 logger = logging.getLogger(__name__)
@@ -340,7 +341,16 @@ def funfact_delete(request, pk):
 
 @login_required
 def user_content(request):
+    profile = request.user.profile
     if request.method == 'POST':
+        if 'action' in request.POST and request.POST['action'] == 'delete-avatar':
+            if profile.avatar:
+                profile.avatar.delete(save=True)
+                messages.success(request, 'Awatar został usunięty.')
+            else:
+                messages.info(request, 'Brak awatara do usunięcia.')
+                return redirect('user_content')
+
         form = AvatarUploadForm(request.POST, request.FILES, instance=request.user.profile)
         if form.is_valid():
             form.save()
@@ -356,7 +366,8 @@ def user_content(request):
     user_exercises = UserProfileExercise.objects.filter(user=request.user).select_related('exercise')
     user_exercises_texts = list(
         UserProfileExercise.objects.filter(user=request.user).values_list('exercise__text', flat=True))
-    return render(request, 'tonguetwister/users/user-content.html', {
+
+    context = {
         'form': form,
         'articulators': all_articulators,
         'user_articulators': user_articulators,
@@ -364,7 +375,17 @@ def user_content(request):
         'exercises': all_exercises,
         'user_exercises': user_exercises,
         'user_exercises_texts': user_exercises_texts,
-    })
+    }
+
+    if 'export' in request.GET and request.GET['export'] == 'exercises':
+        html_string = render_to_string('tonguetwister/users/export-exercises.html', context)
+        html = HTML(string=html_string)
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="lingwolamkowe-cwiczenia.pdf"'
+        html.write_pdf(target=response)
+        return response
+
+    return render(request, 'tonguetwister/users/user-content.html', context)
 
 
 @login_required

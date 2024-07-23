@@ -94,3 +94,12 @@ class AvatarUploadForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['avatar']
+        widgets = {
+            'avatar': forms.FileInput(attrs={
+                'class': 'form-control-file',
+                'id': 'avatar',
+            }),
+        }
+        labels = {
+            'avatar': 'Wybierz awatar'
+        }

@@ -16,12 +16,36 @@
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
 <h1><strong>Moja zawartość</strong></h1>
-<h2>Wgraj awatar</h2>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Dodaj</button>
-</form>
+<div class="avatar-upload-container">
+    <h2>
+        <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#avatarForm" aria-expanded="false" aria-controls="avatarForm">
+            Zarządzaj swoim awatarem 🎭
+        </button>
+    </h2>
+    <div class="collapse" id="avatarForm">
+        <div class="card card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    {% if user.profile.avatar %}
+                        <div class="avatar-preview">
+                            <img src="{{ user.profile.avatar.url }}" alt="Current Avatar" style="max-width: 150px; max-height: 150px;">
+                        </div><br>
+                    {% endif %}
+                    {{ form.avatar }}
+                </div><br>
+                {% if user.profile.avatar %}
+                    <button type="submit" name="action" value="delete-avatar" class="btn btn-danger btn-block">Usuń awatar</button>
+                    <button type="submit" class="btn btn-dark btn-block">Zmień</button>
+                {% else %}
+                    <button type="submit" class="btn btn-dark btn-block">Dodaj</button>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+<a href="?export=exercises" class="btn btn-primary">Eksportuj swoje ćwiczenia do PDF 💾</a>
+
 <h2>Rozgrzewanie artykulatorów</h2>
 <div id="user-articulators-container">
     {% for user_articulator in user_articulators %}
@@ -44,6 +68,8 @@
         <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń właściwych.</p>
     {% endfor %}
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 <script src="{% static 'js/loadAddDeleteArticulators.js' %}"></script>
 <script src="{% static 'js/loadAddDeleteExercises.js' %}"></script>
 </body>
