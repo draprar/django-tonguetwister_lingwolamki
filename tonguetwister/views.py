@@ -35,6 +35,11 @@ def main(request):
         else:
             user_articulators_texts = []
         exercises = Exercise.objects.all()[:1]
+        if request.user.is_authenticated:
+            user_exercises_texts = list(
+                UserProfileExercise.objects.filter(user=request.user).values_list('exercise__text', flat=True))
+        else:
+            user_exercises_texts = []
         trivia = Trivia.objects.all()[:0]
         funfacts = Funfact.objects.all()[:0]
         paginator = Paginator(twisters, 1)
@@ -45,6 +50,7 @@ def main(request):
                    'articulators': articulators,
                    'user_articulators_texts': user_articulators_texts,
                    'exercises': exercises,
+                   'user_exercises_texts': user_exercises_texts,
                    'trivia': trivia,
                    'funfacts': funfacts,
                    }
@@ -114,7 +120,7 @@ def load_more_exercises(request):
         return JsonResponse(data, safe=False)
 
     except Exception as e:
-        print(f"Exception occurred in load_more_articulators: {str(e)}")
+        print(f"Exception occurred in load_more_exercises: {str(e)}")
         return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 
@@ -366,6 +372,10 @@ def user_content(request):
     user_exercises = UserProfileExercise.objects.filter(user=request.user).select_related('exercise')
     user_exercises_texts = list(
         UserProfileExercise.objects.filter(user=request.user).values_list('exercise__text', flat=True))
+    all_twisters = Twister.objects.all()
+    user_twisters = UserProfileTwister.objects.filter(user=request.user).select_related('twister')
+    user_twisters_texts = list(
+        UserProfileTwister.objects.filter(user=request.user).values_list('twister__text', flat=True))
 
     context = {
         'form': form,
@@ -375,6 +385,9 @@ def user_content(request):
         'exercises': all_exercises,
         'user_exercises': user_exercises,
         'user_exercises_texts': user_exercises_texts,
+        'all_twisters': all_twisters,
+        'user_twisters': user_twisters,
+        'user_twisters_texts': user_twisters_texts,
     }
 
     if 'export' in request.GET and request.GET['export'] == 'exercises':
@@ -429,11 +442,13 @@ def delete_exercise(request, exercise_id):
 
 @login_required
 @csrf_protect
-def add_twister(request, exercise_id):
+def add_twister(request, twister_id):
     user = request.user
-    twister = Twister.objects.get(id=exercise_id)
-    UserProfileTwister.objects.create(user=user, twister=twister)
-    return JsonResponse({'status': 'Twister added'})
+    twister = get_object_or_404(Twister, id=twister_id)
+    if UserProfileTwister.objects.filter(user=user, twister=twister).exists():
+        return JsonResponse({'status': 'Duplicate twister'})
+    user_twister = UserProfileTwister.objects.create(user=user, twister=twister)
+    return JsonResponse({'status': 'Twister added', 'userTwisterId': user_twister.id})
 
 
 @login_required
