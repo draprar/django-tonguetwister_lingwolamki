@@ -39,6 +39,14 @@ class Funfact(models.Model):
         return self.text
 
 
+class OldPolish(models.Model):
+    old_text = models.TextField()
+    new_text = models.TextField()
+
+    def __str__(self):
+        return f"Czy wiesz, że staropolskie {self.old_text} można przetłumaczyć jako {self.new_text}?"
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     login_streak = models.PositiveIntegerField(default=1)

@@ -1,10 +1,21 @@
-var swiper = new Swiper(".mySwiper", {
+var mainSwiper = new Swiper(".mySwiper", {
     onSlideChangeStart: function() {
-        $('.swiper-container').height($(mySwiper.activeSlide()).height())
+        $('.swiper-container').height($(mainSwiper.activeSlide()).height());
     },
     pagination: {
         el: ".swiper-pagination",
         type: "progressbar",
+    },
+});
+
+var textSwiper = new Swiper('.textSwiper', {
+    autoplay: {
+        delay: 10000,
+    },
+    loop: true,
+    pagination: {
+        el: '.textSwiper-pagination',
+        clickable: true,
     },
 });
 

@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User, Group
 from django.template.loader import render_to_string
-from .models import (Twister, Articulator, Exercise, Trivia, Funfact, UserProfileArticulator, UserProfileTwister,
+from .models import (Twister, Articulator, Exercise, Trivia, Funfact, OldPolish, UserProfileArticulator, UserProfileTwister,
                      UserProfileExercise)
 from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm, ContactForm, AvatarUploadForm
 import logging
@@ -42,6 +42,8 @@ def main(request):
             user_exercises_texts = []
         trivia = Trivia.objects.all()[:0]
         funfacts = Funfact.objects.all()[:0]
+        old_polish_texts = OldPolish.objects.order_by('?')
+
         paginator = Paginator(twisters, 1)
         page_number = request.GET.get('page', 1)
         page_obj = paginator.get_page(page_number)
@@ -53,6 +55,7 @@ def main(request):
                    'user_exercises_texts': user_exercises_texts,
                    'trivia': trivia,
                    'funfacts': funfacts,
+                   'old_polish_texts': old_polish_texts,
                    }
 
         if request.htmx:
