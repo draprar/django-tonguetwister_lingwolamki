@@ -509,14 +509,6 @@ def register_view(request):
     return render(request, 'registration/register.html', {'form': form})
 
 
-def info(request):
-    return render(request, 'tonguetwister/partials/static/info.html')
-
-
-def materials(request):
-    return render(request, 'tonguetwister/partials/static/materials.html')
-
-
 def contact(request):
     if request.method == "POST":
         form = ContactForm(request.POST)

@@ -13,20 +13,26 @@
   <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
   <link rel="icon" href="{% static 'assets/favicon.ico' %}" type="image/x-icon"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
     <style>
         .swiper-slide {
         margin: 10px 0 0 0;
         }
-        .textSwiper {
-            margin: 20px 0;
-            padding: 0; /* Remove padding to fit text height */
-            background-color: #f8f9fa;
-        }
-        .textSwiper .swiper-slide {
+        .carousel-item {
             text-align: center;
             font-size: 1.2rem;
-            height: auto; /* Ensure height fits the text */
-            line-height: 1.2; /* Adjust line height if needed */
+            height: auto;
+            line-height: 1.2;
+            padding: 10px;
+        }
+        .textSwiper {
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+        .swiper-slide {
+            margin: 10px 0 0 0;
         }
     </style>
 </head>
@@ -36,14 +42,14 @@
 <header>
 {% include 'tonguetwister/partials/static/navbar.html' %}
 </header>
-<div class="swiper textSwiper">
-    <div class="swiper-wrapper">
-        {% for old_polish in old_polish_texts %}
-            <div class="swiper-slide">
-                Czy wiesz, że staropolskie {{ old_polish.old_text }} to dziś {{ old_polish.new_text }}?
-            </div>
-        {% endfor %}
-    </div>
+<div id="textSwiper" class="carousel slide textSwiper">
+  <div class="carousel-inner">
+    {% for old_polish in old_polish_texts %}
+      <div class="carousel-item{% if forloop.first %} active{% endif %}">
+        Czy wiesz, że staropolskie <strong>{{ old_polish.old_text }}</strong> to dziś <strong>{{ old_polish.new_text }}</strong>?
+      </div>
+    {% endfor %}
+  </div>
 </div>
 <main>
 <div class="swiper mySwiper" id="mySwiper">
@@ -59,9 +65,6 @@
   </div>
 </main>
 
-<footer>
-{% include 'tonguetwister/partials/static/footer.html' %}
-</footer>
 <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

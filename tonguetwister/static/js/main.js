@@ -1,32 +1,41 @@
-var mainSwiper = new Swiper(".mySwiper", {
-    onSlideChangeStart: function() {
-        $('.swiper-container').height($(mainSwiper.activeSlide()).height());
-    },
-    pagination: {
-        el: ".swiper-pagination",
-        type: "progressbar",
-    },
-});
-
-var textSwiper = new Swiper('.textSwiper', {
-    autoplay: {
-        delay: 10000,
-    },
-    loop: true,
-    pagination: {
-        el: '.textSwiper-pagination',
-        clickable: true,
-    },
-});
-
-function calculateSlideHeights() {
-    const slides = document.querySelectorAll('.swiper-slide');
-    slides.forEach((slide, index) => {
-        console.log(`Height of slide ${index + 1}: ${slide.clientHeight}px`);
+document.addEventListener('DOMContentLoaded', function() {
+    var textSwiper = new bootstrap.Carousel('#textSwiper', {
+        interval: 3000,
+        ride: 'carousel'
     });
-}
-calculateSlideHeights();
 
-document.getElementById('recalculate-height').addEventListener('click', function() {
-    calculateSlideHeights();
+    var mainSwiper = new Swiper(".mySwiper", {
+        on: {
+            init: function () {
+                adjustMainSwiperHeight();
+            },
+            slideChange: function () {
+                adjustMainSwiperHeight();
+            }
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            type: "progressbar",
+        },
+    });
+
+    function adjustMainSwiperHeight() {
+        let activeSlide = document.querySelector('.mySwiper .swiper-slide-active');
+        if (activeSlide) {
+            document.querySelector('.mySwiper').style.height = activeSlide.offsetHeight + 'px';
+        }
+    }
+
+    function calculateSlideHeights() {
+        const slides = document.querySelectorAll('.swiper-slide');
+        slides.forEach((slide, index) => {
+            console.log(`Height of slide ${index + 1}: ${slide.clientHeight}px`);
+        });
+    }
+
+    adjustMainSwiperHeight();
+
+    document.getElementById('recalculate-height').addEventListener('click', function() {
+        calculateSlideHeights();
+    });
 });
