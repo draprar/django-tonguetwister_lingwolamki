@@ -28,12 +28,19 @@ def is_admin(user):
 def main(request):
     try:
         twisters = Twister.objects.all().order_by('id')
+        if request.user.is_authenticated:
+            user_twisters_texts = list(
+                UserProfileTwister.objects.filter(user=request.user).values_list('twister__text', flat=True))
+        else:
+            user_twisters_texts = []
+
         articulators = Articulator.objects.all()[:1]
         if request.user.is_authenticated:
             user_articulators_texts = list(
                 UserProfileArticulator.objects.filter(user=request.user).values_list('articulator__text', flat=True))
         else:
             user_articulators_texts = []
+
         exercises = Exercise.objects.all()[:1]
         if request.user.is_authenticated:
             user_exercises_texts = list(
@@ -49,6 +56,7 @@ def main(request):
         page_obj = paginator.get_page(page_number)
 
         context = {'page_obj': page_obj,
+                   'user_twisters_texts': user_twisters_texts,
                    'articulators': articulators,
                    'user_articulators_texts': user_articulators_texts,
                    'exercises': exercises,
@@ -63,9 +71,7 @@ def main(request):
         return render(request, 'tonguetwister/main.html', context)
 
     except Exception as e:
-        # Log the exception
         print(f"Exception occurred: {str(e)}")
-        # Return an HttpResponse with an error message or redirect to an error page
         return HttpResponse("Internal Server Error", status=500)
 
 

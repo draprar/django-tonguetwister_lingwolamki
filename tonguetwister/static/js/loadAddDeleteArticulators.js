@@ -24,20 +24,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
-                console.log('Response data for adding:', data);
                 button.disabled = false;
                 if (data.status === 'Articulator added') {
                     button.disabled = true;
                     button.textContent = 'W powtórkach 😄';
                     button.classList.replace('btn-success', 'btn-secondary');
-                } else if (data.status === 'Duplicate articulator') {
-                    alert('This articulator is already added.');
-                } else {
-                    alert('Error adding articulator: ' + data.message);
                 }
             })
             .catch(error => {
-                console.error('Error adding articulator:', error);
                 button.disabled = false;
             });
         } else if (action === 'W powtórkach 😄') {
@@ -45,9 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function addArticulatorToDOM(articulator) {
+    function addArticulatorToDOM(articulator, isAuthenticated) {
         if (document.getElementById(`articulator-${articulator.id}`)) {
-            console.log(`Articulator ${articulator.id} already exists`);
             return;
         }
 
@@ -60,18 +53,20 @@ document.addEventListener('DOMContentLoaded', function() {
         articulatorDiv.textContent = articulator.text;
         articulatorDiv.id = `articulator-${articulator.id}`;
 
-        const button = document.createElement('button');
-        button.classList.add('btn', 'toggle-articulator-btn');
-        button.dataset.id = articulator.id;
-
-        button.textContent = articulator.is_added ? 'W powtórkach 😄' : 'Dodaj do powtórek';
-        button.classList.add(articulator.is_added ? 'btn-secondary' : 'btn-success');
-        button.disabled = articulator.is_added;
-
-        button.addEventListener('click', handleToggleButtonClick);
-
         articulatorContainer.appendChild(articulatorDiv);
-        articulatorContainer.appendChild(button);
+
+        if (isAuthenticated) {
+            const button = document.createElement('button');
+            button.classList.add('btn', 'toggle-articulator-btn');
+            button.dataset.id = articulator.id;
+            button.textContent = articulator.is_added ? 'W powtórkach 😄' : 'Dodaj do powtórek';
+            button.classList.add(articulator.is_added ? 'btn-secondary' : 'btn-success');
+            button.disabled = articulator.is_added;
+
+            button.addEventListener('click', handleToggleButtonClick);
+
+            articulatorContainer.appendChild(button);
+        }
 
         document.getElementById('articulators-container').appendChild(articulatorContainer);
     }
@@ -90,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (loadMoreBtn) {
         offset = parseInt(loadMoreBtn.getAttribute('data-offset'));
         url = loadMoreBtn.getAttribute('data-url');
+        const isAuthenticated = loadMoreBtn.getAttribute('data-authenticated') === 'true';
 
         loadMoreBtn.addEventListener('click', function() {
             fetch(`${url}?offset=${offset}`)
@@ -103,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('articulators-container').innerHTML = '';
 
                 if (data.length > 0) {
-                    data.forEach(articulator => addArticulatorToDOM(articulator));
+                    data.forEach(articulator => addArticulatorToDOM(articulator, isAuthenticated));
                     offset += data.length;
                     loadMoreBtn.setAttribute('data-offset', offset.toString());
                 } else {
@@ -115,8 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Error fetching articulators. Please try again.');
             });
         });
     } else {
@@ -134,11 +128,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     if (data.status === 'Articulator deleted') {
                         location.reload();
-                    } else {
-                        alert('Error: ' + data.message);
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                });
             });
         });
     }

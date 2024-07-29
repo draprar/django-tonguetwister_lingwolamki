@@ -1,8 +1,10 @@
 document.addEventListener('htmx:afterSettle', function(evt) {
     let records = document.querySelectorAll('#twisters-container .twister');
+    let buttons = document.querySelectorAll('#twisters-container .toggle-twister-btn');
 
     if (records.length > 1) {
-        records[records.length - 2].remove();
+        records[0].remove();
+        buttons[0].remove();
     }
 
     let loadMoreBtn = document.getElementById('recalculate-height');
@@ -14,6 +16,7 @@ document.addEventListener('htmx:afterSettle', function(evt) {
 
         if (records.length > 0) {
             records[records.length - 1].style.display = 'none';
+            buttons[buttons.length - 1].style.display = 'none';
         }
 
         const successSound = document.getElementById('success-sound-twisters');
@@ -70,37 +73,6 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (action === 'W powtórkach 😄') {
             button.disabled = true;
         }
-    }
-
-    function addTwisterToDOM(twister) {
-        if (document.getElementById(`twister-${twister.id}`)) {
-            console.log(`Twister ${twister.id} already exists`);
-            return;
-        }
-
-        const twisterContainer = document.createElement('div');
-        twisterContainer.id = `twisters-container-${twister.id}`;
-        twisterContainer.classList.add('twisters-container', 'col-md-16', 'fs-4');
-
-        const twisterDiv = document.createElement('div');
-        twisterDiv.classList.add('twister');
-        twisterDiv.textContent = twister.text;
-        twisterDiv.id = `twister-${twister.id}`;
-
-        const button = document.createElement('button');
-        button.classList.add('btn', 'toggle-twister-btn');
-        button.dataset.id = twister.id;
-
-        button.textContent = twister.is_added ? 'W powtórkach 😄' : 'Dodaj do powtórek';
-        button.classList.add(twister.is_added ? 'btn-secondary' : 'btn-success');
-        button.disabled = twister.is_added;
-
-        button.addEventListener('click', handleToggleButtonClick);
-
-        twisterContainer.appendChild(twisterDiv);
-        twisterContainer.appendChild(button);
-
-        document.getElementById('twisters-container').appendChild(twisterContainer);
     }
 
     const twistersContainer = document.getElementById('twisters-container');

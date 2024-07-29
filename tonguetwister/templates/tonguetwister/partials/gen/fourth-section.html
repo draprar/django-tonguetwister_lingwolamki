@@ -17,7 +17,7 @@
     {% endfor %}
 </div>
 <br>
-<button id="load-more-exercises-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ exercises|length }}" data-url="{% url 'load_more_exercises' %}">Chcę jeszcze!</button>
+<button id="load-more-exercises-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ exercises|length }}" data-url="{% url 'load_more_exercises' %}" data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}">Chcę jeszcze!</button>
 
 <div id="card-exercises" class="card text-white bg-secondary mt-3 mb-3 w-100" style="display: none;">
     <audio id="success-sound-exercises" src="{% static 'sounds/fanfare.mp3' %}" preload="auto"></audio>

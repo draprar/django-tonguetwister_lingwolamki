@@ -24,20 +24,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(data => {
-                console.log('Response data for adding:', data);
                 button.disabled = false;
                 if (data.status === 'Exercise added') {
                     button.disabled = true;
                     button.textContent = 'W powtórkach 😄';
                     button.classList.replace('btn-success', 'btn-secondary');
-                } else if (data.status === 'Duplicate exercise') {
-                    alert('This exercise is already added.');
-                } else {
-                    alert('Error adding exercise: ' + data.message);
                 }
             })
             .catch(error => {
-                console.error('Error adding exercise:', error);
                 button.disabled = false;
             });
         } else if (action === 'W powtórkach 😄') {
@@ -45,9 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function addExerciseToDOM(exercise) {
+    function addExerciseToDOM(exercise, isAuthenticated) {
         if (document.getElementById(`exercise-${exercise.id}`)) {
-            console.log(`Exercise ${exercise.id} already exists`);
             return;
         }
 
@@ -60,18 +53,20 @@ document.addEventListener('DOMContentLoaded', function() {
         exerciseDiv.textContent = exercise.text;
         exerciseDiv.id = `exercise-${exercise.id}`;
 
-        const button = document.createElement('button');
-        button.classList.add('btn', 'toggle-exercise-btn');
-        button.dataset.id = exercise.id;
-
-        button.textContent = exercise.is_added ? 'W powtórkach 😄' : 'Dodaj do powtórek';
-        button.classList.add(exercise.is_added ? 'btn-secondary' : 'btn-success');
-        button.disabled = exercise.is_added;
-
-        button.addEventListener('click', handleToggleButtonClick);
-
         exerciseContainer.appendChild(exerciseDiv);
-        exerciseContainer.appendChild(button);
+
+        if(isAuthenticated) {
+            const button = document.createElement('button');
+            button.classList.add('btn', 'toggle-exercise-btn');
+            button.dataset.id = exercise.id;
+            button.textContent = exercise.is_added ? 'W powtórkach 😄' : 'Dodaj do powtórek';
+            button.classList.add(exercise.is_added ? 'btn-secondary' : 'btn-success');
+            button.disabled = exercise.is_added;
+
+            button.addEventListener('click', handleToggleButtonClick);
+
+            exerciseContainer.appendChild(button);
+        }
 
         document.getElementById('exercises-container').appendChild(exerciseContainer);
     }
@@ -90,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (loadMoreBtn) {
         offset = parseInt(loadMoreBtn.getAttribute('data-offset'));
         url = loadMoreBtn.getAttribute('data-url');
+        const isAuthenticated = loadMoreBtn.getAttribute('data-authenticated') === 'true';
 
         loadMoreBtn.addEventListener('click', function() {
             fetch(`${url}?offset=${offset}`)
@@ -103,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('exercises-container').innerHTML = '';
 
                 if (data.length > 0) {
-                    data.forEach(exercise => addExerciseToDOM(exercise));
+                    data.forEach(exercise => addExerciseToDOM(exercise, isAuthenticated));
                     offset += data.length;
                     loadMoreBtn.setAttribute('data-offset', offset.toString());
                 } else {
@@ -115,8 +111,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Error fetching exercises. Please try again.');
             });
         });
     } else {
@@ -134,11 +128,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(data => {
                     if (data.status === 'Exercise deleted') {
                         location.reload();
-                    } else {
-                        alert('Error: ' + data.message);
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                });
             });
         });
     }
