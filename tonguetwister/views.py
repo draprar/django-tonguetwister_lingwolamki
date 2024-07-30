@@ -526,14 +526,12 @@ def register_view(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            print("Form is valid and saved.")
             return redirect('login')
         else:
-            print("Form is not valid. Errors: ", form.errors)
+            messages.error(request, 'Napotkaliśmy zgoła nieoczekiwane błędy 😱 zweryfikuj swój formularz 😵')
             return render(request, 'registration/register.html', {'form': form})
     else:
         form = CustomUserCreationForm()
-        print("GET request. Rendering empty form.")
     return render(request, 'registration/register.html', {'form': form})
 
 
