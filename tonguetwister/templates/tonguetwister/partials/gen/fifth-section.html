@@ -2,34 +2,26 @@
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
 <div id="twisters-container">
-    {% for twister in page_obj %}
-        <p class="col-md-16 fs-4 twister">{{ twister.text }}</p>
+    {% for twister in twisters %}
+        <div class="twister col-md-16 fs-4" id="twister-{{ twister.id }}">{{ twister.text }}</div>
         {% if user.is_authenticated %}
             {% if twister.text in user_twisters_texts %}
-                <button class="btn btn-secondary toggle-twister-btn" data-id="{{ twister.id }}" data-user-twister-id="{{ user_twister.id }}" disabled>W powtórkach 😄</button>
+                <button class="btn btn-secondary toggle-twister-btn" data-id="{{ twister.id }}" data-user-articulator-id="{{ user_twister.id }}" disabled>W powtórkach 😄</button>
             {% else %}
                 <button class="btn btn-success toggle-twister-btn" data-id="{{ twister.id }}">Dodaj do powtórek</button>
             {% endif %}
         {% endif %}
     {% endfor %}
-</div><br>
+</div>
+<br>
+<button id="load-more-twisters-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ twisters|length }}" data-url="{% url 'load_more_twisters' %}" data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}">Chcę jeszcze!</button>
 
-{% if page_obj.has_next %}
-    <p class="col-md-16 fs-5" id="load-more">
-        <button class="btn btn-dark btn-lg text-uppercase fw-bold"
-                hx-get="{% url 'main' %}?page={{page_obj.next_page_number}}"
-                hx-target="#load-more"
-                hx-swap="outerHTML"
-                id="recalculate-height">Chcę jeszcze!</button>
-    </p>
-{% else %}
-<img src="{% static 'assets/medal.svg' %}" alt="" width="96" height="96" class="d-inline-block align-text-top">
-<div id="card-twisters" class="card text-white bg-secondary mt-3 mb-3 w-100">
+<div id="card-twister" class="card text-white bg-secondary mt-3 mb-3 w-100" style="display: none;">
     <div class="card-body">
         <audio id="success-sound-twisters" src="{% static 'sounds/fanfare.mp3' %}" preload="auto"></audio>
+        <img src="{% static 'assets/medal.svg' %}" alt="" width="96" height="96" class="d-inline-block align-text-top"><br><br>
         <p class="card-text text-center mb-0">Gratulacje 👏 od samego Króla Karola i Saszy z suchej Szosy! 👑 <br> My też jesteśmy z Ciebie dumni 🖖 <br> Mamy nadzieję, że spodobały Ci się językowe potyczki 👅 a w nagrodę sprawdź, jaki bonusik na Ciebie czeka 🤑</p>
     </div>
 </div>
-{% endif %}
 
 <script src="{% static 'js/loadAddDeleteTwisters.js' %}"></script>

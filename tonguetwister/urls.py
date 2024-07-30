@@ -12,6 +12,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('load-more-articulators/', views.load_more_articulators, name='load_more_articulators'),
     path('load-more-exercises/', views.load_more_exercises, name='load_more_exercises'),
+    path('load-more-twisters/', views.load_more_twisters, name='load_more_twisters'),
     path('load-more-trivia/', views.load_more_trivia, name='load_more_trivia'),
     path('load-more-funfacts/', views.load_more_funfacts, name='load_more_funfacts'),
     path('articulators/', views.articulator_list, name='articulator_list'),

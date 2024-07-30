@@ -57,6 +57,7 @@
         <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń artykulacyjnych.</p>
     {% endfor %}
 </div>
+
 <h2>Ćwiczenia właściwe</h2>
 <div id="user-exercises-container">
     {% for user_exercise in user_exercises %}
@@ -68,12 +69,13 @@
         <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń właściwych.</p>
     {% endfor %}
 </div>
+
 <h2>Wprawki głupawki</h2>
 <div id="user-twisters-container">
     {% for user_twister in user_twisters %}
-        <div class="user-exercise col-md-16 fs-4" id="twister-{{ user_twister.id }}">
+        <div class="user-twister col-md-16 fs-4" id="twister-{{ user_twister.id }}">
             {{ user_twister.twister.text }}
-            <button class="btn btn-danger delete-exercise-btn" data-id="{{ user_twister.id }}">-</button>
+            <button class="btn btn-danger delete-twister-btn" data-id="{{ user_twister.id }}">-</button>
         </div>
     {% empty %}
         <p class="col-md-16 fs-4">Nie masz zapisanych wprawek głupawek.</p>
@@ -83,5 +85,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
 <script src="{% static 'js/loadAddDeleteArticulators.js' %}"></script>
 <script src="{% static 'js/loadAddDeleteExercises.js' %}"></script>
+<script src="{% static 'js/loadAddDeleteTwisters.js' %}"></script>
 </body>
 </html>

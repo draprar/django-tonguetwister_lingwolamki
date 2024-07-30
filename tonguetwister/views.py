@@ -1,7 +1,6 @@
 from django import forms
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
-from django.core.paginator import Paginator
 from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_protect
@@ -27,7 +26,7 @@ def is_admin(user):
 
 def main(request):
     try:
-        twisters = Twister.objects.all().order_by('id')
+        twisters = Twister.objects.all().all()[:1]
         if request.user.is_authenticated:
             user_twisters_texts = list(
                 UserProfileTwister.objects.filter(user=request.user).values_list('twister__text', flat=True))
@@ -51,11 +50,7 @@ def main(request):
         funfacts = Funfact.objects.all()[:0]
         old_polish_texts = OldPolish.objects.order_by('?')
 
-        paginator = Paginator(twisters, 1)
-        page_number = request.GET.get('page', 1)
-        page_obj = paginator.get_page(page_number)
-
-        context = {'page_obj': page_obj,
+        context = {'twisters': twisters,
                    'user_twisters_texts': user_twisters_texts,
                    'articulators': articulators,
                    'user_articulators_texts': user_articulators_texts,
@@ -66,8 +61,6 @@ def main(request):
                    'old_polish_texts': old_polish_texts,
                    }
 
-        if request.htmx:
-            return render(request, 'tonguetwister/partials/gen/list.html', context)
         return render(request, 'tonguetwister/main.html', context)
 
     except Exception as e:
@@ -130,6 +123,35 @@ def load_more_exercises(request):
 
     except Exception as e:
         print(f"Exception occurred in load_more_exercises: {str(e)}")
+        return JsonResponse({'error': 'Internal Server Error'}, status=500)
+
+
+def load_more_twisters(request):
+    try:
+        offset = int(request.GET.get('offset', 0))
+        limit = 1
+        twisters = Twister.objects.all()[offset:offset + limit]
+
+        if request.user.is_authenticated:
+            user_twisters_texts = set(
+                UserProfileTwister.objects.filter(user=request.user).values_list('twister__text', flat=True)
+            )
+        else:
+            user_twisters_texts = set()
+
+        data = []
+        for twister in twisters:
+            is_added = twister.text in user_twisters_texts
+            data.append({
+                'id': twister.id,
+                'text': twister.text,
+                'is_added': is_added,
+            })
+
+        return JsonResponse(data, safe=False)
+
+    except Exception as e:
+        print(f"Exception occurred in load_more_twisters: {str(e)}")
         return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 
@@ -394,7 +416,7 @@ def user_content(request):
         'exercises': all_exercises,
         'user_exercises': user_exercises,
         'user_exercises_texts': user_exercises_texts,
-        'all_twisters': all_twisters,
+        'twisters': all_twisters,
         'user_twisters': user_twisters,
         'user_twisters_texts': user_twisters_texts,
     }

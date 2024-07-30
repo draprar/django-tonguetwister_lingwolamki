@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
     var textSwiper = new bootstrap.Carousel('#textSwiper', {
-        interval: 3000,
+        interval: 5000,
         ride: 'carousel'
     });
 
@@ -29,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
     function calculateSlideHeights() {
         const slides = document.querySelectorAll('.swiper-slide');
         slides.forEach((slide, index) => {
-            console.log(`Height of slide ${index + 1}: ${slide.clientHeight}px`);
         });
     }
 
