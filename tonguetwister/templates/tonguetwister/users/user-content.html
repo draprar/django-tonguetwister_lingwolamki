@@ -70,7 +70,7 @@
     {% endfor %}
 </div>
 
-<h2>Wprawki głupawki</h2>
+<h2>Łamańce językowe</h2>
 <div id="user-twisters-container">
     {% for user_twister in user_twisters %}
         <div class="user-twister col-md-16 fs-4" id="twister-{{ user_twister.id }}">
@@ -78,7 +78,7 @@
             <button class="btn btn-danger delete-twister-btn" data-id="{{ user_twister.id }}">-</button>
         </div>
     {% empty %}
-        <p class="col-md-16 fs-4">Nie masz zapisanych wprawek głupawek.</p>
+        <p class="col-md-16 fs-4">Nie masz zapisanych łamańców językowych.</p>
     {% endfor %}
 </div>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"></script>

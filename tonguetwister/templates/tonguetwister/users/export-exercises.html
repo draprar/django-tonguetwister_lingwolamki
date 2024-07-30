@@ -22,6 +22,7 @@
         <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń artykulacyjnych.</p>
     {% endfor %}
 </div>
+
 <h2>Ćwiczenia właściwe</h2>
 <div id="user-exercises-container">
     {% for user_exercise in user_exercises %}
@@ -29,7 +30,18 @@
             {{ user_exercise.exercise.text }}
         </div>
     {% empty %}
-        <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń właściwych.</p>
+        <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń artykulacyjnych.</p>
+    {% endfor %}
+</div>
+
+<h2>Łamańce językowe</h2>
+<div id="user-twisters-container">
+    {% for user_twister in user_twisters %}
+        <div class="user-twister col-md-16 fs-4" id="twister-{{ user_twister.id }}">
+            {{ user_twister.twister.text }}
+        </div>
+    {% empty %}
+        <p class="col-md-16 fs-4">Nie masz zapisanych łamańców językowych.</p>
     {% endfor %}
 </div>
 </body>

@@ -1,5 +1,6 @@
 from django import forms
 from django.conf import settings
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponse
@@ -508,17 +509,21 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 def login_view(request):
-    error = None
+    form = AuthenticationForm()  # Create an instance of the authentication form
+
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            return redirect('main')
-        else:
-            error = 'Invalid username or password'
-    return render(request, 'registration/login.html', {'error': error})
+        form = AuthenticationForm(data=request.POST)  # Bind data to the form
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('main')
+            else:
+                messages.error(request, 'Napotkaliśmy zgoła nieoczekiwane błędy 😱 spróbuj jesio raz 😵')
+
+    return render(request, 'registration/login.html', {'form': form})
 
 
 def register_view(request):
