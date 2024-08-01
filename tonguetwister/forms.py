@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from .models import Articulator, Exercise, Twister, Trivia, Funfact, Profile
 from django.contrib.auth.models import User, Group
@@ -60,8 +62,44 @@ class CustomUserCreationForm(UserCreationForm):
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
-            raise ValidationError("Username is already taken")
+            raise ValidationError("Ktoś już zaklepał taką nazwę :(")
         return username
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("Konto z takim adresem email już istnieje :(")
+        return email
+
+    def clean_password1(self):
+        password1 = self.cleaned_data.get('password1')
+        if not self.is_password_strong(password1):
+            raise ValidationError(
+                "Hasełko to więcej niż 8 znaków i składa się z wielkich i małych liter, cyfr i specjalnych znaków :)")
+        return password1
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
+
+        if password1 and password2 and password1 != password2:
+            raise ValidationError("Hasełka do siebie nie pasują :(")
+
+        return cleaned_data
+
+    def is_password_strong(self, password):
+        if len(password) < 8:
+            return False
+        if not re.search(r"[A-Z]", password):
+            return False
+        if not re.search(r"[a-z]", password):
+            return False
+        if not re.search(r"[0-9]", password):
+            return False
+        if not re.search(r"[!@#$%^&*()_+]", password):
+            return False
+        return True
 
     def save(self, commit=True):
         user = super(CustomUserCreationForm, self).save(commit=False)

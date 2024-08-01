@@ -36,8 +36,6 @@
       {% else %}
       <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'login' %}">Logowanie</a>
       <a class="btn btn-outline-secondary d-lg-none" href="{% url 'login' %}" aria-label="login"><img src="{% static 'assets/login.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
-      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'register' %}">Rejestracja</a>
-      <a class="btn btn-outline-secondary d-lg-none" href="{% url 'register' %}" aria-label="register"><img src="{% static 'assets/register.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
       <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'contact' %}">Kontakt</a>
       <a class="btn btn-outline-secondary d-lg-none" href="{% url 'contact' %}" aria-label="contact"><img src="{% static 'assets/envelope.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
       {% endif %}

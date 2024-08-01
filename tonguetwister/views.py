@@ -509,10 +509,10 @@ class CustomUserCreationForm(UserCreationForm):
 
 
 def login_view(request):
-    form = AuthenticationForm()  # Create an instance of the authentication form
+    form = AuthenticationForm()
 
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)  # Bind data to the form
+        form = AuthenticationForm(data=request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
@@ -531,9 +531,12 @@ def register_view(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Brawo! Udało się założyć konto! Możesz się zalogować :)')
             return redirect('login')
         else:
-            messages.error(request, 'Napotkaliśmy zgoła nieoczekiwane błędy 😱 zweryfikuj swój formularz 😵')
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, error)
             return render(request, 'registration/register.html', {'form': form})
     else:
         form = CustomUserCreationForm()

@@ -69,7 +69,8 @@
             <br>
             <button type="submit" class="btn btn-dark btn-block">Zarejestruj</button>
         </form>
-    <button class="btn btn-dark btn-block" style="height: 50px; font-size: 18px;" id="back-registration"><a class="navbar-brand" href="/"><img src="{% static 'assets/ttlogo.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"> Wróć</a></button>
+    <button class="btn btn-dark btn-block" style="height: 50px; font-size: 18px;" id="back-registration">
+        <a class="navbar-brand" href="{% url 'login' %}"><img src="{% static 'assets/ttlogo.png' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"> Wróć</a></button>
     </div>
 </body>
 </html>
