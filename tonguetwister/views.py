@@ -4,6 +4,10 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponse
+from django.urls import reverse
+from django.utils.encoding import force_bytes, force_str
+from django.utils.html import strip_tags
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -14,6 +18,7 @@ from django.template.loader import render_to_string
 from .models import (Twister, Articulator, Exercise, Trivia, Funfact, OldPolish, UserProfileArticulator, UserProfileTwister,
                      UserProfileExercise)
 from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm, ContactForm, AvatarUploadForm
+from .tokens import account_activation_token
 import logging
 from weasyprint import HTML
 
@@ -526,12 +531,26 @@ def login_view(request):
     return render(request, 'registration/login.html', {'form': form})
 
 
+def send_activation_email(user, request):
+    subject = 'Witamy na pokładzie!'
+    token = account_activation_token.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    activation_link = request.build_absolute_uri(reverse('activate', args=[uid, token]))
+    html_message = render_to_string('registration/activation.html', {'user': user, 'activation_link': activation_link})
+    plain_message = strip_tags(html_message)
+    from_email = settings.EMAIL_HOST_USER
+    to = user.email
+
+    send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+
+
 def register_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Brawo! Udało się założyć konto! Możesz się zalogować :)')
+            user = form.save()
+            send_activation_email(user, request)
+            messages.success(request, 'Brawo! Możesz się zalogować. Sprawdź swoją skrzynkę e-mail, aby aktywować konto.')
             return redirect('login')
         else:
             for field, errors in form.errors.items():
@@ -541,6 +560,23 @@ def register_view(request):
     else:
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.profile.email_confirmed = True
+        user.profile.save()
+        messages.success(request, 'Dziękujemy za potwierdzenie :) Twoje konto zostało zweryfikowane.')
+        return redirect('login')
+    else:
+        messages.error(request, 'Link aktywacyjny jest nieprawidłowy!')
+        return redirect('register')
 
 
 def contact(request):

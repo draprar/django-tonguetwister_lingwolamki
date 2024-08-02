@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-from .views import login_view, register_view
+from .views import login_view, register_view, activate
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -9,6 +9,7 @@ urlpatterns = [
     path('', views.main, name='main'),
     path('login/', login_view, name='login'),
     path('register/', register_view, name='register'),
+    path('activate/<uidb64>/<token>/', activate, name='activate'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('load-more-articulators/', views.load_more_articulators, name='load_more_articulators'),
     path('load-more-exercises/', views.load_more_exercises, name='load_more_exercises'),

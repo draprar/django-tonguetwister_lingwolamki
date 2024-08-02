@@ -52,18 +52,16 @@ class Profile(models.Model):
     login_streak = models.PositiveIntegerField(default=1)
     last_login_date = models.DateField(auto_now=True)
     avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    email_confirmed = models.BooleanField(default=False)
 
     def update_login_streak(self):
         today = timezone.now().date()
-
         if self.last_login_date == today:
             return
-
         if self.last_login_date == today - timedelta(days=1):
             self.login_streak += 1
         else:
             self.login_streak = 1
-
         self.last_login_date = today
         self.save()
 
