@@ -1,7 +1,7 @@
 import re
 
 from django import forms
-from .models import Articulator, Exercise, Twister, Trivia, Funfact, Profile
+from .models import Articulator, Exercise, Twister, Trivia, Funfact, Profile, OldPolish
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
@@ -35,6 +35,12 @@ class FunfactForm(forms.ModelForm):
     class Meta:
         model = Funfact
         fields = ['text']
+
+class OldPolishForm(forms.ModelForm):
+
+    class Meta:
+        model = OldPolish
+        fields = ['old_text', 'new_text']
 
 
 class CustomUserCreationForm(UserCreationForm):

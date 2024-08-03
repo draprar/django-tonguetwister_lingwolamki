@@ -17,7 +17,7 @@ from django.contrib.auth.models import User, Group
 from django.template.loader import render_to_string
 from .models import (Twister, Articulator, Exercise, Trivia, Funfact, OldPolish, UserProfileArticulator, UserProfileTwister,
                      UserProfileExercise)
-from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm, ContactForm, AvatarUploadForm
+from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm, ContactForm, AvatarUploadForm, OldPolishForm
 from .tokens import account_activation_token
 import logging
 from weasyprint import HTML
@@ -380,6 +380,47 @@ def funfact_delete(request, pk):
         funfact.delete()
         return redirect('funfact_list')
     return render(request, 'tonguetwister/funfacts/funfact_confirm_delete.html', {'funfact': funfact})
+
+
+
+@user_passes_test(is_admin)
+def oldpolish_list(request):
+    oldpolishs = OldPolish.objects.all()
+    return render(request, 'tonguetwister/oldpolishs/oldpolish_list.html', {'oldpolishs': oldpolishs})
+
+
+@user_passes_test(is_admin)
+def oldpolish_add(request):
+    if request.method == "POST":
+        form = OldPolishForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('oldpolish_list')
+    else:
+        form = OldPolishForm()
+    return render(request, 'tonguetwister/oldpolishs/oldpolish_form.html', {'form': form})
+
+
+@user_passes_test(is_admin)
+def oldpolish_edit(request, pk):
+    oldpolish = get_object_or_404(OldPolish, pk=pk)
+    if request.method == "POST":
+        form = OldPolishForm(request.POST, instance=oldpolish)
+        if form.is_valid():
+            form.save()
+            return redirect('oldpolish_list')
+    else:
+        form = OldPolishForm(instance=oldpolish)
+    return render(request, 'tonguetwister/oldpolishs/oldpolish_form.html', {'form': form})
+
+
+@user_passes_test(is_admin)
+def oldpolish_delete(request, pk):
+    oldpolish = get_object_or_404(OldPolish, pk=pk)
+    if request.method == "POST":
+        oldpolish.delete()
+        return redirect('oldpolish_list')
+    return render(request, 'tonguetwister/oldpolishs/oldpolish_confirm_delete.html', {'oldpolish': oldpolish})
 
 
 @login_required
