@@ -1,9 +1,10 @@
-# Django-tonguetwister Web App
+# LingwoŁamki Web App
 
-Thank you for visiting. LingwoŁamki will be an application supporting work on your pronunciation - it has a set of articulation, voice and breathing exercises for you.
+Thank you for visiting. LingwoŁamki is an application supporting work on your pronunciation - it has a set of articulation, voice and breathing exercises for you.
 
-In fact, I decided to share the link to the application at this stage of its creation - maybe it will be useful to someone. Moreover, if you have any comments or ideas - I will be happy to listen to you :)
+if you have any comments or ideas - we are all ears :)
 
 Enjoy your visit: https://lingwolamki.pythonanywhere.com/
 
-~M
+Dzięki!
+LingwoŁamki
