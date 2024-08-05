@@ -68,20 +68,20 @@ class CustomUserCreationForm(UserCreationForm):
     def clean_username(self):
         username = self.cleaned_data.get('username')
         if User.objects.filter(username=username).exists():
-            raise ValidationError("Ktoś już zaklepał taką nazwę :(")
+            raise ValidationError("Ktoś już podsunął Nam taką nazwę użytkownika :(")
         return username
 
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if User.objects.filter(email=email).exists():
-            raise ValidationError("Konto z takim adresem email już istnieje :(")
+            raise ValidationError("Konto pod tym adresem email już istnieje :(")
         return email
 
     def clean_password1(self):
         password1 = self.cleaned_data.get('password1')
         if not self.is_password_strong(password1):
             raise ValidationError(
-                "Hasełko to więcej niż 8 znaków i składa się z wielkich i małych liter, cyfr i specjalnych znaków :)")
+                "Hasło powinno mieć więcej niż 8 znaków i zawierać: wielkie i małe litery, cyfry i znaki specjalne.")
         return password1
 
     def clean(self):

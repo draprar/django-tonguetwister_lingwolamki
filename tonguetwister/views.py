@@ -637,7 +637,7 @@ def contact(request):
                     recipient_list=[settings.EMAIL_HOST_USER],
                     fail_silently=False,
                 )
-                messages.success(request, 'Twoja wiadomość została wysłana')
+                messages.success(request, 'Twoja wiadomość została Nam przekazana')
             except Exception as e:
                 messages.error(request, f'Błąd przy wysyłaniu wiadomości: {e}')
             return redirect('contact')

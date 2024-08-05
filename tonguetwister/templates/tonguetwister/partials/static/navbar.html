@@ -18,26 +18,26 @@
     </div>
     <div class="ml-auto">
       {% if user.is_authenticated %}
-      <span class="navbar-text justify-content-center text-center m-auto">Czółko, <strong>{{ user.username }}</strong>! To Twój <strong>{{ user.profile.login_streak }}</strong> dzień z nami! 🔥</span>
+      <span class="navbar-text justify-content-center text-center m-auto" style="color: white;">Czołem, <strong>{{ user.username }}</strong>! To Twój <strong>{{ user.profile.login_streak }}</strong> dzień z nami! 🔥</span>
         {% if user.profile.avatar %}
           <a class="btn" href="{% url 'user_content' %}" aria-label="user"><img src="{{ user.profile.avatar.url }}" alt="avatar" class="rounded-circle" width="24" height="24"></a>
         {% else %}
-          <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'user_content' %}">Profil</a>
+          <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'user_content' %}" style="color: white;">Profil</a>
           <a class="btn btn-outline-secondary d-lg-none" href="{% url 'user_content' %}" aria-label="user"><img src="{% static 'assets/profile.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
         {% endif %}
-      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'logout' %}">Wyloguj</a>
+      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'logout' %}" style="color: white;">Wyloguj</a>
       <a class="btn btn-outline-secondary d-lg-none" href="{% url 'logout' %}" aria-label="logout"><img src="{% static 'assets/logout.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
-      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'contact' %}">Kontakt</a>
+      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'contact' %}" style="color: white;">Kontakt</a>
       <a class="btn btn-outline-secondary d-lg-none" href="{% url 'contact' %}" aria-label="contact"><img src="{% static 'assets/envelope.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
       {% if user.is_superuser %}
       <button class="navbar-toggler centered-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContentPlus" aria-controls="navbarToggleExternalContentPlus" aria-expanded="false" aria-label="settings" style="border: none;">
-         <a class="navbar-brand" href="#"><img src="{% static 'assets/settings.svg' %}" alt="" width="28" height="28" class="d-inline-block align-text-top"></a>
+         <a class="navbar-brand" href="#"><img src="{% static 'assets/settings.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
     </button>
       {% endif %}
       {% else %}
-      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'login' %}">Logowanie</a>
+      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'login' %}" style="color: white;">Logowanie</a>
       <a class="btn btn-outline-secondary d-lg-none" href="{% url 'login' %}" aria-label="login"><img src="{% static 'assets/login.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
-      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'contact' %}">Kontakt</a>
+      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'contact' %}" style="color: white;">Kontakt</a>
       <a class="btn btn-outline-secondary d-lg-none" href="{% url 'contact' %}" aria-label="contact"><img src="{% static 'assets/envelope.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
       {% endif %}
     </div>
