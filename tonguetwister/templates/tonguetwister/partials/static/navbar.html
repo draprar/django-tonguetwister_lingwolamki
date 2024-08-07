@@ -18,7 +18,6 @@
     </div>
     <div class="ml-auto">
       {% if user.is_authenticated %}
-      <span class="navbar-text justify-content-center text-center m-auto" style="color: white;">Czołem, <strong>{{ user.username }}</strong>! To Twój <strong>{{ user.profile.login_streak }}</strong> dzień z nami! 🔥</span>
         {% if user.profile.avatar %}
           <a class="btn" href="{% url 'user_content' %}" aria-label="user"><img src="{{ user.profile.avatar.url }}" alt="avatar" class="rounded-circle" width="24" height="24"></a>
         {% else %}

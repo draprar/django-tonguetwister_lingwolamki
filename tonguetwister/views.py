@@ -1,6 +1,5 @@
 from django import forms
 from django.conf import settings
-from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
 from django.http import JsonResponse, HttpResponse
@@ -10,10 +9,11 @@ from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import user_passes_test, login_required
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User, Group
+from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
 from .models import (Twister, Articulator, Exercise, Trivia, Funfact, OldPolish, UserProfileArticulator, UserProfileTwister,
                      UserProfileExercise)
@@ -618,6 +618,60 @@ def activate(request, uidb64, token):
     else:
         messages.error(request, 'Link aktywacyjny jest nieprawidłowy!')
         return redirect('register')
+
+
+def password_reset_view(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email=email)
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            reset_link = request.build_absolute_uri(f'/accounts/reset/{uid}/{token}/')
+            context = {'reset_link': reset_link, 'user': user}
+            subject = 'Resetuj swoje hasło'
+            html_message = render_to_string('registration/password_reset_email.html', context)
+            plain_message = strip_tags(html_message)
+            from_email = settings.EMAIL_HOST_USER
+            send_mail(subject, plain_message, from_email, [email], html_message=html_message)
+            messages.success(request, 'Link resetujący hasło został wysłany na Twój adres email.')
+            return redirect('password_reset_done')
+        except User.DoesNotExist:
+            messages.error(request, 'Nie znaleziono użytkownika z tym adresem email.')
+    return render(request, 'registration/password_reset_form.html')
+
+
+def password_reset_confirm_view(request, uidb64, token):
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and default_token_generator.check_token(user, token):
+        if request.method == 'POST':
+            new_password1 = request.POST.get('new_password1')
+            new_password2 = request.POST.get('new_password2')
+            if new_password1 == new_password2:
+                user.set_password(new_password1)
+                user.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, 'Twoje hasło zostało zmienione.')
+                return redirect('password_reset_complete')
+            else:
+                messages.error(request, 'Hasła nie są identyczne.')
+        return render(request, 'registration/password_reset_confirm.html')
+    else:
+        messages.error(request, 'Link resetowania hasła jest nieprawidłowy.')
+        return redirect('password_reset')
+
+
+def password_reset_complete_view(request):
+    return render(request, 'registration/password_reset_complete.html')
+
+
+def password_reset_done_view(request):
+    return render(request, 'registration/password_reset_done.html')
 
 
 def contact(request):
