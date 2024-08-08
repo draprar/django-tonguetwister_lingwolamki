@@ -1,21 +1,19 @@
-from django.urls import path, include
+from django.contrib.auth.views import LogoutView
+from django.urls import path
 from . import views
-from .views import (login_view, register_view, activate,
-                    password_reset_view, password_reset_done_view, password_reset_complete_view,
-                    password_reset_confirm_view)
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.main, name='main'),
-    path('login/', login_view, name='login'),
-    path('register/', register_view, name='register'),
-    path('activate/<uidb64>/<token>/', activate, name='activate'),
-    path('password_reset/', password_reset_view, name='password_reset'),
-    path('password_reset/done/', password_reset_done_view, name='password_reset_done'),
-    path('reset/<uidb64>/<token>/', password_reset_confirm_view, name='password_reset_confirm'),
-    path('reset/done/', password_reset_complete_view, name='password_reset_complete'),
-    path('accounts/', include('django.contrib.auth.urls')),
+    path('login/', views.login_view, name='login'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('register/', views.register_view, name='register'),
+    path('activate/<uidb64>/<token>/', views.activate, name='activate'),
+    path('password_reset/', views.password_reset_view, name='password_reset'),
+    path('password_reset/done/', views.password_reset_done_view, name='password_reset_done'),
+    path('accounts/reset/<uidb64>/<token>/', views.password_reset_confirm_view, name='password_reset_confirm'),
+    path('reset/done/', views.password_reset_complete_view, name='password_reset_complete'),
     path('load-more-articulators/', views.load_more_articulators, name='load_more_articulators'),
     path('load-more-exercises/', views.load_more_exercises, name='load_more_exercises'),
     path('load-more-twisters/', views.load_more_twisters, name='load_more_twisters'),

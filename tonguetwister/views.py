@@ -628,13 +628,31 @@ def password_reset_view(request):
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             reset_link = request.build_absolute_uri(f'/accounts/reset/{uid}/{token}/')
+
+            plain_message = f"""
+            Resetuj hasło
+
+            Czołem {user.username},
+
+            Otrzymaliśmy prośbę o zresetowanie hasła do Twojego konta. Kliknij poniższy link, aby je zresetować:
+            {reset_link}
+
+            Jeśli to nie Ty prosiłeś o zresetowanie hasła, po prostu zignoruj tę wiadomość. Twoje hasło pozostanie bez zmian.
+
+            Pozdrawiamy,
+            Zespół LingwoŁamki
+            """
             context = {'reset_link': reset_link, 'user': user}
-            subject = 'Resetuj swoje hasło'
             html_message = render_to_string('registration/password_reset_email.html', context)
-            plain_message = strip_tags(html_message)
+            subject = 'Resetuj swoje hasło'
             from_email = settings.EMAIL_HOST_USER
-            send_mail(subject, plain_message, from_email, [email], html_message=html_message)
-            messages.success(request, 'Link resetujący hasło został wysłany na Twój adres email.')
+            send_mail(
+                subject,
+                plain_message,
+                from_email,
+                [email],
+                html_message=html_message
+            )
             return redirect('password_reset_done')
         except User.DoesNotExist:
             messages.error(request, 'Nie znaleziono użytkownika z tym adresem email.')
