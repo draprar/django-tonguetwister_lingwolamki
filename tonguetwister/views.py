@@ -74,6 +74,11 @@ def main(request):
         return HttpResponse("Internal Server Error", status=500)
 
 
+def content_management(request):
+    data = {}
+    return render(request, 'admin/settings.html', data)
+
+
 def load_more_articulators(request):
     try:
         offset = int(request.GET.get('offset', 0))

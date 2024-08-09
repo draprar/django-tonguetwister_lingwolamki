@@ -1,16 +1,4 @@
 {% load static %}
-
-<div class="collapse" id="navbarToggleExternalContentPlus" data-bs-theme="dark">
-  <div class="bg-dark p-4">
-      <a href="{% url 'articulator_list' %}" class="btn btn-outline-secondary text-white link-offset-2 text-decoration-none" role="button" type="articulator-list">Zarządzaj artykulatorami</a>
-      <a href="{% url 'exercise_list' %}" class="btn btn-outline-secondary text-white link-offset-2 text-decoration-none" role="button" type="exercise-list">Zarządzaj ćwiczeniami</a>
-      <a href="{% url 'twister_list' %}" class="btn btn-outline-secondary text-white link-offset-2 text-decoration-none" role="button" type="twister-list">Zarządzaj łamańcami</a>
-      <a href="{% url 'trivia_list' %}" class="btn btn-outline-secondary text-white link-offset-2 text-decoration-none" role="button" type="trivia-list">Zarządzaj poradami</a>
-      <a href="{% url 'funfact_list' %}" class="btn btn-outline-secondary text-white link-offset-2 text-decoration-none" role="button" type="funfact-list">Zarządzaj ciekawostkami</a>
-      <a href="{% url 'oldpolish_list' %}" class="btn btn-outline-secondary text-white link-offset-2 text-decoration-none" role="button" type="funfact-list">Zarządzaj staropolszczyzną</a>
-  </div>
-</div>
-
 <nav class="navbar navbar-dark bg-dark">
   <div class="container-fluid">
     <div class="d-flex align-items-center">
@@ -29,9 +17,8 @@
       <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'contact' %}" style="color: white;">Kontakt</a>
       <a class="btn btn-outline-secondary d-lg-none" href="{% url 'contact' %}" aria-label="contact"><img src="{% static 'assets/envelope.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
       {% if user.is_superuser %}
-      <button class="navbar-toggler centered-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggleExternalContentPlus" aria-controls="navbarToggleExternalContentPlus" aria-expanded="false" aria-label="settings" style="border: none;">
-         <a class="navbar-brand" href="#"><img src="{% static 'assets/settings.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
-    </button>
+      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'content_management' %}" style="color: white;">Kontent</a>
+      <a class="btn btn-outline-secondary d-lg-none" href="{% url 'content_management' %}" aria-label="content_management"><img src="{% static 'assets/settings.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
       {% endif %}
       {% else %}
       <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'login' %}" style="color: white;">Logowanie</a>
