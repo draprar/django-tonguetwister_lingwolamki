@@ -108,6 +108,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     const successSound = document.getElementById('success-sound-exercises');
                     successSound.play();
+
+                    if (navigator.vibrate) {
+                        navigator.vibrate(200);
+                    }
+
                 }
             })
             .catch(error => {

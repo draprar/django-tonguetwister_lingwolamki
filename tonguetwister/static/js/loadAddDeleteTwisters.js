@@ -108,6 +108,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     const successSound = document.getElementById('success-sound-twisters');
                     successSound.play();
+
+                    if (navigator.vibrate) {
+                        navigator.vibrate(200);
+                    }
+
                 }
             })
             .catch(error => {

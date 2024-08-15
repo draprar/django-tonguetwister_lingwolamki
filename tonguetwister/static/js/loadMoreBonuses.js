@@ -82,6 +82,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const successSound = document.getElementById('success-sound-end');
         successSound.play();
+
+        if (navigator.vibrate) {
+            navigator.vibrate(200);
+        }
+
     }
 
     function changeTriviaButtonText() {
