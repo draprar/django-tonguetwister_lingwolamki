@@ -166,6 +166,14 @@ def load_more_twisters(request):
         return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 
+def load_more_old_polish(request):
+    offset = int(request.GET.get('offset', 0))
+    limit = 1
+    old_polish_record = OldPolish.objects.all()[offset:offset + limit]
+    data = list(old_polish_record.values())
+    return JsonResponse(data, safe=False)
+
+
 def load_more_trivia(request):
     offset = int(request.GET.get('offset', 0))
     limit = 1

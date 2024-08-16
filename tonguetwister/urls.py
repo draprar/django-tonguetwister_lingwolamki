@@ -20,6 +20,7 @@ urlpatterns = [
     path('load-more-twisters/', views.load_more_twisters, name='load_more_twisters'),
     path('load-more-trivia/', views.load_more_trivia, name='load_more_trivia'),
     path('load-more-funfacts/', views.load_more_funfacts, name='load_more_funfacts'),
+    path('load-more-old-polish/', views.load_more_old_polish, name='load_more_old_polish'),
     path('articulators/', views.articulator_list, name='articulator_list'),
     path('articulators/add/', views.articulator_add, name='articulator_add'),
     path('articulators/<int:pk>/edit/', views.articulator_edit, name='articulator_edit'),

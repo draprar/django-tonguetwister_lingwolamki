@@ -1,9 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var textSwiper = new bootstrap.Carousel('#textSwiper', {
-        interval: 5000,
-        ride: 'carousel'
-    });
-
     var mainSwiper = new Swiper(".mySwiper", {
         on: {
             init: function () {
@@ -37,4 +32,15 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('recalculate-height').addEventListener('click', function() {
         calculateSlideHeights();
     });
+
+    function handleButtonClick() {
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+    }
+
+    document.querySelectorAll('button').forEach(function(button) {
+        button.addEventListener('click', handleButtonClick);
+    });
+
 });

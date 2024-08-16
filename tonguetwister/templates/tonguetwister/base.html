@@ -14,26 +14,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
-    <style>
-        .swiper-slide {
-        margin: 10px 0 0 0;
-        }
-        .carousel-item {
-            text-align: center;
-            font-size: 1.2rem;
-            height: auto;
-            line-height: 1.2;
-            padding: 10px;
-        }
-        .textSwiper {
-            margin: 0;
-            padding: 0;
-            background-color: #ffffff;
-        }
-        .swiper-slide {
-            margin: 10px 0 0 0;
-        }
-    </style>
 </head>
 <body>
 <button class="btn" onclick="topFunction()" id="topBtn"><i class="fa fa-arrow-up"></i></button>
@@ -41,14 +21,12 @@
 <header>
 {% include 'tonguetwister/partials/static/navbar.html' %}
 </header>
-<div id="textSwiper" class="carousel slide textSwiper">
-  <div class="carousel-inner">
-    {% for old_polish in old_polish_texts %}
-      <div class="carousel-item{% if forloop.first %} active{% endif %}">
-        Czy wiesz, że staropolskie <strong>{{ old_polish.old_text }}</strong> to dziś <strong>{{ old_polish.new_text }}</strong>?
-      </div>
-    {% endfor %}
-  </div>
+<div id="beaver-container">
+    <img src="{% static 'assets/beaver.png' %}" alt="Beaver" id="beaver-img">
+    <div id="beaver-speech-bubble">
+        <span id="beaver-text">Kliknij na mnie, aby dowiedzieć się więcej!</span>
+        <span id="close-speech-bubble">x</span>
+    </div>
 </div>
 <main>
 <div class="swiper mySwiper" id="mySwiper">
@@ -70,6 +48,7 @@
 <script src="{% static 'js/main.js' %}"></script>
 <script src="{% static 'js/loadMoreBonuses.js' %}"></script>
 <script src="{% static 'js/top.js' %}"></script>
+<script src="{% static 'js/beaver.js' %}"></script>
 
 </body>
 </html>

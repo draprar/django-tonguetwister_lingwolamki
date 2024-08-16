@@ -15,7 +15,7 @@
 </header>
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 
-<h1><strong>Moja zawartość</strong></h1>
+<h2><strong>Moja zawartość</strong></h2>
 <div class="avatar-upload-container">
     <h2>
         <button class="btn btn-success" type="button" data-bs-toggle="collapse" data-bs-target="#avatarForm" aria-expanded="false" aria-controls="avatarForm">
@@ -46,7 +46,7 @@
 </div>
 <a href="?export=exercises" class="btn btn-primary">Eksportuj ćwiczenia do PDF 💾</a>
 
-<h2>Rozgrzewanie artykulatorów</h2>
+<h3>Rozgrzewanie artykulatorów</h3>
 <div id="user-articulators-container">
     {% for user_articulator in user_articulators %}
         <div class="user-articulator col-md-16 fs-4" id="articulator-{{ user_articulator.id }}">
@@ -58,7 +58,7 @@
     {% endfor %}
 </div>
 
-<h2>Ćwiczenia właściwe</h2>
+<h3>Ćwiczenia właściwe</h3>
 <div id="user-exercises-container">
     {% for user_exercise in user_exercises %}
         <div class="user-exercise col-md-16 fs-4" id="exercise-{{ user_exercise.id }}">
@@ -70,7 +70,7 @@
     {% endfor %}
 </div>
 
-<h2>Łamańce językowe</h2>
+<h3>Łamańce językowe</h3>
 <div id="user-twisters-container">
     {% for user_twister in user_twisters %}
         <div class="user-twister col-md-16 fs-4" id="twister-{{ user_twister.id }}">
