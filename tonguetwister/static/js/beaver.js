@@ -23,59 +23,83 @@ document.addEventListener('DOMContentLoaded', function () {
 
         beaverImg.style.left = randomLeft + 'px';
         beaverImg.style.top = randomTop + 'px';
+
+        updateSpeechBubblePosition();
+    }
+
+    function updateSpeechBubblePosition() {
+        var beaverRect = beaverImg.getBoundingClientRect();
+        speechBubble.style.left = beaverRect.right + 'px';
+        speechBubble.style.top = (beaverRect.top - speechBubble.offsetHeight - 20) + 'px';
     }
 
     randomizePosition();
 
-    beaverImg.addEventListener('mousedown', function (e) {
-        startX = e.clientX;
-        startY = e.clientY;
-        offsetX = e.clientX - beaverImg.getBoundingClientRect().left;
-        offsetY = e.clientY - beaverImg.getBoundingClientRect().top;
+    function fetchNewRecord() {
+        fetch(`/load-more-old-polish/?offset=${offset}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    var record = data[0];
+                    beaverText.innerHTML = `Czy wiesz, że staropolskie <strong>${record.old_text}</strong> to dziś <strong>${record.new_text}</strong>?`;
+                } else {
+                    beaverText.innerHTML = 'Brawo! Baza danych wyczyszczona 😲';
+                }
+                speechBubble.style.display = 'block';
+                offset++;
+            })
+            .catch(error => {
+                console.error('Error fetching new record:', error);
+                beaverText.innerHTML = 'Error loading data.';
+                speechBubble.style.display = 'block';
+            });
+    }
+
+    function startDrag(e) {
+        startX = e.clientX || e.touches[0].clientX;
+        startY = e.clientY || e.touches[0].clientY;
+        offsetX = startX - beaverImg.getBoundingClientRect().left;
+        offsetY = startY - beaverImg.getBoundingClientRect().top;
         isDragging = true;
         moved = false;
         e.preventDefault();
-    });
+    }
 
-    document.addEventListener('mousemove', function (e) {
+    function doDrag(e) {
         if (isDragging) {
-            var deltaX = e.clientX - startX;
-            var deltaY = e.clientY - startY;
+            var x = (e.clientX || e.touches[0].clientX) - offsetX;
+            var y = (e.clientY || e.touches[0].clientY) - offsetY;
+            beaverImg.style.left = x + 'px';
+            beaverImg.style.top = y + 'px';
+            moved = true;
 
-            if (Math.abs(deltaX) > 3 || Math.abs(deltaY) > 3) {
-                moved = true;
-                var x = e.clientX - offsetX;
-                var y = e.clientY - offsetY;
-                beaverImg.style.left = x + 'px';
-                beaverImg.style.top = y + 'px';
+            updateSpeechBubblePosition();
+        }
+    }
+
+    function stopDrag() {
+        if (isDragging) {
+            if (!moved) {
+                fetchNewRecord();
             }
+            isDragging = false;
         }
-    });
+    }
 
-    document.addEventListener('mouseup', function () {
-        if (isDragging && !moved) {
-            fetch(`/load-more-old-polish/?offset=${offset}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.length > 0) {
-                        var record = data[0];
-                        beaverText.innerHTML = `Czy wiesz, że staropolskie <strong>${record.old_text}</strong> to dziś <strong>${record.new_text}</strong>?`;
-                    } else {
-                        beaverText.innerHTML = 'Brak danych.';
-                    }
-                    speechBubble.style.display = 'block';
-                    offset++;
-                })
-                .catch(error => {
-                    console.error('Error fetching new record:', error);
-                    beaverText.innerHTML = 'Wystąpił błąd przy ładowaniu danych.';
-                    speechBubble.style.display = 'block';
-                });
-        }
-        isDragging = false;
-    });
+    // Mouse events
+    beaverImg.addEventListener('mousedown', startDrag);
+    document.addEventListener('mousemove', doDrag);
+    document.addEventListener('mouseup', stopDrag);
+
+    // Touch events for mobile
+    beaverImg.addEventListener('touchstart', startDrag);
+    document.addEventListener('touchmove', doDrag);
+    document.addEventListener('touchend', stopDrag);
 
     closeBubble.addEventListener('click', function () {
         speechBubble.style.display = 'none';
+        setTimeout(() => {
+            speechBubble.style.display = 'block';
+        }, 1000);
     });
 });
