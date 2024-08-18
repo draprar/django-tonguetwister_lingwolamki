@@ -25,7 +25,15 @@
       <a class="btn btn-outline-secondary d-lg-none" href="{% url 'login' %}" aria-label="login"><img src="{% static 'assets/login.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
       <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'contact' %}" style="color: white;">Kontakt</a>
       <a class="btn btn-outline-secondary d-lg-none" href="{% url 'contact' %}" aria-label="contact"><img src="{% static 'assets/envelope.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
+      <a id="mic-btn" class="btn btn-outline-secondary d-none d-lg-inline" style="color: white; cursor: pointer;">🎙️ Nagraj swój głos</a>
+      <a id="mic-btn-mobile" class="btn btn-outline-secondary d-lg-none" aria-label="mic" style="cursor: pointer;">
+        <img id="mic-img" src="{% static 'assets/mic-on.svg' %}" alt="mic-on" width="24" height="24" class="d-inline-block align-text-top">
+      </a>
       {% endif %}
     </div>
   </div>
 </nav>
+<script>
+    const micOnSrc = "{% static 'assets/mic-on.svg' %}";
+    const micOffSrc = "{% static 'assets/mic-off.svg' %}";
+</script>

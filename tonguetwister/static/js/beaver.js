@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var startX, startY;
     var offsetX, offsetY;
     var moved = false;
+    var bubbleClosedManually = false;
 
     function randomizePosition() {
         var viewportWidth = window.innerWidth;
@@ -79,27 +80,30 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function stopDrag() {
         if (isDragging) {
-            if (!moved) {
+            if (!moved && !bubbleClosedManually) {
                 fetchNewRecord();
             }
             isDragging = false;
         }
     }
 
-    // Mouse events
     beaverImg.addEventListener('mousedown', startDrag);
     document.addEventListener('mousemove', doDrag);
     document.addEventListener('mouseup', stopDrag);
 
-    // Touch events for mobile
     beaverImg.addEventListener('touchstart', startDrag);
     document.addEventListener('touchmove', doDrag);
     document.addEventListener('touchend', stopDrag);
 
     closeBubble.addEventListener('click', function () {
         speechBubble.style.display = 'none';
-        setTimeout(() => {
-            speechBubble.style.display = 'block';
-        }, 1000);
+        bubbleClosedManually = true;
     });
+
+    beaverImg.addEventListener('click', function () {
+        if (bubbleClosedManually && !moved) {
+        fetchNewRecord();
+        bubbleClosedManually = false;
+        }
+    })
 });
