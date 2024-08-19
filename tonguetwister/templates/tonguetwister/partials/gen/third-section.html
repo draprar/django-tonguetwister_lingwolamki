@@ -2,7 +2,8 @@
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 <h1><strong>ROZGRZEJ ARTYKULATORY</strong></h1>
 <p class="col-md-16 fs-4">Język, wargi, usta są jak akumulator w aucie 👨‍🔧<br>Bez odpowiedniego rozgrzania 🔥 nie odpalisz prawidłowo swojej wymowy.</p>
-
+<button id="mirror-btn-articulators" class="btn btn-dark text-uppercase fw-bold">💻 Otwórz lusterko</button>
+<br><br>
 <img src="{% static 'assets/arrows.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"><br><br>
 <div id="articulators-container">
     {% for articulator in articulators %}
@@ -18,6 +19,7 @@
 </div>
 <br>
 <button id="load-more-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ articulators|length }}" data-url="{% url 'load_more_articulators' %}" data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}">Chcę jeszcze!</button>
+<br><br>
 
 <div id="card-articulator" class="card text-white bg-secondary mt-3 mb-3 w-100" style="display: none;">
     <audio id="success-sound-articulators" src="{% static 'sounds/fanfare.mp3' %}" preload="auto"></audio>
@@ -25,4 +27,8 @@
         <p class="card-text text-center mb-0">WoW! 😎 Dobra robota! 👍 Czujesz ogień w gębie i rozpalenie na kolejne ćwiczenia? 🤩<br>Zapraszamy Cię na kolejne słówko 👉</p>
     </div>
 </div>
+<div id="video-container-articulators" style="display:none;">
+    <video id="video-preview-articulators" autoplay muted></video>
+</div>
 <script src="{% static 'js/loadAddDeleteArticulators.js' %}"></script>
+<script src="{% static 'js/videoStreamArticulators.js' %}"></script>

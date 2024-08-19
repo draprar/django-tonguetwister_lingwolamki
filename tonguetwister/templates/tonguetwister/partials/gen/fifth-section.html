@@ -1,6 +1,5 @@
 {% load static %}
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
-
 <div id="twisters-container">
     {% for twister in twisters %}
         <div class="twister col-md-16 fs-4" id="twister-{{ twister.id }}">{{ twister.text }}</div>
@@ -15,7 +14,7 @@
 </div>
 <br>
 <button id="load-more-twisters-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ twisters|length }}" data-url="{% url 'load_more_twisters' %}" data-authenticated="{{ user.is_authenticated|yesno:'true,false' }}">Chcę jeszcze!</button>
-
+<br><br>
 <div id="card-twister" class="card text-white bg-secondary mt-3 mb-3 w-100" style="display: none;">
     <div class="card-body">
         <audio id="success-sound-twisters" src="{% static 'sounds/fanfare.mp3' %}" preload="auto"></audio>
@@ -23,5 +22,8 @@
         <p class="card-text text-center mb-0">Wyrazy uznania 👏 od samego Króla Karola i Saszy z suchej Szosy! 👑 <br> My też jesteśmy z Ciebie dumni 🖖 <br> Mamy nadzieję, że spodobały Ci się językowe potyczki 👅 a w nagrodę sprawdź, jakie dary na Ciebie czekają.</p>
     </div>
 </div>
-
+<div id="video-container-twisters" style="display:none;">
+    <video id="video-preview-twisters" autoplay muted></video>
+</div>
 <script src="{% static 'js/loadAddDeleteTwisters.js' %}"></script>
+<script src="{% static 'js/videoStreamTwisters.js' %}"></script>

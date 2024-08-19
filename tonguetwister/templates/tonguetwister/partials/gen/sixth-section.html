@@ -2,7 +2,7 @@
 
 <h1><strong>PREZENT</strong></h1>
 <p class="col-md-16 fs-4">Kliknij w przycisk, aby otworzyć podarek.</p>
-
+<button id="mirror-btn-bonuses" class="btn btn-dark text-uppercase fw-bold">💻 Otwórz lusterko</button><br><br>
 <img src="{% static 'assets/arrows.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"><br><br>
 <div id="trivia-container">
     {% for x in trivia %}
@@ -21,7 +21,7 @@
 </div>
 <br>
 <button id="load-more-facts-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ funfacts|length }}" data-url="{% url 'load_more_funfacts' %}" onclick="changeFactsButtonText()">Ciekawostka</button>
-
+<br><br>
 <div id="congratulations-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close">&times;</span>
@@ -33,4 +33,8 @@
     </button>
     </div>
 </div>
+<div id="video-container-bonuses" style="display:none;">
+    <video id="video-preview-bonuses" autoplay muted></video>
+</div>
 <script src="{% static 'js/loadMoreBonuses.js' %}"></script>
+<script src="{% static 'js/videoStreamBonuses.js' %}"></script>
