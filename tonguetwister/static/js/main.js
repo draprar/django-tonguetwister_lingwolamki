@@ -2,10 +2,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var mainSwiper = new Swiper(".mySwiper", {
         on: {
             init: function () {
-                calculateSlideHeights();
+               // calculateSlideHeights();
             },
             slideChange: function () {
-                calculateSlideHeights();
+               // calculateSlideHeights();
             }
         },
         pagination: {
@@ -15,7 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
         navigation: {
             nextEl: '.swiper-button-next',
             prevEl: '.swiper-button-prev'
-        }
+        },
+        simulateTouch: true,
+        allowTouchMove: true,
     });
 
     function calculateSlideHeights() {
@@ -36,6 +38,10 @@ document.addEventListener('DOMContentLoaded', function() {
         '.toggle-articulator-btn',
         '#load-more-btn',
         '#mirror-btn',
+        '#mirror-btn-articulators',
+        '#mirror-btn-exercises',
+        '#mirror-btn-twisters',
+        '#mirror-btn-bonuses',
         '.toggle-exercise-btn',
         '#load-more-exercises-btn',
         '.toggle-twister-btn',
@@ -53,6 +59,10 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     const elementsToObserve = [
+        '#video-container-articulators',
+        '#video-container-twisters',
+        '#video-container-exercises',
+        '#video-container-bonuses',
         '#video-container',
         '#card-articulator',
         '#card-exercises',

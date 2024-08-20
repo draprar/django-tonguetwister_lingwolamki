@@ -46,14 +46,18 @@ body {
 
 .swiper-button-next,
 .swiper-button-prev {
-  color: #b22629 !important;
-  display: none;
+    color: #b22629 !important;
 }
 
-@media (min-width: 800px) {
+.swiper-button-next.d-none.d-lg-block,
+.swiper-button-prev.d-none.d-lg-block {
+    display: block;
+}
+
+@media (max-width: 992px) {
     .swiper-button-next,
     .swiper-button-prev {
-        display: block;
+        display: none;
     }
 }
 

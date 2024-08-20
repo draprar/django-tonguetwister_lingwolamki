@@ -44,16 +44,23 @@ body {
   background: #b22629 !important;
 }
 
+/* General styles for swiper buttons */
 .swiper-button-next,
 .swiper-button-prev {
-  color: #b22629 !important;
-  display: none;
+    color: #b22629 !important; /* Set color */
 }
 
-@media (min-width: 800px) {
+/* Hide navigation buttons on small screens */
+.swiper-button-next.d-none.d-lg-block,
+.swiper-button-prev.d-none.d-lg-block {
+    display: block; /* Display on large screens */
+}
+
+/* Ensure navigation buttons are not displayed on small screens */
+@media (max-width: 992px) { /* Adjust breakpoint if necessary */
     .swiper-button-next,
     .swiper-button-prev {
-        display: block;
+        display: none; /* Hide on small screens */
     }
 }
 

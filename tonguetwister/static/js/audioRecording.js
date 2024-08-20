@@ -8,51 +8,32 @@ document.addEventListener('DOMContentLoaded', () => {
     let recordingAudio = false;
     let currentStream;
 
-    micBtn.addEventListener('click', () => {
-        if (!recordingAudio) {
-            startAudioRecording();
-        } else {
-            stopAudioRecording();
-        }
-    });
+    async function startAudioRecording() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            recordingAudio = true;
+            currentStream = stream;
 
-    micBtnMobile.addEventListener('click', () => {
-        if (!recordingAudio) {
-            startAudioRecording();
-        } else {
-            stopAudioRecording();
-        }
-    });
+            updateUIForRecording(true);
 
-    function startAudioRecording() {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-                recordingAudio = true;
-                currentStream = stream;
-                micBtn.textContent = '🛑 Zatrzymaj nagranie';
-                micImg.src = micOffSrc;
-                micImg.alt = "mic-off";
+            audioChunks = [];
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.start();
 
-                audioChunks = [];
-                mediaRecorder = new MediaRecorder(stream);
-                mediaRecorder.start();
-
-                mediaRecorder.addEventListener('dataavailable', event => {
-                    audioChunks.push(event.data);
-                });
-
-                mediaRecorder.addEventListener('stop', () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                    confirmSave(audioBlob, 'audio.wav');
-                    recordingAudio = false;
-                    resetButton();
-                    stopMediaStream();
-                });
-            })
-            .catch(err => {
-                console.error('Error accessing audio stream:', err);
-                alert('Błąd przy próbie dostępu do mikrofonu. Proszę sprawdzić uprawnienia.');
+            mediaRecorder.addEventListener('dataavailable', event => {
+                audioChunks.push(event.data);
             });
+
+            mediaRecorder.addEventListener('stop', () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                confirmSave(audioBlob, 'audio.wav');
+                resetRecordingState();
+            });
+
+        } catch (err) {
+            console.error('Error accessing audio stream:', err);
+            alert('Błąd przy próbie dostępu do mikrofonu. Proszę sprawdzić uprawnienia.');
+        }
     }
 
     function stopAudioRecording() {
@@ -69,8 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function confirmSave(blob, filename) {
-        const save = confirm("Czy chcesz zapisać nagranie?");
-        if (save) {
+        if (confirm("Czy chcesz zapisać nagranie?")) {
             downloadBlob(blob, filename);
         }
     }
@@ -84,13 +64,33 @@ document.addEventListener('DOMContentLoaded', () => {
         a.click();
         setTimeout(() => {
             document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
+            URL.revokeObjectURL(url);
         }, 100);
     }
 
-    function resetButton() {
-        micBtn.textContent = '🎙️ Nagraj swój głos';
-        micImg.src = micOnSrc;
-        micImg.alt = "mic-on";
+    function updateUIForRecording(isRecording) {
+        if (isRecording) {
+            micBtn.textContent = '🛑 Zatrzymaj nagranie';
+            micImg.src = micOffSrc;
+            micImg.alt = "mic-off";
+        } else {
+            micBtn.textContent = '🎙️ Nagraj swój głos';
+            micImg.src = micOnSrc;
+            micImg.alt = "mic-on";
+        }
     }
+
+    function resetRecordingState() {
+        recordingAudio = false;
+        stopMediaStream();
+        updateUIForRecording(false);
+    }
+
+    micBtn.addEventListener('click', () => {
+        recordingAudio ? stopAudioRecording() : startAudioRecording();
+    });
+
+    micBtnMobile.addEventListener('click', () => {
+        recordingAudio ? stopAudioRecording() : startAudioRecording();
+    });
 });
