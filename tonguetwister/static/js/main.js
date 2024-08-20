@@ -2,10 +2,10 @@ document.addEventListener('DOMContentLoaded', function() {
     var mainSwiper = new Swiper(".mySwiper", {
         on: {
             init: function () {
-                calculateSlideHeights();
+                //calculateSlideHeights();
             },
             slideChange: function () {
-                calculateSlideHeights();
+                //calculateSlideHeights();
             }
         },
         pagination: {
