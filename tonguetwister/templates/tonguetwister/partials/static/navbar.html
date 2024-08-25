@@ -22,9 +22,9 @@
       <a class="btn btn-outline-secondary d-lg-none" href="{% url 'content_management' %}" aria-label="content_management"><img src="{% static 'assets/settings.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
       {% endif %}
       {% else %}
-      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'login' %}" style="color: white;">Logowanie</a>
+      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'login' %}" style="color: white;" id="login">Logowanie</a>
       <a class="btn btn-outline-secondary d-lg-none" href="{% url 'login' %}" aria-label="login"><img src="{% static 'assets/login.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
-      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'contact' %}" style="color: white;">Kontakt</a>
+      <a class="btn btn-outline-secondary d-none d-lg-inline" href="{% url 'contact' %}" style="color: white;" id="contact">Kontakt</a>
       <a class="btn btn-outline-secondary d-lg-none" href="{% url 'contact' %}" aria-label="contact"><img src="{% static 'assets/envelope.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"></a>
       {% include 'tonguetwister/partials/static/audio.html' %}
       {% endif %}

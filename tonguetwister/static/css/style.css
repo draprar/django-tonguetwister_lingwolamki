@@ -102,6 +102,17 @@ body {
   cursor: pointer;
 }
 
+#screen-dim {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    display: none;
+}
+
 #beaver-container {
     position: fixed;
     z-index: 100;
@@ -150,6 +161,10 @@ body {
 #beaver-text {
     display: block;
     color: #000;
+}
+
+#beaver-options {
+    margin-top: 10px;
 }
 
 @media only screen and (max-width: 767px) {
