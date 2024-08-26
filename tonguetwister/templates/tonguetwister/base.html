@@ -23,16 +23,24 @@
 </header>
 
 <div id="screen-dim"></div>
-
+<img id="beaver-arrow" src="{% static 'assets/arrow.png' %}" style="display:none; position:absolute; z-index:100;"/>
 <div id="beaver-container">
     <img src="{% static 'assets/beaver.png' %}" alt="Beaver" id="beaver-img">
     <div id="beaver-speech-bubble">
         <span id="beaver-text">Siema! Nazywam się <strong>LingwoŁamek</strong>, oprowadzić Cię po appce? 🧐</span>
         <div id="beaver-options">
-            <button id="beaver-yes" class="btn btn-success">TAK</button>
-            <button id="beaver-no" class="btn btn-danger">NIE</button>
+            <button id="beaver-yes" class="btn btn-dark">TAK</button>
+            <button id="beaver-no" class="btn btn-secondary">NIE</button>
         </div>
         <span id="close-speech-bubble">x</span>
+    </div>
+</div>
+
+<div id="polish-beaver-container" style="display: none;">
+    <img src="{% static 'assets/beaver.png' %}" alt="Beaver" id="polish-beaver-img">
+    <div id="polish-beaver-speech-bubble">
+        <span id="polish-beaver-text">Siema! Nazywam się <strong>LingwoŁamek</strong>, kliknij mnie, aby zajrzeć w świat staropolszczyzny 🧐</span>
+        <span id="polish-close-speech-bubble">x</span>
     </div>
 </div>
 
@@ -57,8 +65,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'js/main.js' %}"></script>
 <script src="{% static 'js/top.js' %}"></script>
-<!--<script src="{% static 'js/beaver.js' %}"></script>-->
-<script src="{% static 'js/entryBeaver.js' %}"></script>
+<script src="{% static 'js/beaver.js' %}"></script>
 <script src="{% static 'js/audioRecording.js' %}"></script>
 </body>
 </html>
