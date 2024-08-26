@@ -12,21 +12,44 @@ document.addEventListener('DOMContentLoaded', function () {
     screenDim.style.display = 'block';
 
     var steps = [
-        { selector: '#login', text: 'Kliknij, aby się zarejestrować' },
-        { selector: '#contact', text: 'Kliknij, aby się z nami skontaktować' },
-        { selector: '#mic-btn', text: 'Kliknij, aby nagrać swój głos' },
-        { selector: '#mirror-btn-articulators', text: 'Kliknij, aby włączyć podgląd' },
-        { selector: '#load-more-btn', text: 'Kliknij, aby zmienić ćwiczenie' },
-        { selector: 'body', text: 'Ekstra! Skończyliśmy nasz krótki przewodnik, pora na przygodę? :)', final: true }
+        { selector: ['#login', '#login-mobile'], text: 'Tu możesz się zalogować lub zarejestrować, aby zindywidualizować swoją naukę' },
+        { selector: ['#contact', '#contact-mobile'], text: 'Tu możesz się z Nami skontaktować, a ja zamienię się w chatbota' },
+        { selector: ['#mic-btn', '#mic-btn-mobile'], text: 'Jeżeli klikniesz - rozpoczniesz nagrywanie swojego głosu' },
+        { selector: '#mirror-btn-articulators', text: 'Dzięki tej opcji, możesz odpalić lusterko' },
+        { selector: '#load-more-btn', text: 'A tutaj wygenerujesz nowe ćwiczenie do praktyki' },
+        { selector: 'body', text: 'Super, co? Już możesz rozpocząć.', final: true }
     ];
+
+    function getTargetElement(step) {
+        let selector;
+
+        switch (step) {
+            case 0:
+                selector = window.innerWidth <= 991 ? '#login-mobile' : '#login';
+                break;
+            case 1:
+                selector = window.innerWidth <= 991 ? '#contact-mobile' : '#contact';
+                break;
+            case 2:
+                selector = window.innerWidth <= 991 ? '#mic-btn-mobile' : '#mic-btn';
+                break;
+            default:
+                selector = steps[step].selector;
+                break;
+        }
+
+        return document.querySelector(selector);
+    }
 
     function moveToStep(step) {
         if (step >= steps.length) return;
 
         var stepInfo = steps[step];
-        var targetElement = document.querySelector(stepInfo.selector);
+        var targetElement = getTargetElement(step);
 
-        if (!targetElement) return;
+        if (!targetElement) {
+            return;
+        }
 
         var targetRect = targetElement.getBoundingClientRect();
         var viewportWidth = window.innerWidth;
@@ -36,13 +59,16 @@ document.addEventListener('DOMContentLoaded', function () {
             arrow.style.display = 'none';
         } else {
             arrow.style.display = 'block';
-
             arrow.style.width = beaverImg.offsetWidth + 'px';
             arrow.style.height = 'auto';
+
+            var arrowLeft = targetRect.left + window.scrollX + (targetRect.width / 2) - (arrow.offsetWidth / 2);
+            var arrowTop = targetRect.top + window.scrollY - arrow.offsetHeight - 10;
 
             arrow.style.left = (targetRect.left - arrow.offsetWidth + 10) + 'px';
             arrow.style.top = (targetRect.bottom + targetRect.height - arrow.offsetHeight) + 'px';
         }
+
         beaverImg.style.left = (viewportWidth / 2 - beaverImg.offsetWidth / 2) + 'px';
         beaverImg.style.top = (viewportHeight / 2 - beaverImg.offsetHeight / 2) + 'px';
 
@@ -192,7 +218,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     offset++;
                 })
                 .catch(error => {
-                    console.error('Error fetching new record:', error);
                     polishBeaverText.innerHTML = 'Error loading data.';
                     polishSpeechBubble.style.display = 'block';
                 });

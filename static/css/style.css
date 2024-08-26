@@ -229,6 +229,7 @@ body {
     height: auto;
     display: none;
     animation: pulsate 1.5s infinite;
+    z-index: 102;
 }
 
 @media only screen and (max-width: 767px) {
