@@ -2,7 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const micBtn = document.getElementById('mic-btn');
     const micBtnMobile = document.getElementById('mic-btn-mobile');
     const micImg = document.getElementById('mic-img');
+    const micOnSrc = window.micConfig.micOnSrc;
+    const micOffSrc = window.micConfig.micOffSrc;
 
+    let audioContext;
     let mediaRecorder;
     let audioChunks = [];
     let recordingAudio = false;
@@ -14,22 +17,24 @@ document.addEventListener('DOMContentLoaded', () => {
             recordingAudio = true;
             currentStream = stream;
 
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const source = audioContext.createMediaStreamSource(stream);
+            const processor = audioContext.createScriptProcessor(4096, 1, 1);
+
+            processor.onaudioprocess = function(e) {
+                const inputData = e.inputBuffer.getChannelData(0);
+                const buffer = new Int16Array(inputData.length);
+
+                for (let i = 0; i < inputData.length; i++) {
+                    buffer[i] = Math.max(-1, Math.min(1, inputData[i])) * 0x7FFF;
+                }
+                audioChunks.push(buffer);
+            };
+
+            source.connect(processor);
+            processor.connect(audioContext.destination);
+
             updateUIForRecording(true);
-
-            audioChunks = [];
-            mediaRecorder = new MediaRecorder(stream);
-            mediaRecorder.start();
-
-            mediaRecorder.addEventListener('dataavailable', event => {
-                audioChunks.push(event.data);
-            });
-
-            mediaRecorder.addEventListener('stop', () => {
-                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-                confirmSave(audioBlob, 'audio.wav');
-                resetRecordingState();
-            });
-
         } catch (err) {
             console.error('Error accessing audio stream:', err);
             alert('Błąd przy próbie dostępu do mikrofonu. Proszę sprawdzić uprawnienia.');
@@ -37,9 +42,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function stopAudioRecording() {
-        if (mediaRecorder && recordingAudio) {
-            mediaRecorder.stop();
+        if (recordingAudio) {
+            recordingAudio = false;
+            audioContext.close();
+
+            const mp3Blob = exportMP3(audioChunks);
+            audioChunks = [];
+            confirmSave(mp3Blob, 'audio.mp3');
+            resetRecordingState();
         }
+    }
+
+    function exportMP3(chunks) {
+        const mp3Encoder = new lamejs.Mp3Encoder(1, 44100, 128);
+        const mp3Data = [];
+
+        chunks.forEach(chunk => {
+            const mp3buf = mp3Encoder.encodeBuffer(chunk);
+            if (mp3buf.length > 0) {
+                mp3Data.push(new Int8Array(mp3buf));
+            }
+        });
+
+        const mp3buf = mp3Encoder.flush();
+        if (mp3buf.length > 0) {
+            mp3Data.push(new Int8Array(mp3buf));
+        }
+
+        return new Blob(mp3Data, { type: 'audio/mp3' });
     }
 
     function stopMediaStream() {

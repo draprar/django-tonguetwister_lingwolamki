@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
 </head>
-<body>
+<body data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}">
 <button class="btn" onclick="topFunction()" id="topBtn"><i class="fa fa-arrow-up"></i></button>
 
 <header>
@@ -67,5 +67,12 @@
 <script src="{% static 'js/top.js' %}"></script>
 <script src="{% static 'js/beaver.js' %}"></script>
 <script src="{% static 'js/audioRecording.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/lamejs/lame.min.js"></script>
+<script id="mic-config">
+    window.micConfig = {
+        micOnSrc: "{% static 'assets/mic-on.svg' %}",
+        micOffSrc: "{% static 'assets/mic-off.svg' %}"
+    };
+</script>
 </body>
 </html>
