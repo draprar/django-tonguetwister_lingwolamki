@@ -21,7 +21,8 @@ from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, Funfa
 from .tokens import account_activation_token
 import logging
 from weasyprint import HTML
-
+from asgiref.sync import sync_to_async
+from .chatbot import Chatbot
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +73,17 @@ def main(request):
     except Exception as e:
         print(f"Exception occurred: {str(e)}")
         return HttpResponse("Internal Server Error", status=500)
+
+
+chatbot_instance = Chatbot()
+
+
+async def chatbot(request):
+    user_input = request.GET.get('message', '')
+    if user_input:
+        response = await sync_to_async(chatbot_instance.get_response)(user_input)
+        return JsonResponse({'response': response})
+    return JsonResponse({'response': 'Nie rozumiem.'})
 
 
 def content_management(request):

@@ -6,6 +6,72 @@
     <title>LingwoŁamki - przedłuż swój język - Kontakt</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+    <style>
+        #beaver-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+        }
+
+        #beaver {
+            width: 100%;
+            border-radius: 50%;
+        }
+
+        #speech-bubble {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 10px;
+            max-width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #chat-text {
+            margin-bottom: 10px;
+        }
+
+        #close-speech-bubble {
+            cursor: pointer;
+            color: #888;
+            font-size: 16px;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+
+        #user-input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #send-button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        #send-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 <button class="btn" onclick="topFunction()" id="topBtn"><i class="fa fa-arrow-up"></i></button>
@@ -75,6 +141,30 @@
         <li>- HTML, CSS&Bootstrap i JavaScript (front-end)</li>
     </ul>
 </div>
+<div id="beaver-container" style="display: block;">
+    <img src="{% static 'assets/beaver.png' %}" alt="Beaver" id="beaver">
+    <div id="speech-bubble">
+        <span id="chat-text">Pogadamy?</span>
+        <span id="close-speech-bubble">x</span>
+    </div>
+    <input type="text" id="user-input" placeholder="Wpisz swoją wiadomość">
+    <button id="send-button">Wyślij</button>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('send-button').addEventListener('click', function() {
+        var userMessage = document.getElementById('user-input').value;
+        fetch('/chatbot/?message=' + encodeURIComponent(userMessage))
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('chat-text').innerText = data.response;
+                document.getElementById('user-input').value = '';
+            });
+    });
+
+    document.getElementById('close-speech-bubble').addEventListener('click', function() {
+        document.getElementById('beaver-container').style.display = 'none';
+    });
+</script>
 </body>
 </html>

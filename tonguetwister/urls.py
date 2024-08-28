@@ -53,6 +53,7 @@ urlpatterns = [
     path('add-twister/<int:twister_id>/', views.add_twister, name='add_twister'),
     path('delete-twister/<int:twister_id>/', views.delete_twister, name='delete_twister'),
     path('contact/', views.contact, name='contact'),
+    path('chatbot/', views.chatbot, name='chatbot'),
 ]
 
 if settings.DEBUG:

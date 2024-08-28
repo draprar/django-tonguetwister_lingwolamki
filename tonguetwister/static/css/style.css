@@ -233,71 +233,70 @@ body {
 }
 
 @media only screen and (max-width: 767px) {
-    #video-container-articulators {
-        display: block;
-        overflow: hidden;
-        width: 100%;
-        height: 30vh;
-        position: relative;
-    }
+#video-container-articulators {
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: 30vh;
+    position: relative;
+}
 
-    #video-preview-articulators {
-        width: 100%;
-        height: 100vh;
-        position: absolute;
-        top: -70vh;
-        left: 0;
-        object-fit: cover;
-    }
+#video-preview-articulators {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: -70vh;
+    left: 0;
+    object-fit: cover;
+}
 
-    #video-container-exercises {
-        display: block;
-        overflow: hidden;
-        width: 100%;
-        height: 30vh;
-        position: relative;
-    }
+#video-container-exercises {
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: 30vh;
+    position: relative;
+}
 
-    #video-preview-exercises {
-        width: 100%;
-        height: 100vh;
-        position: absolute;
-        top: -70vh;
-        left: 0;
-        object-fit: cover;
-    }
+#video-preview-exercises {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: -70vh;
+    left: 0;
+    object-fit: cover;
+}
 
-    #video-container-twisters {
-        display: block;
-        overflow: hidden;
-        width: 100%;
-        height: 30vh;
-        position: relative;
-    }
+#video-container-twisters {
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: 30vh;
+    position: relative;
+}
 
-    #video-preview-twisters {
-        width: 100%;
-        height: 100vh;
-        position: absolute;
-        top: -70vh;
-        left: 0;
-        object-fit: cover;
-    }
+#video-preview-twisters {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: -70vh;
+    left: 0;
+    object-fit: cover;
+}
 
-    #video-container-bonuses {
-        display: block;
-        overflow: hidden;
-        width: 100%;
-        height: 30vh;
-        position: relative;
-    }
+#video-container-bonuses {
+    display: block;
+    overflow: hidden;
+    width: 100%;
+    height: 30vh;
+    position: relative;
+}
 
-    #video-preview-bonuses {
-        width: 100%;
-        height: 100vh;
-        position: absolute;
-        top: -70vh;
-        left: 0;
-        object-fit: cover;
-    }
+#video-preview-bonuses {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: -70vh;
+    left: 0;
+    object-fit: cover;
 }
