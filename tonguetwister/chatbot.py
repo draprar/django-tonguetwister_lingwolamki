@@ -1,6 +1,4 @@
-import os
 from transformers import AutoModelForCausalLM, AutoTokenizer
-from django.core.cache import cache
 
 MODEL = None
 TOKENIZER = None
@@ -9,8 +7,10 @@ TOKENIZER = None
 def load_model():
     global MODEL, TOKENIZER
     if MODEL is None or TOKENIZER is None:
-        TOKENIZER = AutoTokenizer.from_pretrained("dkleczek/bert-base-polish-uncased-v1")
-        MODEL = AutoModelForCausalLM.from_pretrained("dkleczek/bert-base-polish-uncased-v1")
+        TOKENIZER = AutoTokenizer.from_pretrained("sdadas/polish-gpt2-small")
+        if TOKENIZER.pad_token is None:
+            TOKENIZER.pad_token = TOKENIZER.eos_token
+        MODEL = AutoModelForCausalLM.from_pretrained("sdadas/polish-gpt2-small")
     return MODEL, TOKENIZER
 
 
@@ -163,22 +163,35 @@ class Chatbot:
             'kursy': "Lingwołamki oferują specjalistyczne kursy wymowy, które pomogą Ci w opanowaniu trudnych aspektów mowy."
         }
 
-    def get_response(self, user_input):
-        cached_response = cache.get(user_input)
-        if cached_response:
-            return cached_response
+    def generate_response(self, input_text):
+        if self.tokenizer.pad_token is None:
+            custom_pad_token = "[PAD]"
+            self.tokenizer.add_special_tokens({'pad_token': custom_pad_token})
 
-        for keyword, response in self.keywords.items():
-            if keyword in user_input.lower():
-                cache.set(user_input, response, timeout=60 * 60)
-                return response
+        inputs = self.tokenizer(input_text, return_tensors='pt', padding=True, truncation=True, max_length=50)
 
-        eos_token = self.tokenizer.eos_token if self.tokenizer.eos_token else ""
-        input_ids = self.tokenizer.encode(user_input + eos_token, return_tensors='pt')
+        input_ids = inputs['input_ids']
+        attention_mask = inputs['attention_mask']
 
-        response_ids = self.model.generate(input_ids, max_length=30, pad_token_id=self.tokenizer.eos_token_id)
-        response = self.tokenizer.decode(response_ids[:, input_ids.shape[-1]:][0], skip_special_tokens=True)
+        output = self.model.generate(
+            input_ids,
+            attention_mask=attention_mask,
+            max_length=50,
+            num_return_sequences=1,
+            repetition_penalty=2.0,
+            no_repeat_ngram_size=2,
+            pad_token_id=self.tokenizer.pad_token_id,
+        )
 
-        cache.set(user_input, response, timeout=60 * 60)
+        response = self.tokenizer.decode(output[0], clean_up_tokenization_spaces=True, skip_special_tokens=True)
+
+        if input_text in response:
+            response = response.replace(input_text, "").strip()
 
         return response
+
+    def get_response(self, user_input):
+        for keyword, response in self.keywords.items():
+            if keyword in user_input.lower():
+                return response
+        return self.generate_response(user_input)
