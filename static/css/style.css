@@ -208,6 +208,79 @@ body {
     line-height: 20px;
 }
 
+#chat-beaver-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 200px;
+    z-index: 1000;
+    cursor: move;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#chat-beaver-img {
+    width: 100px;
+    height: auto;
+    position: absolute;
+}
+
+#chat-speech-bubble {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
+}
+
+#chat-text {
+    margin-bottom: 10px;
+}
+
+#beaver-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 100px;
+    z-index: 1002;
+    position: relative;
+}
+
+#chat-user-input {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#chat-send-button {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #6c757d;
+    color: white;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+#chat-send-button:hover {
+    background-color: #5a6268;
+}
+
 @keyframes pulsate {
     0% {
         transform: scale(1);

@@ -1,22 +1,11 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from textblob import TextBlob
+import nltk
 
-MODEL = None
-TOKENIZER = None
-
-
-def load_model():
-    global MODEL, TOKENIZER
-    if MODEL is None or TOKENIZER is None:
-        TOKENIZER = AutoTokenizer.from_pretrained("sdadas/polish-gpt2-small")
-        if TOKENIZER.pad_token is None:
-            TOKENIZER.pad_token = TOKENIZER.eos_token
-        MODEL = AutoModelForCausalLM.from_pretrained("sdadas/polish-gpt2-small")
-    return MODEL, TOKENIZER
+nltk.download('punkt_tab')
 
 
 class Chatbot:
     def __init__(self):
-        self.model, self.tokenizer = load_model()
         self.keywords = {
             'rejestracja': "Aby się zarejestrować, kliknij przycisk 'Logowanie'. Zarejestruj się już teraz, aby korzystać z pełni funkcji naszej aplikacji!",
             'rejestrację': "Aby się zarejestrować, kliknij przycisk 'Logowanie'. Zarejestruj się już teraz, aby korzystać z pełni funkcji naszej aplikacji!",
@@ -163,35 +152,20 @@ class Chatbot:
             'kursy': "Lingwołamki oferują specjalistyczne kursy wymowy, które pomogą Ci w opanowaniu trudnych aspektów mowy."
         }
 
-    def generate_response(self, input_text):
-        if self.tokenizer.pad_token is None:
-            custom_pad_token = "[PAD]"
-            self.tokenizer.add_special_tokens({'pad_token': custom_pad_token})
-
-        inputs = self.tokenizer(input_text, return_tensors='pt', padding=True, truncation=True, max_length=50)
-
-        input_ids = inputs['input_ids']
-        attention_mask = inputs['attention_mask']
-
-        output = self.model.generate(
-            input_ids,
-            attention_mask=attention_mask,
-            max_length=50,
-            num_return_sequences=1,
-            repetition_penalty=2.0,
-            no_repeat_ngram_size=2,
-            pad_token_id=self.tokenizer.pad_token_id,
-        )
-
-        response = self.tokenizer.decode(output[0], clean_up_tokenization_spaces=True, skip_special_tokens=True)
-
-        if input_text in response:
-            response = response.replace(input_text, "").strip()
-
-        return response
+    def process_text(self, user_input):
+        blob = TextBlob(user_input)
+        return blob
 
     def get_response(self, user_input):
-        for keyword, response in self.keywords.items():
-            if keyword in user_input.lower():
-                return response
-        return self.generate_response(user_input)
+        blob = self.process_text(user_input)
+
+        for keyword in self.keywords:
+            if keyword in blob.words:
+                return self.keywords[keyword]
+
+        if blob.sentiment.polarity > 0:
+            return "Cieszę się, że masz pozytywne nastawienie! Jak mogę Ci jeszcze pomóc?"
+        elif blob.sentiment.polarity < 0:
+            return "Przykro mi, że masz negatywne odczucia. Może mogę jakoś pomóc?"
+        else:
+            return "Dziękuję za wiadomość. Jak mogę pomóc?"
