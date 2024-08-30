@@ -1,5 +1,5 @@
-from django.contrib.auth.middleware import get_user
 from datetime import timedelta
+from django.contrib.auth.middleware import get_user
 from django.utils import timezone
 
 
