@@ -15,9 +15,10 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
-from .models import (Twister, Articulator, Exercise, Trivia, Funfact, OldPolish, UserProfileArticulator, UserProfileTwister,
-                     UserProfileExercise)
-from .forms import ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm, ContactForm, AvatarUploadForm, OldPolishForm
+from .models import (Twister, Articulator, Exercise, Trivia, Funfact, OldPolish, UserProfileArticulator,
+                     UserProfileTwister, UserProfileExercise)
+from .forms import (ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm,
+                    ContactForm, AvatarUploadForm, OldPolishForm)
 from .tokens import account_activation_token
 import logging
 from weasyprint import HTML
@@ -33,45 +34,25 @@ def is_admin(user):
 
 def main(request):
     try:
-        twisters = Twister.objects.all().all()[:1]
-        if request.user.is_authenticated:
-            user_twisters_texts = list(
-                UserProfileTwister.objects.filter(user=request.user).values_list('twister__text', flat=True))
-        else:
-            user_twisters_texts = []
+        context = {
+            'twisters': Twister.objects.all()[:1],
+            'articulators': Articulator.objects.all()[:1],
+            'exercises': Exercise.objects.all()[:1],
+            'trivia': Trivia.objects.all()[:0],
+            'funfacts': Funfact.objects.all()[:0],
+            'old_polish_texts': OldPolish.objects.order_by('?'),
+        }
 
-        articulators = Articulator.objects.all()[:1]
         if request.user.is_authenticated:
-            user_articulators_texts = list(
-                UserProfileArticulator.objects.filter(user=request.user).values_list('articulator__text', flat=True))
-        else:
-            user_articulators_texts = []
-
-        exercises = Exercise.objects.all()[:1]
-        if request.user.is_authenticated:
-            user_exercises_texts = list(
-                UserProfileExercise.objects.filter(user=request.user).values_list('exercise__text', flat=True))
-        else:
-            user_exercises_texts = []
-        trivia = Trivia.objects.all()[:0]
-        funfacts = Funfact.objects.all()[:0]
-        old_polish_texts = OldPolish.objects.order_by('?')
-
-        context = {'twisters': twisters,
-                   'user_twisters_texts': user_twisters_texts,
-                   'articulators': articulators,
-                   'user_articulators_texts': user_articulators_texts,
-                   'exercises': exercises,
-                   'user_exercises_texts': user_exercises_texts,
-                   'trivia': trivia,
-                   'funfacts': funfacts,
-                   'old_polish_texts': old_polish_texts,
-                   }
+            context.update({
+                'user_twisters_texts': list(UserProfileTwister.objects.filter(user=request.user).values_list('twister__text', flat=True)),
+                'user_articulators_texts': list(UserProfileArticulator.objects.filter(user=request.user).values_list('articulator__text', flat=True)),
+                'user_exercises_texts': list(UserProfileExercise.objects.filter(user=request.user).values_list('exercise__text', flat=True)),
+            })
 
         return render(request, 'tonguetwister/main.html', context)
-
     except Exception as e:
-        print(f"Exception occurred: {str(e)}")
+        logger.error(f"Exception occurred: {str(e)}")
         return HttpResponse("Internal Server Error", status=500)
 
 
@@ -87,8 +68,7 @@ async def chatbot(request):
 
 
 def content_management(request):
-    data = {}
-    return render(request, 'admin/settings.html', data)
+    return render(request, 'admin/settings.html')
 
 
 def load_more_articulators(request):
