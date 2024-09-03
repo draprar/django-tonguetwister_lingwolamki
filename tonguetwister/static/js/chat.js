@@ -35,15 +35,33 @@ document.addEventListener('DOMContentLoaded', function () {
     document.addEventListener('touchmove', doDrag);
     document.addEventListener('touchend', stopDrag);
 
+    // Send message when the button is clicked
     document.getElementById('chat-send-button').addEventListener('click', function () {
         var userMessage = document.getElementById('chat-user-input').value;
-        fetch('/chatbot/?message=' + encodeURIComponent(userMessage))
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('chat-chat-text').innerText = data.response;
-                document.getElementById('chat-user-input').value = '';
-            });
+        if (userMessage.trim() !== "") {  // Ensure non-empty input
+            fetch('/chatbot/?message=' + encodeURIComponent(userMessage))
+                .then(response => response.json())
+                .then(data => {
+                    // Correct ID used here
+                    document.getElementById('chat-text').innerText = data.response;
+                    document.getElementById('chat-user-input').value = '';  // Clear input field
+                });
+        }
     });
 
+    // Allow sending the message by pressing Enter
+    document.getElementById('chat-user-input').addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            document.getElementById('chat-send-button').click();
+        }
+    });
+
+    // Prevent dragging from interfering with input and button
+    document.getElementById('chat-user-input').addEventListener('mousedown', function (e) {
+        e.stopPropagation();
+    });
+
+    document.getElementById('chat-send-button').addEventListener('mousedown', function (e) {
+        e.stopPropagation();
     });
 });
