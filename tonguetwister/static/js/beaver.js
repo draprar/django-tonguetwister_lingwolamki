@@ -327,6 +327,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         polishCloseBubble.addEventListener('click', function () {
             polishSpeechBubble.style.display = 'none';
+            polishBeaverImg.style.display = 'none';
             bubbleClosedManually = true;
         });
 

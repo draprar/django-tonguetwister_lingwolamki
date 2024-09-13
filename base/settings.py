@@ -14,31 +14,28 @@ from django.core.management.utils import get_random_secret_key
 from pathlib import Path
 
 
-'''import environ
+import environ
 
 env = environ.Env(
     DEBUG=(bool, False),
 )
-'''
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-'''
+
 environ.Env.read_env(BASE_DIR / '.env')
-'''
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-'''SECRET_KEY = env.str('SECRET_KEY', default=get_random_secret_key())'''
-SECRET_KEY = 'django-insecure-8*xd5qqgdj*7ac8m%!#h%8_y^(2wjs3ybu&@nks)0h48=0mmch'
+SECRET_KEY = env.str('SECRET_KEY', default=get_random_secret_key())
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-'''DEBUG = env('DEBUG')'''
-DEBUG = True
+DEBUG = env('DEBUG')
 
-'''ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')'''
-ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', 'www.lingwolamki.online']
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Application definition
 
@@ -62,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'base.middleware.LoginStreakMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
 ]
 
 ROOT_URLCONF = 'base.urls'
@@ -135,6 +133,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -145,10 +144,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.wp.pl'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-DEFAULT_FROM_EMAIL = ''
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.wp.pl')
+EMAIL_PORT = env.int('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
