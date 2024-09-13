@@ -572,7 +572,7 @@ def login_view(request):
                 login(request, user)
                 return redirect('main')
             else:
-                messages.error(request, 'Napotkaliśmy zgoła nieoczekiwane błędy 😱 spróbuj jesio raz 😵')
+                messages.error(request, 'Napotkaliśmy zgoła nieoczekiwane błędy 😱 spróbuj raz jeszcze 😊')
 
     return render(request, 'registration/login.html', {'form': form})
 
