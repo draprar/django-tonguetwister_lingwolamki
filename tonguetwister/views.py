@@ -625,6 +625,7 @@ def activate(request, uidb64, token):
         return redirect('register')
 
 
+@csrf_protect
 def password_reset_view(request):
     if request.method == 'POST':
         email = request.POST.get('email')
@@ -664,6 +665,7 @@ def password_reset_view(request):
     return render(request, 'registration/password_reset_form.html')
 
 
+@csrf_protect
 def password_reset_confirm_view(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -689,10 +691,12 @@ def password_reset_confirm_view(request, uidb64, token):
         return redirect('password_reset')
 
 
+@csrf_protect
 def password_reset_complete_view(request):
     return render(request, 'registration/password_reset_complete.html')
 
 
+@csrf_protect
 def password_reset_done_view(request):
     return render(request, 'registration/password_reset_done.html')
 
@@ -705,11 +709,12 @@ def contact(request):
             email = form.cleaned_data['email']
             message = form.cleaned_data['message']
             subject = f'Kontakt od {name}'
+            message_with_email = f"From: {email}\n\n{message}"
 
             try:
                 send_mail(
                     subject=subject,
-                    message=message,
+                    message=message_with_email,
                     from_email=settings.EMAIL_HOST_USER,
                     recipient_list=[settings.EMAIL_HOST_USER],
                     fail_silently=False,
