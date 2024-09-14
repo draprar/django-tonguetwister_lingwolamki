@@ -33,7 +33,7 @@ SECRET_KEY = env.str('SECRET_KEY', default=get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', '.pythonanywhere.com', 'www.lingwolamki.online', 'lingwolamki.online'])
+ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', 'www.lingwolamki.online', 'lingwolamki.online']
 
 CSRF_TRUSTED_ORIGINS = ['https://www.lingwolamki.online', 'https://lingwolamki.online']
 
@@ -142,7 +142,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = env('EMAIL_HOST')
