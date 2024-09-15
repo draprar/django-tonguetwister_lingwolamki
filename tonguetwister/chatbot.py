@@ -1,7 +1,9 @@
+import logging
+
 from textblob import TextBlob
 import nltk
 
-nltk.download('punkt_tab')
+nltk.download('punkt')
 
 
 class Chatbot:
@@ -151,17 +153,23 @@ class Chatbot:
             'kurs': "Lingwołamki oferują specjalistyczne kursy wymowy, które pomogą Ci w opanowaniu trudnych aspektów mowy.",
             'kursy': "Lingwołamki oferują specjalistyczne kursy wymowy, które pomogą Ci w opanowaniu trudnych aspektów mowy."
         }
+        self.keyword_blobs = {TextBlob(k): v for k, v in self.keywords.items()}
 
     def process_text(self, user_input):
-        blob = TextBlob(user_input)
-        return blob
+        try:
+            return TextBlob(user_input)
+        except Exception as e:
+            logging.error(f"Error processing text: {e}")
+            return None
 
     def get_response(self, user_input):
         blob = self.process_text(user_input)
+        if not blob:
+            return "Niestety, nie mogę przetworzyć Twojej wiadomości. Spróbuj ponownie."
 
-        for keyword in self.keywords:
-            if keyword in blob.words:
-                return self.keywords[keyword]
+        for keyword_blob, response in self.keyword_blobs.items():
+            if any(word in blob.words for word in keyword_blob.words):
+                return response
 
         if blob.sentiment.polarity > 0:
             return "Cieszę się, że masz pozytywne nastawienie! Jak mogę Ci jeszcze pomóc?"

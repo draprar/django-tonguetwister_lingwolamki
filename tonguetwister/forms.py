@@ -1,10 +1,9 @@
-import re
-
 from django import forms
 from .models import Articulator, Exercise, Twister, Trivia, Funfact, Profile, OldPolish
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 
 
 class ArticulatorForm(forms.ModelForm):
@@ -36,11 +35,18 @@ class FunfactForm(forms.ModelForm):
         model = Funfact
         fields = ['text']
 
+
 class OldPolishForm(forms.ModelForm):
 
     class Meta:
         model = OldPolish
         fields = ['old_text', 'new_text']
+
+
+strong_password_validator = RegexValidator(
+    regex=r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+]).{8,}$',
+    message="Hasło powinno mieć więcej niż 8 znaków i zawierać: wielkie i małe litery, cyfry i znaki specjalne.",
+)
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -54,6 +60,7 @@ class CustomUserCreationForm(UserCreationForm):
     )
     password1 = forms.CharField(
         required=True,
+        validators=[strong_password_validator],
         widget=forms.PasswordInput(attrs={'id': 'password1'})
     )
     password2 = forms.CharField(
@@ -77,13 +84,6 @@ class CustomUserCreationForm(UserCreationForm):
             raise ValidationError("Konto pod tym adresem email już istnieje :(")
         return email
 
-    def clean_password1(self):
-        password1 = self.cleaned_data.get('password1')
-        if not self.is_password_strong(password1):
-            raise ValidationError(
-                "Hasło powinno mieć więcej niż 8 znaków i zawierać: wielkie i małe litery, cyfry i znaki specjalne.")
-        return password1
-
     def clean(self):
         cleaned_data = super().clean()
         password1 = cleaned_data.get("password1")
@@ -93,19 +93,6 @@ class CustomUserCreationForm(UserCreationForm):
             raise ValidationError("Hasełka do siebie nie pasują :(")
 
         return cleaned_data
-
-    def is_password_strong(self, password):
-        if len(password) < 8:
-            return False
-        if not re.search(r"[A-Z]", password):
-            return False
-        if not re.search(r"[a-z]", password):
-            return False
-        if not re.search(r"[0-9]", password):
-            return False
-        if not re.search(r"[!@#$%^&*()_+]", password):
-            return False
-        return True
 
     def save(self, commit=True):
         user = super(CustomUserCreationForm, self).save(commit=False)
@@ -147,3 +134,19 @@ class AvatarUploadForm(forms.ModelForm):
         labels = {
             'avatar': 'Wybierz awatar'
         }
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get('avatar')
+
+        if not avatar:
+            raise ValidationError('Wybierz awatar.')
+
+        valid_mime_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
+        if avatar.content_type not in valid_mime_types:
+            raise ValidationError("Niepoprawny format pliku. Akceptowane formaty to JPEG/JPG, PNG, GIF.")
+
+        max_file_size = 2 * 1024 * 1024
+        if avatar.size > max_file_size:
+            raise ValidationError("Rozmiar pliku nie może przekroczyć 2 MB.")
+
+        return avatar

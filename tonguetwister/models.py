@@ -56,14 +56,13 @@ class Profile(models.Model):
 
     def update_login_streak(self):
         today = timezone.now().date()
-        if self.last_login_date == today:
-            return
-        if self.last_login_date == today - timedelta(days=1):
-            self.login_streak += 1
-        else:
-            self.login_streak = 1
-        self.last_login_date = today
-        self.save()
+        if self.last_login_date != today:
+            if self.last_login_date == today - timedelta(days=1):
+                self.login_streak += 1
+            else:
+                self.login_streak = 1
+            self.last_login_date = today
+            self.save()
 
     def __str__(self):
         return f'{self.user.username} Profile'

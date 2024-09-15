@@ -71,115 +71,61 @@ def content_management(request):
     return render(request, 'admin/settings.html')
 
 
-def load_more_articulators(request):
+def load_more_generic(request, model, user_profile_model, related_field, limit=1):
     try:
         offset = int(request.GET.get('offset', 0))
-        limit = 1
-        articulators = Articulator.objects.all()[offset:offset + limit]
+        objects = model.objects.all()[offset:offset + limit]
 
         if request.user.is_authenticated:
-            user_articulators_texts = set(
-                UserProfileArticulator.objects.filter(user=request.user).values_list('articulator__text', flat=True)
-            )
+            user_texts = set(user_profile_model.objects.filter(user=request.user).values_list(f'{related_field}__text', flat=True))
         else:
-            user_articulators_texts = set()
+            user_texts = set()
 
-        data = []
-        for articulator in articulators:
-            is_added = articulator.text in user_articulators_texts
-            data.append({
-                'id': articulator.id,
-                'text': articulator.text,
-                'is_added': is_added,
-            })
+        data = [{
+            'id': obj.id,
+            'text': getattr(obj, 'text', ''),
+            'is_added': obj.text in user_texts,
+        } for obj in objects]
 
         return JsonResponse(data, safe=False)
-
     except Exception as e:
-        print(f"Exception occurred in load_more_articulators: {str(e)}")
+        logger.error(f"Exception occured: {str(e)}")
         return JsonResponse({'error': 'Internal Server Error'}, status=500)
+
+
+def load_more_articulators(request):
+    return load_more_generic(request, Articulator, UserProfileArticulator, related_field='articulator')
 
 
 def load_more_exercises(request):
-    try:
-        offset = int(request.GET.get('offset', 0))
-        limit = 1
-        exercises = Exercise.objects.all()[offset:offset + limit]
-
-        if request.user.is_authenticated:
-            user_exercises_texts = set(
-                UserProfileExercise.objects.filter(user=request.user).values_list('exercise__text', flat=True)
-            )
-        else:
-            user_exercises_texts = set()
-
-        data = []
-        for exercise in exercises:
-            is_added = exercise.text in user_exercises_texts
-            data.append({
-                'id': exercise.id,
-                'text': exercise.text,
-                'is_added': is_added,
-            })
-
-        return JsonResponse(data, safe=False)
-
-    except Exception as e:
-        print(f"Exception occurred in load_more_exercises: {str(e)}")
-        return JsonResponse({'error': 'Internal Server Error'}, status=500)
+    return load_more_generic(request, Exercise, UserProfileExercise, related_field='exercise')
 
 
 def load_more_twisters(request):
+    return load_more_generic(request, Twister, UserProfileTwister, related_field='twister')
+
+
+def simple_load_more_generic(request, model, limit=1):
     try:
         offset = int(request.GET.get('offset', 0))
-        limit = 1
-        twisters = Twister.objects.all()[offset:offset + limit]
-
-        if request.user.is_authenticated:
-            user_twisters_texts = set(
-                UserProfileTwister.objects.filter(user=request.user).values_list('twister__text', flat=True)
-            )
-        else:
-            user_twisters_texts = set()
-
-        data = []
-        for twister in twisters:
-            is_added = twister.text in user_twisters_texts
-            data.append({
-                'id': twister.id,
-                'text': twister.text,
-                'is_added': is_added,
-            })
-
+        objects = model.objects.all()[offset:offset + limit]
+        data = list(objects.values())
         return JsonResponse(data, safe=False)
-
     except Exception as e:
-        print(f"Exception occurred in load_more_twisters: {str(e)}")
+        logger.error(f"Exception occured: {str(e)}")
         return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 
 def load_more_old_polish(request):
-    offset = int(request.GET.get('offset', 0))
-    limit = 1
-    old_polish_record = OldPolish.objects.all()[offset:offset + limit]
-    data = list(old_polish_record.values())
-    return JsonResponse(data, safe=False)
+    return simple_load_more_generic(request, OldPolish)
 
 
 def load_more_trivia(request):
-    offset = int(request.GET.get('offset', 0))
-    limit = 1
-    trivia = Trivia.objects.all()[offset:offset + limit]
-    data = list(trivia.values())
-    return JsonResponse(data, safe=False)
+    return simple_load_more_generic(request, Trivia)
 
 
 def load_more_funfacts(request):
-    offset = int(request.GET.get('offset', 0))
-    limit = 1
-    funfacts = Funfact.objects.all()[offset:offset + limit]
-    data = list(funfacts.values())
-    return JsonResponse(data, safe=False)
+    return simple_load_more_generic(request, Funfact)
 
 
 def error_404_view(request, exception):
@@ -385,7 +331,6 @@ def funfact_delete(request, pk):
         funfact.delete()
         return redirect('funfact_list')
     return render(request, 'tonguetwister/funfacts/funfact_confirm_delete.html', {'funfact': funfact})
-
 
 
 @user_passes_test(is_admin)

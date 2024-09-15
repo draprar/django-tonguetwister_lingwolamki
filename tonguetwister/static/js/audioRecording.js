@@ -116,11 +116,18 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUIForRecording(false);
     }
 
-    micBtn.addEventListener('click', () => {
+    function toggleRecording() {
         recordingAudio ? stopAudioRecording() : startAudioRecording();
-    });
+    }
 
-    micBtnMobile.addEventListener('click', () => {
-        recordingAudio ? stopAudioRecording() : startAudioRecording();
-    });
+    micBtn.addEventListener('click', toggleRecording);
+    micBtnMobile.addEventListener('click', toggleRecording);
+
+    window.addEventListener('beforeunload', () => {
+        if (currentStream) {
+            currentStream.getTracks().forEach(track => track.stop());
+        }
+        micBtn.removeEventListener('click', toggleRecording);
+        micBtnMobile.removeEventListener('click', toggleRecording);
+    })
 });

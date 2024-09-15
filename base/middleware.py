@@ -13,9 +13,7 @@ class LoginStreakMiddleware:
             profile = user.profile
             today = timezone.now().date()
 
-            if profile.last_login_date == today:
-                pass
-            else:
+            if profile.last_login_date != today:
                 if profile.last_login_date == today - timedelta(days=1):
                     profile.login_streak += 1
                 else:
