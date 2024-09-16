@@ -45,11 +45,12 @@ jobs:
 
       - name: Run migrations
         run: |
+          python manage.py makemigrations
           python manage.py migrate
 
       - name: Run tests with pytest
         run: |
-          pytest
+          pytest --disable-warnings
 
       - name: Store test results
         if: always()
