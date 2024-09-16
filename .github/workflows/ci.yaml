@@ -48,6 +48,10 @@ jobs:
           python manage.py makemigrations
           python manage.py migrate
 
+      - name: Collect static
+        run: |
+          python manage.py collectstatic --noinput
+
       - name: Run tests with pytest
         run: |
           pytest --disable-warnings
