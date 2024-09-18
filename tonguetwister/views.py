@@ -380,9 +380,7 @@ def user_content(request):
         if 'action' in request.POST and request.POST['action'] == 'delete-avatar':
             if profile.avatar:
                 profile.avatar.delete(save=True)
-                messages.success(request, 'Awatar został usunięty.')
             else:
-                messages.info(request, 'Brak awatara do usunięcia.')
                 return redirect('user_content')
 
         form = AvatarUploadForm(request.POST, request.FILES, instance=request.user.profile)

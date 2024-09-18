@@ -37,9 +37,9 @@
                 </div><br>
                 {% if user.profile.avatar %}
                     <button type="submit" name="action" value="delete-avatar" class="btn btn-danger btn-block">Usuń awatar</button>
-                    <button type="submit" class="btn btn-dark btn-block">Zmień</button>
+                    <button type="submit" class="btn btn-dark btn-block">Zmień (maks. 2MB)</button>
                 {% else %}
-                    <button type="submit" class="btn btn-dark btn-block">Dodaj</button>
+                    <button type="submit" class="btn btn-dark btn-block">Dodaj (maks. 2MB)</button>
                 {% endif %}
             </form>
         </div>
