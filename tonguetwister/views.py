@@ -45,9 +45,9 @@ def main(request):
 
         if request.user.is_authenticated:
             context.update({
-                'user_twisters_texts': list(UserProfileTwister.objects.filter(user=request.user).values_list('twister__text', flat=True)),
-                'user_articulators_texts': list(UserProfileArticulator.objects.filter(user=request.user).values_list('articulator__text', flat=True)),
-                'user_exercises_texts': list(UserProfileExercise.objects.filter(user=request.user).values_list('exercise__text', flat=True)),
+                'user_twisters_texts': list(UserProfileTwister.objects.filter(user=request.user).select_related('twister').values_list('twister__text', flat=True)),
+                'user_articulators_texts': list(UserProfileArticulator.objects.filter(user=request.user).select_related('articulator').values_list('articulator__text', flat=True)),
+                'user_exercises_texts': list(UserProfileExercise.objects.filter(user=request.user).select_related('exercise').values_list('exercise__text', flat=True)),
             })
 
         return render(request, 'tonguetwister/main.html', context)
