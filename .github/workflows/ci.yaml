@@ -29,6 +29,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-django
+          python -m textblob.download_corpora
 
       - name: Set up environment variables
         run: |
