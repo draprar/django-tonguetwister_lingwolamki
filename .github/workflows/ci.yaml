@@ -29,7 +29,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-django
-          python -m textblob.download_corpora
+
+      - name: Download NLTK data
+        run: |
+          python -m nltk.downloader punkt
 
       - name: Set up environment variables
         run: |
