@@ -155,6 +155,27 @@ class Chatbot:
         }
         self.keyword_blobs = {TextBlob(k): v for k, v in self.keywords.items()}
 
+        self.negative_words = [
+            'okropne', 'straszne', 'tragiczne', 'złe', 'smutne', 'przykre', 'beznadziejne', 'denerwujące',
+            'nudne', 'uciążliwe', 'stresujące', 'nieprzyjemne', 'irytujące', 'fatalne', 'przerażające',
+            'problematyczne', 'nieakceptowalne', 'męczące', 'niezadowalające', 'odpychające', 'zawstydzające',
+            'frustrujące', 'niszczące', 'potworne', 'kiepskie', 'bezwartościowe', 'nieszczęśliwe', 'depresyjne',
+            'żenujące', 'katastrofalne', 'zdradliwe', 'niedopuszczalne', 'niewygodne', 'bolesne', 'krępujące',
+            'żałosne', 'rozczarowujące', 'nieudane', 'zniechęcające', 'rozpaczliwe', 'wrogie', 'nieprzystępne',
+            'niszczycielskie', 'przytłaczające', 'zdołowane', 'toksyczne', 'żałobne', 'bezsilne', 'tłamszące',
+            'odrażające'
+        ]
+
+        self.positive_words = [
+            'wspaniałe', 'niesamowite', 'świetne', 'fantastyczne', 'pozytywne', 'doskonałe', 'radosne',
+            'inspirujące', 'przyjemne', 'relaksujące', 'imponujące', 'satysfakcjonujące', 'wyjątkowe', 'cudowne',
+            'piękne', 'zachwycające', 'fenomenalne', 'wartościowe', 'podnoszące na duchu', 'motywujące',
+            'porywające', 'rewelacyjne', 'ekscytujące', 'owocne', 'energetyzujące', 'szczęśliwe', 'optymistyczne',
+            'fascynujące', 'budujące', 'genialne', 'urocze', 'radosne', 'promienne', 'pomyślne', 'zdumiewające',
+            'odprężające', 'hojne', 'zabawne', 'pewne', 'wyborne', 'magiczne', 'natchnione', 'radosne',
+            'dobroczynne', 'życzliwe', 'spektakularne', 'harmonijne', 'kojące', 'twórcze', 'szlachetne'
+        ]
+
     def process_text(self, user_input):
         try:
             return TextBlob(user_input)
@@ -162,7 +183,20 @@ class Chatbot:
             logging.error(f"Error processing text: {e}")
             return None
 
+    def get_custom_sentiment(self, user_input):
+        if any(neg_word in user_input.lower() for neg_word in self.negative_words):
+            return -1
+        if any(pos_word in user_input.lower() for pos_word in self.positive_words):
+            return 1
+        return None
+
     def get_response(self, user_input):
+        custom_sentiment = self.get_custom_sentiment(user_input)
+        if custom_sentiment == -1:
+            return "Przykro mi, że masz negatywne odczucia. Może mogę jakoś pomóc?"
+        if custom_sentiment == 1:
+            return "Cieszę się, że masz pozytywne nastawienie! Jak mogę Ci jeszcze pomóc?"
+
         blob = self.process_text(user_input)
         if not blob:
             return "Niestety, nie mogę przetworzyć Twojej wiadomości. Spróbuj ponownie."
