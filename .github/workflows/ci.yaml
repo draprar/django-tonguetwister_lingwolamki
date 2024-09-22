@@ -65,6 +65,7 @@ jobs:
 
       - name: Run tests with pytest
         run: |
+          mkdir -p ./test-reports
           pytest --disable-warnings
 
       - name: Store test results
