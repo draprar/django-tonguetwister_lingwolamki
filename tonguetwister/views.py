@@ -67,6 +67,7 @@ async def chatbot(request):
     return JsonResponse({'response': 'Nie rozumiem.'})
 
 
+@user_passes_test(is_admin)
 def content_management(request):
     return render(request, 'admin/settings.html')
 
