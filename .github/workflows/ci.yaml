@@ -39,7 +39,7 @@ jobs:
       - name: Download NLTK data
         run: |
           python -m textblob.download_corpora
-          python -m nltk.downloader punkt
+          python -m nltk.downloader punkt_tab
 
       - name: Set up environment variables
         run: |
