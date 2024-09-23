@@ -8,7 +8,7 @@ from django.test import AsyncClient, Client
 
 
 @pytest.mark.django_db
-class TestMainView:
+class TestMainViews:
     def test_main_unauthenticated(self, client):
         url = reverse('main')
         response = client.get(url)
@@ -58,11 +58,7 @@ class TestMainView:
 
 
 @pytest.mark.django_db
-class TestContentManagementView:
-
-    @pytest.fixture
-    def client(self):
-        return Client()
+class TestContentManagementViews:
 
     @pytest.fixture
     def admin_user(self):
@@ -161,3 +157,11 @@ class TestContentManagementView:
 
         assert response.status_code == 302
         assert not model_data[4].objects.filter(pk=model_instance.pk).exists()
+
+
+@pytest.mark.django_db
+class TestErrorViews:
+    def test_error_404_view(self, client, settings):
+        response = client.get('/non-existing-url/')
+
+        assert 'tonguetwister/404.html' in [t.name for t in response.templates]

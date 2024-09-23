@@ -72,6 +72,11 @@ def content_management(request):
     return render(request, 'admin/settings.html')
 
 
+def error_404_view(request, exception):
+    data = {}
+    return render(request, 'tonguetwister/404.html', data)
+
+
 def load_more_generic(request, model, user_profile_model, related_field, limit=1):
     try:
         offset = int(request.GET.get('offset', 0))
@@ -127,11 +132,6 @@ def load_more_trivia(request):
 
 def load_more_funfacts(request):
     return simple_load_more_generic(request, Funfact)
-
-
-def error_404_view(request, exception):
-    data = {}
-    return render(request, 'tonguetwister/404.html', data)
 
 
 @user_passes_test(is_admin)
