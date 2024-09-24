@@ -1,10 +1,13 @@
 import pytest
+from django.core import mail
 from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.contrib.messages import get_messages
+from django.test import AsyncClient, Client
 from tonguetwister.models import Twister, Articulator, Exercise, Trivia, Funfact, OldPolish, UserProfileTwister, UserProfileArticulator, UserProfileExercise
 from tonguetwister.views import chatbot_instance
-from django.test import AsyncClient, Client
+from tonguetwister.forms import ContactForm
 
 
 @pytest.mark.django_db
@@ -165,3 +168,62 @@ class TestErrorViews:
         response = client.get('/non-existing-url/')
 
         assert 'tonguetwister/404.html' in [t.name for t in response.templates]
+
+
+@pytest.mark.django_db
+class TestContactViews:
+    @pytest.fixture
+    def url(self):
+        return reverse('contact')
+
+    @pytest.fixture
+    def valid_form_data(self):
+        return {
+            'name': 'testuser',
+            'email': 'test@example.com',
+            'message': 'Test Message'
+        }
+
+    def test_contact_get_request(self, client, url):
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assert 'tonguetwister/partials/static/contact.html' in [t.name for t in response.templates]
+        assert isinstance(response.context['form'], ContactForm)
+
+    def test_contact_post_valid(self, client, url, valid_form_data):
+        response = client.post(url, data=valid_form_data)
+
+        assert response.status_code == 302
+        assert response.url == url
+
+        messages = list(get_messages(response.wsgi_request))
+        assert str(messages[0]) == 'Twoja wiadomość została Nam przekazana'
+
+        assert len(mail.outbox) == 1
+        sent_email = mail.outbox[0]
+        assert sent_email.subject == f'Kontakt od {valid_form_data["name"]}'
+        assert sent_email.body == f"Od: {valid_form_data['email']}\n\n{valid_form_data['message']}"
+
+    def test_contact_post_invalid(self, client, url):
+        invalid_data = {
+            'name': '',
+            'email': 'invalid email',
+            'message': ''
+        }
+        response = client.post(url, data=invalid_data)
+
+        assert response.status_code == 200
+        assert isinstance(response.context['form'], ContactForm)
+        assert response.context['form'].is_valid() is False
+
+    def test_contact_post_email_error(self, mocker, client, url, valid_form_data):
+        mock_send_mail = mocker.patch('tonguetwister.views.send_mail', side_effect=Exception('Email error'))
+        response = client.post(url, data=valid_form_data)
+
+        assert response.status_code == 302
+        assert response.url == url
+
+        messages = list(get_messages(response.wsgi_request))
+        assert str(messages[0]) == 'Błąd przy wysyłaniu wiadomości: Email error'
+        assert len(mail.outbox) == 0

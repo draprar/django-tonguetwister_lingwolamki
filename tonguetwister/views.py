@@ -653,7 +653,7 @@ def contact(request):
             email = form.cleaned_data['email']
             message = form.cleaned_data['message']
             subject = f'Kontakt od {name}'
-            message_with_email = f"From: {email}\n\n{message}"
+            message_with_email = f"Od: {email}\n\n{message}"
 
             try:
                 send_mail(
