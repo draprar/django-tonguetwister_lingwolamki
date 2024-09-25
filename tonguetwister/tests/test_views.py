@@ -163,6 +163,98 @@ class TestContentManagementViews:
 
 
 @pytest.mark.django_db
+class TestLoadMoreGenerics:
+
+    @pytest.fixture(params=[
+        ('load_more_articulators', Articulator, UserProfileArticulator, 'articulator'),
+        ('load_more_exercises', Exercise, UserProfileExercise, 'exercise'),
+        ('load_more_twisters', Twister, UserProfileTwister, 'twister'),
+    ])
+    def model_data(self, request):
+        return request.param
+
+    def test_load_more_generic_unauthenticated(self, client, model_data):
+        url = reverse(model_data[0])
+        model_class = model_data[1]
+        model_class.objects.create(text='Test text')
+
+        response = client.get(url, {'offset': 0})
+
+        assert response.status_code == 200
+        assert isinstance(response, JsonResponse)
+        assert len(response.json()) == 1
+        assert response.json()[0]['text'] == 'Test text'
+        assert response.json()[0]['is_added'] is False
+
+    def test_load_more_generic_authenticated(self, client, model_data, django_user_model):
+        user = django_user_model.objects.create_user(username='testuser', password='testpassword')
+        client.login(username=user.username, password='testpassword')
+        url = reverse(model_data[0])
+        model_class = model_data[1]
+        user_profile_model = model_data[2]
+        related_field = model_data[3]
+
+        instance = model_class.objects.create(text='Test text')
+        user_profile_model.objects.create(user=user, **{related_field: instance})
+
+        response = client.get(url, {'offset': 0})
+
+        assert response.status_code == 200
+        assert len(response.json()) == 1
+        assert response.json()[0]['text'] == 'Test text'
+        assert response.json()[0]['is_added'] is True
+
+    def test_load_more_generic_internal_server_error(self, client, mocker, model_data):
+        url = reverse(model_data[0])
+        mocker.patch(f'tonguetwister.models.{model_data[1].__name__}.objects.all', side_effect=Exception("Test Exception"))
+
+        response = client.get(url)
+
+        assert response.status_code == 500
+        assert response.json() == {'error': 'Internal Server Error'}
+
+
+@pytest.mark.django_db
+class TestSimpleLoadMoreGenerics:
+
+    @pytest.fixture(params=[
+        ('load_more_old_polish', OldPolish),
+        ('load_more_trivia', Trivia),
+        ('load_more_funfacts', Funfact),
+    ])
+    def model_data(self, request):
+        return request.param
+
+    def test_simple_load_more_generic(self, client, model_data):
+        url = reverse(model_data[0])
+        model_class = model_data[1]
+        if model_data[0] == 'load_more_old_polish':
+            model_class.objects.create(old_text='old_text', new_text='new_text')
+        else:
+            model_class.objects.create(text='Test text')
+
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assert isinstance(response, JsonResponse)
+        assert len(response.json()) == 1
+        if model_data[0] == 'load_more_old_polish':
+            assert response.json()[0]['old_text'] == 'old_text'
+            assert response.json()[0]['new_text'] == 'new_text'
+        else:
+            assert response.json()[0]['text'] == 'Test text'
+
+    def test_simple_load_more_generic_internal_error(self, client, mocker, model_data):
+        url = reverse(model_data[0])
+        mocker.patch(f'tonguetwister.models.{model_data[1].__name__}.objects.all', side_effect=Exception("Test Exception"))
+
+        response = client.get(url)
+
+        assert response.status_code == 500
+        assert response.json() == {'error': 'Internal Server Error'}
+
+
+@pytest.mark.django_db
 class TestErrorViews:
     def test_error_404_view(self, client, settings):
         response = client.get('/non-existing-url/')
