@@ -1,5 +1,6 @@
 import pytest
 from django.core import mail
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from django.http import JsonResponse
 from django.contrib.auth.models import User
@@ -7,7 +8,7 @@ from django.contrib.messages import get_messages
 from django.test import AsyncClient, Client
 from tonguetwister.models import Twister, Articulator, Exercise, Trivia, Funfact, OldPolish, UserProfileTwister, UserProfileArticulator, UserProfileExercise
 from tonguetwister.views import chatbot_instance
-from tonguetwister.forms import ContactForm
+from tonguetwister.forms import ContactForm, AvatarUploadForm
 
 
 @pytest.mark.django_db
@@ -252,6 +253,78 @@ class TestSimpleLoadMoreGenerics:
 
         assert response.status_code == 500
         assert response.json() == {'error': 'Internal Server Error'}
+
+
+@pytest.mark.django_db
+class TestUserContent:
+
+    @pytest.fixture
+    def regular_user_and_profile(self, django_user_model):
+        user = django_user_model.objects.create_user(username='user', password='userpassword', email='user@example.com')
+        profile = user.profile
+        return user, profile
+
+    def test_user_content_get(self, client, regular_user_and_profile):
+        user, profile = regular_user_and_profile
+        client.login(username='user', password='userpassword')
+        url = reverse('user_content')
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assert 'tonguetwister/users/user-content.html' in [t.name for t in response.templates]
+        assert 'articulators' in response.context
+        assert 'exercises' in response.context
+        assert 'twisters' in response.context
+
+
+@pytest.mark.parametrize('params', [
+    (Articulator, UserProfileArticulator, 'add_articulator', 'delete_articulator'),
+    (Exercise, UserProfileExercise, 'add_exercise', 'delete_exercise'),
+    (Twister, UserProfileTwister, 'add_twister', 'delete_twister')
+])
+@pytest.mark.django_db
+class TestUserObjectViews:
+
+    @pytest.fixture
+    def regular_user(self, django_user_model):
+        return django_user_model.objects.create_user(username='user', password='userpassword', email='user@example.com')
+
+    def test_add_object(self, client, params, regular_user):
+        client.login(username='user', password='userpassword')
+        model, user_model, add_url, delete_url = params
+        obj = model.objects.create(text='test')
+
+        url = reverse(add_url, args=[obj.id])
+        response = client.post(url)
+
+        assert response.status_code == 200
+        assert user_model.objects.filter(user=regular_user, **{model.__name__.lower(): obj}).exists()
+        assert response.json()['status'] == f"{model.__name__} added"
+
+    def test_add_duplicate_object(self, client, params, regular_user):
+        client.login(username='user', password='userpassword')
+        model, user_model, add_url, delete_url = params
+        obj = model.objects.create(text='text')
+        user_model.objects.create(user=regular_user, **{model.__name__.lower(): obj})
+
+        url = reverse(add_url, args=[obj.id])
+        response = client.post(url)
+
+        assert response.status_code == 200
+        assert response.json()['status'] == f"Duplicate {model.__name__.lower()}"
+
+    def test_delete_object(self, client, params, regular_user):
+        client.login(username='user', password='userpassword')
+        model, user_model, add_url, delete_url = params
+        obj = model.objects.create(text='text')
+        user_obj = user_model.objects.create(user=regular_user, **{model.__name__.lower(): obj})
+
+        url = reverse(delete_url, args=[obj.id])
+        response = client.post(url)
+
+        assert response.status_code == 200
+        assert not user_model.objects.filter(id=user_obj.id).exists()
+        assert response.json()['status'] == f"{model.__name__} deleted"
 
 
 @pytest.mark.django_db
