@@ -3,12 +3,16 @@ from django.core import mail
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from django.http import JsonResponse
-from django.contrib.auth.models import User
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.models import User, Group
 from django.contrib.messages import get_messages
 from django.test import AsyncClient, Client
 from tonguetwister.models import Twister, Articulator, Exercise, Trivia, Funfact, OldPolish, UserProfileTwister, UserProfileArticulator, UserProfileExercise
 from tonguetwister.views import chatbot_instance
 from tonguetwister.forms import ContactForm, AvatarUploadForm
+from ..tokens import account_activation_token
 
 
 @pytest.mark.django_db
@@ -20,7 +24,6 @@ class TestMainViews:
         assert response.status_code == 200
         assert 'tonguetwister/main.html' in [t.name for t in response.templates]
 
-        assert 'twisters' in response.context
         assert 'twisters' in response.context
         assert 'articulators' in response.context
         assert 'exercises' in response.context
@@ -41,7 +44,6 @@ class TestMainViews:
         assert response.status_code == 200
         assert 'tonguetwister/main.html' in [t.name for t in response.templates]
 
-        assert 'twisters' in response.context
         assert 'twisters' in response.context
         assert 'articulators' in response.context
         assert 'exercises' in response.context
@@ -264,7 +266,7 @@ class TestUserContent:
         profile = user.profile
         return user, profile
 
-    def test_user_content_get(self, client, regular_user_and_profile):
+    def test_user_content_view_loads_correctly(self, client, regular_user_and_profile):
         user, profile = regular_user_and_profile
         client.login(username='user', password='userpassword')
         url = reverse('user_content')
@@ -325,6 +327,123 @@ class TestUserObjectViews:
         assert response.status_code == 200
         assert not user_model.objects.filter(id=user_obj.id).exists()
         assert response.json()['status'] == f"{model.__name__} deleted"
+
+
+@pytest.mark.django_db
+class TestAuthViews:
+
+    @pytest.fixture
+    def regular_user(self, django_user_model):
+        return django_user_model.objects.create_user(username='user', email='user@example.com', password='testpassword', is_active=True)
+
+    @pytest.fixture
+    def new_user(self):
+        return {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password1': 'Str0ngP@ssw0rd!',
+            'password2': 'Str0ngP@ssw0rd!'
+        }
+
+    @pytest.fixture
+    def new_user_invalid(self):
+        return {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password1': 'password123',
+            'password2': 'password'
+        }
+
+    @pytest.fixture
+    def regular_users_group(self):
+        Group.objects.create(name='Regular Users')
+
+    def test_login_view_valid(self, client, regular_user):
+        login_data = {'username': regular_user.username, 'password': 'testpassword'}
+        response = client.post(reverse('login'), data=login_data)
+
+        assert response.status_code == 302
+        assert response.url == reverse('main')
+
+    def test_login_view_invalid(self, client, regular_user):
+        login_data = {'username': regular_user.username, 'password': 'wrongpassword'}
+        response = client.post(reverse('login'), data=login_data)
+
+        assert response.status_code == 200
+
+    def test_register_view_valid(self, client, new_user, regular_users_group):
+        response = client.post(reverse('register'), data=new_user)
+
+        assert response.status_code == 302
+        assert response.url == reverse('login')
+        assert len(mail.outbox) == 1
+        assert 'Witamy na pokładzie!' in mail.outbox[0].subject
+
+    def test_register_view_invalid(self, client, new_user_invalid, regular_users_group):
+        response = client.post(reverse('register'), data=new_user_invalid)
+
+        assert response.status_code == 200
+
+    def test_activate_success(self, client, regular_user):
+        user = regular_user
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = account_activation_token.make_token(user)
+
+        response = client.get(reverse('activate', args=[uid, token]))
+
+        assert response.status_code == 302
+        assert 'Dziękujemy za potwierdzenie :) Twoje konto zostało zweryfikowane.' in [m.message for m in get_messages(response.wsgi_request)]
+        user.refresh_from_db()
+        assert user.profile.email_confirmed is True
+
+    def test_activate_token_invalid(self, client, regular_user):
+        user = regular_user
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        invalid_token = 'wrong-token'
+
+        response = client.get(reverse('activate', args=[uid, invalid_token]))
+
+        assert response.status_code == 302
+        assert 'Link aktywacyjny jest nieprawidłowy!' in [m.message for m in get_messages(response.wsgi_request)]
+
+    def test_password_reset_success(self, client, regular_user):
+        user = regular_user
+        response = client.get(reverse('password_reset'), data={'email': 'user@example.com'})
+
+        assert response.status_code == 200
+
+    def test_password_reset_invalid_email(self, client, regular_user):
+        user = regular_user
+        response = client.post(reverse('password_reset'), data={'email': 'wrongemail@example.com'})
+
+        assert response.status_code == 200
+        assert 'Nie znaleziono użytkownika z tym adresem email.' in [m.message for m in get_messages(response.wsgi_request)]
+
+    def test_password_reset_confirm_success(self, client, regular_user):
+        user = regular_user
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+
+        response = client.post(reverse('password_reset_confirm', args=[uid, token]), data={
+            'new_password1': 'newstrongpassword123',
+            'new_password2': 'newstrongpassword123'
+        })
+
+        assert response.status_code == 302
+        user.refresh_from_db()
+        assert user.check_password('newstrongpassword123')
+
+    def test_password_reset_confirm_mismatch(self, client, regular_user):
+        user = regular_user
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = default_token_generator.make_token(user)
+
+        response = client.post(reverse('password_reset_confirm', args=[uid, token]), data={
+            'new_password1': 'password123',
+            'new_password2': 'differentpassword123'
+        })
+
+        assert response.status_code == 200
 
 
 @pytest.mark.django_db
