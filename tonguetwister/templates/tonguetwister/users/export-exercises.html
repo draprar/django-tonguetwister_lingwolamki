@@ -12,6 +12,9 @@
 <div class="d-flex align-items-center">
 <h1><img src="{% static 'assets/ttlogo.png' %}" alt="" width="28" height="28" class="d-inline-block align-text-top"> Twoje LingwoŁamkowe ćwiczenia</h1>
 </div>
+<div class="d-flex align-items-center">
+<h3><a href="https://www.lingwolamki.online/"><em>www.lingwolamki.online</em></a></h3>
+</div>
 <br>
 <h2>Rozgrzewanie artykulatorów</h2>
 <div id="user-articulators-container">
@@ -23,7 +26,7 @@
         <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń artykulacyjnych.</p>
     {% endfor %}
 </div>
-
+<br>
 <h2>Ćwiczenia właściwe</h2>
 <div id="user-exercises-container">
     {% for user_exercise in user_exercises %}
@@ -34,7 +37,7 @@
         <p class="col-md-16 fs-4">Nie masz zapisanych ćwiczeń artykulacyjnych.</p>
     {% endfor %}
 </div>
-
+<br>
 <h2>Łamańce językowe</h2>
 <div id="user-twisters-container">
     {% for user_twister in user_twisters %}
@@ -45,5 +48,6 @@
         <p class="col-md-16 fs-4">Nie masz zapisanych łamańców językowych.</p>
     {% endfor %}
 </div>
+<br>
 </body>
 </html>

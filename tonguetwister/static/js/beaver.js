@@ -14,12 +14,12 @@ document.addEventListener('DOMContentLoaded', function () {
         screenDim.style.display = 'block';
 
         var steps = [
-            { selector: ['#login', '#login-mobile'], text: 'Tu możesz się zalogować lub zarejestrować, aby zindywidualizować swoją naukę' },
-            { selector: ['#contact', '#contact-mobile'], text: 'Tu możesz się z Nami skontaktować, a ja zamienię się w chatbota' },
-            { selector: ['#mic-btn', '#mic-btn-mobile'], text: 'Jeżeli klikniesz - rozpoczniesz nagrywanie swojego głosu' },
-            { selector: '#mirror-btn-articulators', text: 'Dzięki tej opcji, możesz odpalić lusterko' },
-            { selector: '#load-more-btn', text: 'A tutaj wygenerujesz nowe ćwiczenie do praktyki' },
-            { selector: 'body', text: 'Super, co? Już możesz rozpocząć.', final: true }
+            { selector: ['#login', '#login-mobile'], text: 'Tu możesz się zarejestrować, aby stworzyć swój profil i spersonalizować swoją naukę 😎' },
+            { selector: ['#contact', '#contact-mobile'], text: 'Tu możesz się z nami skontaktować, a ja zamienię się w chatbota 🧐' },
+            { selector: ['#mic-btn', '#mic-btn-mobile'], text: 'Jeżeli tu klikniesz - rozpoczniesz nagrywanie swojego głosu 🎤' },
+            { selector: '#mirror-btn-articulators', text: 'Dzięki tej opcji, możesz odpalić lusterko 🎥' },
+            { selector: '#load-more-btn', text: 'A tutaj wygenerujesz nowe ćwiczenie do praktyki 💡' },
+            { selector: 'body', text: 'Zaczynamy? 🚀 Śmiało, przesuń palcem lub przeciągnij myszką ➡️', final: true }
         ];
 
         function getTargetElement(step) {
@@ -103,9 +103,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (swiperInstance) {
                             swiperInstance.slideTo(2, 500);
 
-                            swiperInstance.on('slideChangeTransitionEnd', function () {
+                            swiperInstance.once('slideChangeTransitionEnd', function () {
                                 moveToStep(step + 1);
-                            });
+                            }, 100);
                         } else {
                             moveToStep(step + 1);
                         }
