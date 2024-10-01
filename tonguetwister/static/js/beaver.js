@@ -117,16 +117,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             beaverOptions.appendChild(nextButton);
 
-            if (step > 0) {
-                var prevButton = document.createElement('button');
-                prevButton.className = 'btn btn-secondary';
-                prevButton.innerText = 'WRÓĆ';
-                prevButton.addEventListener('click', function () {
-                    moveToStep(step - 1);
-                });
-                beaverOptions.appendChild(prevButton);
-            }
-
             speechBubble.appendChild(beaverOptions);
             speechBubble.style.display = 'block';
         }
