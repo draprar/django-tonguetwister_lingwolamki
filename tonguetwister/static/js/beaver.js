@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
             { selector: ['#mic-btn', '#mic-btn-mobile'], text: 'Jeżeli tu klikniesz - rozpoczniesz nagrywanie swojego głosu 🎤' },
             { selector: '#mirror-btn-articulators', text: 'Dzięki tej opcji, możesz odpalić lusterko 🎥' },
             { selector: '#load-more-btn', text: 'A tutaj wygenerujesz nowe ćwiczenie do praktyki 💡' },
-            { selector: 'body', text: 'Zaczynamy? 🚀 Śmiało, przesuń palcem lub przeciągnij myszką ➡️', final: true }
+            { selector: 'body', text: 'Zaczynamy? Zamknij tę chmurkę, aby przejść do rozgrzewki 🚀', final: true }
         ];
 
         function getTargetElement(step) {
