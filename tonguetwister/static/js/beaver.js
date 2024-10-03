@@ -49,11 +49,23 @@ document.addEventListener('DOMContentLoaded', function () {
             var stepInfo = steps[step];
             var targetElement = getTargetElement(step);
 
+            console.log('Target Element:', targetElement);
+
             if (!targetElement) {
                 return;
             }
 
             var targetRect = targetElement.getBoundingClientRect();
+
+            console.log('Target Rect:', targetRect);
+
+            var element = document.querySelector('#mirror-btn-articulators');
+            if (element && element.getBoundingClientRect().width > 0) {
+                console.log('Element is visible and can be targeted');
+            } else {
+                console.log('Element is not visible or cannot be targeted');
+            }
+
             var viewportWidth = window.innerWidth;
             var viewportHeight = window.innerHeight;
 
@@ -103,7 +115,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         if (swiperInstance) {
                             swiperInstance.slideTo(2, 500);
 
-                            swiperInstance.once('slideChangeTransitionEnd', function () {
+                            swiperInstance.on('slideChangeTransitionEnd', function () {
+                                var swiperContainer = document.querySelector('.swiper-wrapper');
+                                var arrows = document.querySelectorAll('#mirror-btn-articulators, #load-more-btn');
+
+                                arrows.forEach(function (arrow) {
+                                    var arrowRect = arrow.getBoundingClientRect();
+                                    var containerRect = swiperContainer.getBoundingClientRect();
+
+                                    arrow.style.left = (containerRect.left + (swiperInstance.activeIndex * window.innerWidth) + (window.innerWidth / 2) - (arrowRect.width / 2)) + 'px';
+                                    arrow.style.top = (arrowRect.top) + 'px';
+                                    arrow.style.left = (targetRect.left - arrow.offsetWidth + 10) + 'px';
+                                    arrow.style.top = (targetRect.bottom + targetRect.height - arrow.offsetHeight) + 'px';
+                                });
                                 moveToStep(step + 1);
                             }, 100);
                         } else {
