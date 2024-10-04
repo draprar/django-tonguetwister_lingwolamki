@@ -6,7 +6,7 @@
 <img src="{% static 'assets/arrows.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"><br><br>
 <div id="exercises-container">
     {% for exercise in exercises %}
-        <div class="exercise col-md-16 fs-4" id="exercise-{{ exercise.id }}">{{ exercise.text }}</div>
+        <div class="exercise col-md-16 fs-4 bg-light bg-gradient" id="exercise-{{ exercise.id }}">{{ exercise.text }}</div>
         {% if user.is_authenticated %}
             {% if exercise.text in user_exercises_texts %}
                 <button class="btn btn-secondary toggle-exercise-btn" data-id="{{ exercise.id }}" data-user-exercise-id="{{ user_exercise.id }}" disabled>W powtórkach 😄</button>

@@ -7,7 +7,7 @@
 <img src="{% static 'assets/arrows.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"><br><br>
 <div id="articulators-container">
     {% for articulator in articulators %}
-        <div class="articulator col-md-16 fs-4" id="articulator-{{ articulator.id }}">{{ articulator.text }}</div>
+    <div class="articulator col-md-16 fs-4 bg-light bg-gradient" id="articulator-{{ articulator.id }}">{{ articulator.text }}</div>
         {% if user.is_authenticated %}
             {% if articulator.text in user_articulators_texts %}
                 <button class="btn btn-secondary toggle-articulator-btn" data-id="{{ articulator.id }}" data-user-articulator-id="{{ user_articulator.id }}" disabled>W powtórkach 😄</button>

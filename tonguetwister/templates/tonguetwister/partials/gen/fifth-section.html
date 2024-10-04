@@ -2,7 +2,7 @@
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
 <div id="twisters-container">
     {% for twister in twisters %}
-        <div class="twister col-md-16 fs-4" id="twister-{{ twister.id }}">{{ twister.text }}</div>
+        <div class="twister col-md-16 fs-4 bg-light bg-gradient" id="twister-{{ twister.id }}">{{ twister.text }}</div>
         {% if user.is_authenticated %}
             {% if twister.text in user_twisters_texts %}
                 <button class="btn btn-secondary toggle-twister-btn" data-id="{{ twister.id }}" data-user-articulator-id="{{ user_twister.id }}" disabled>W powtórkach 😄</button>

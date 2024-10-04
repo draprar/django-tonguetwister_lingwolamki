@@ -2,21 +2,11 @@
 
 <h1><strong>PREZENT</strong></h1>
 <p class="col-md-16 fs-4">Kliknij w przycisk, aby otworzyć podarek.</p>
-<button id="mirror-btn-bonuses" class="btn btn-dark text-uppercase fw-bold">💻 Otwórz lusterko</button><br><br>
 <img src="{% static 'assets/arrows.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"><br><br>
-<div id="trivia-container">
-    {% for x in trivia %}
-        <div class="trivia col-md-16 fs-5">{{ x.text }}</div>
-    {% endfor %}
-</div>
-<br>
-<button id="load-more-trivia-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ trivia|length }}" data-url="{% url 'load_more_trivia' %}" onclick="changeTriviaButtonText()">Porada językowa</button>
-
-<br>
 
 <div id="facts-container">
     {% for funfact in funfacts %}
-    <div class="fact col-md-16 fs-5">{{ funfact.text }}</div>
+    <div class="fact col-md-16 fs-5" bg-light bg-gradient>{{ funfact.text }}</div>
     {% endfor %}
 </div>
 <br>
@@ -32,9 +22,6 @@
       <a class="navbar-brand" href="/">To co, żądasz satysfakcji? <img src="{% static 'assets/ttlogo.png' %}" alt="" width="28" height="28" class="d-inline-block align-text-top"></a>
     </button>
     </div>
-</div>
-<div id="video-container-bonuses" style="display:none;">
-    <video id="video-preview-bonuses" autoplay muted playsinline></video>
 </div>
 <script src="{% static 'js/loadMoreBonuses.js' %}"></script>
 <script src="{% static 'js/videoStreamBonuses.js' %}"></script>
