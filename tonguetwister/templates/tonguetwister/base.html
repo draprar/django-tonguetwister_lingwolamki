@@ -14,6 +14,14 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css"/>
+    <style>
+        .highlight {
+            outline: 4px solid rgba(255, 255, 0, 0.9) !important;
+            box-shadow: 0px 0px 20px 10px rgba(255, 255, 0, 0.9) !important;
+            z-index: 1000;
+            position: relative;
+        }
+    </style>
 </head>
 <body data-user-authenticated="{{ user.is_authenticated|yesno:'true,false' }}">
 <button class="btn" onclick="topFunction()" id="topBtn"><i class="fa fa-arrow-up"></i></button>

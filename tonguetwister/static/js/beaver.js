@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', function () {
         var beaverText = document.getElementById('beaver-text');
         var screenDim = document.getElementById('screen-dim');
         var beaverOptions = document.createElement('div');
-        var arrow = document.getElementById('beaver-arrow');
         var currentStep = 0;
 
         screenDim.style.display = 'block';
@@ -17,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
             { selector: ['#login', '#login-mobile'], text: 'Tu możesz się zarejestrować, aby stworzyć swój profil i spersonalizować swoją naukę 😎' },
             { selector: ['#contact', '#contact-mobile'], text: 'Tu możesz się z nami skontaktować, a ja zamienię się w chatbota 🧐' },
             { selector: ['#mic-btn', '#mic-btn-mobile'], text: 'Jeżeli tu klikniesz - rozpoczniesz nagrywanie swojego głosu 🎤' },
-            { selector: '#mirror-btn-articulators', text: 'Dzięki tej opcji, możesz odpalić lusterko 🎥' },
-            { selector: '#load-more-btn', text: 'A tutaj wygenerujesz nowe ćwiczenie do praktyki 💡' },
+            { selector: '#mirror-btn-exercises', text: 'Dzięki tej opcji, możesz odpalić lusterko 🎥' },
+            { selector: '#load-more-exercises-btn', text: 'A tutaj wygenerujesz nowe ćwiczenie do praktyki 💡' },
             { selector: 'body', text: 'Zaczynamy? Zamknij tę chmurkę, aby przejść do rozgrzewki 🚀', final: true }
         ];
 
@@ -43,6 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return document.querySelector(selector);
         }
 
+
         function moveToStep(step) {
             if (step >= steps.length) return;
 
@@ -50,26 +50,13 @@ document.addEventListener('DOMContentLoaded', function () {
             var targetElement = getTargetElement(step);
 
             if (!targetElement) {
+                console.error('Target element not found for step:', step);
                 return;
             }
 
             var targetRect = targetElement.getBoundingClientRect();
             var viewportWidth = window.innerWidth;
             var viewportHeight = window.innerHeight;
-
-            if (stepInfo.final) {
-                arrow.style.display = 'none';
-            } else {
-                arrow.style.display = 'block';
-                arrow.style.width = beaverImg.offsetWidth + 'px';
-                arrow.style.height = 'auto';
-
-                var arrowLeft = targetRect.left + window.scrollX + (targetRect.width / 2) - (arrow.offsetWidth / 2);
-                var arrowTop = targetRect.top + window.scrollY - arrow.offsetHeight - 10;
-
-                arrow.style.left = (targetRect.left - arrow.offsetWidth + 10) + 'px';
-                arrow.style.top = (targetRect.bottom + targetRect.height - arrow.offsetHeight) + 'px';
-            }
 
             beaverImg.style.left = (viewportWidth / 4 - beaverImg.offsetWidth / 2) + 'px';
             beaverImg.style.top = (viewportHeight / 2 - beaverImg.offsetHeight / 2) + 'px';
@@ -116,19 +103,25 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             beaverOptions.appendChild(nextButton);
-
-            if (step > 0) {
-                var prevButton = document.createElement('button');
-                prevButton.className = 'btn btn-secondary';
-                prevButton.innerText = 'WRÓĆ';
-                prevButton.addEventListener('click', function () {
-                    moveToStep(step - 1);
-                });
-                beaverOptions.appendChild(prevButton);
-            }
-
             speechBubble.appendChild(beaverOptions);
             speechBubble.style.display = 'block';
+
+            removePulseEffectFromAllSteps();
+
+            if (targetElement) {
+                console.log(targetElement)
+                targetElement.classList.add('highlight'); // Apply pulse effect
+            }
+            console.log(targetElement);
+        }
+
+        function removePulseEffectFromAllSteps() {
+            steps.forEach((step, index) => {
+                var target = getTargetElement(index);
+                if (target) {
+                    target.classList.remove('highlight');
+                }
+            });
         }
 
         function closeTutorialAndShowPolishBeaver() {
@@ -140,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function () {
             speechBubble.style.display = 'none';
             screenDim.style.display = 'none';
             beaverImg.style.display = 'none';
-            arrow.style.display = 'none';
+            removePulseEffectFromAllSteps();
         }
 
         function startTutorial() {
