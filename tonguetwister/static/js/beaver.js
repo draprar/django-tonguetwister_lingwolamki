@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var viewportHeight = window.innerHeight;
 
             beaverImg.style.left = (viewportWidth / 4 - beaverImg.offsetWidth / 2) + 'px';
-            beaverImg.style.top = (viewportHeight / 4 - beaverImg.offsetHeight / 2) + 'px';
+            beaverImg.style.top = (viewportHeight / 1.5 - beaverImg.offsetHeight / 2) + 'px';
 
             updateSpeechBubblePosition();
             beaverText.innerHTML = stepInfo.text;
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         var viewportWidth = window.innerWidth;
         beaverImg.style.left = (viewportWidth / 4 - beaverImg.offsetWidth / 2) + 'px';
-        beaverImg.style.top = (window.innerHeight / 2 - beaverImg.offsetHeight / 2) + 'px';
+        beaverImg.style.top = (window.innerHeight / 1.5 - beaverImg.offsetHeight / 2) + 'px';
 
         updateSpeechBubblePosition();
     } else {
