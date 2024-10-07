@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     triviaComplete = true;
                     $('#load-more-trivia-btn').hide();
                     $('#trivia-container .trivia').hide();
-                    checkCompletion();
+                    checkCompletionTrivia();
                 }
             }
         });
@@ -52,15 +52,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     factsComplete = true;
                     $('#load-more-facts-btn').hide();
                     $('#facts-container .fact').hide();
-                    checkCompletion();
+                    checkCompletionFacts();
                 }
             }
         });
     });
 
-    function checkCompletion() {
-        if (triviaComplete && factsComplete) {
+    function checkCompletionFacts() {
+        if (factsComplete) {
             showCongratulationsModal();
+        }
+    }
+
+    function checkCompletionTrivia() {
+        if (triviaComplete) {
+            showCongratulationsModalTrivia();
+        }
+    }
+
+    function showCongratulationsModalTrivia() {
+        document.getElementById('congratulations-modal-trivia').style.display = 'block';
+        loadMoreBtn.style.display = 'none';
+
+        const successSound = document.getElementById('success-sound-trivia');
+        successSound.play();
+
+        if (navigator.vibrate) {
+            navigator.vibrate(200);
         }
     }
 
@@ -86,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (navigator.vibrate) {
             navigator.vibrate(200);
         }
-
     }
 
     function changeTriviaButtonText() {

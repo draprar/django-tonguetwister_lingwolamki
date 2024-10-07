@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var beaverOptions = document.createElement('div');
         var currentStep = 0;
 
+        beaverImg.style.width = (beaverImg.offsetWidth * 1.2) + 'px';
+        beaverImg.style.height = (beaverImg.offsetHeight * 1.2) + 'px';
+
         screenDim.style.display = 'block';
 
         var steps = [
@@ -59,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var viewportHeight = window.innerHeight;
 
             beaverImg.style.left = (viewportWidth / 4 - beaverImg.offsetWidth / 2) + 'px';
-            beaverImg.style.top = (viewportHeight / 2 - beaverImg.offsetHeight / 2) + 'px';
+            beaverImg.style.top = (viewportHeight / 4 - beaverImg.offsetHeight / 2) + 'px';
 
             updateSpeechBubblePosition();
             beaverText.innerHTML = stepInfo.text;
@@ -110,9 +113,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (targetElement) {
                 console.log(targetElement)
-                targetElement.classList.add('highlight'); // Apply pulse effect
+                targetElement.classList.add('highlight');
             }
-            console.log(targetElement);
+            updateSpeechBubblePosition();
         }
 
         function removePulseEffectFromAllSteps() {
@@ -142,6 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             screenDim.style.display = 'block';
             moveToStep(0);
+            updateSpeechBubblePosition();
         }
 
         function updateSpeechBubblePosition() {
@@ -237,6 +241,19 @@ document.addEventListener('DOMContentLoaded', function () {
         var moved = false;
         var bubbleClosedManually = false;
 
+        if (typeof showPolishBeaver.initialized === 'undefined') {
+        showPolishBeaver.initialized = false;
+        }
+
+        if (!showPolishBeaver.initialized) {
+            polishBeaverImg.style.width = (polishBeaverImg.offsetWidth * 1.2) + 'px';
+            polishBeaverImg.style.height = (polishBeaverImg.offsetHeight * 1.2) + 'px';
+
+            randomizePosition();
+
+            showPolishBeaver.initialized = true;
+        }
+
         function randomizePosition() {
             var viewportWidth = window.innerWidth;
             var viewportHeight = window.innerHeight;
@@ -257,8 +274,6 @@ document.addEventListener('DOMContentLoaded', function () {
             polishSpeechBubble.style.left = beaverRect.right + 'px';
             polishSpeechBubble.style.top = (beaverRect.top - polishSpeechBubble.offsetHeight - 20) + 'px';
         }
-
-        randomizePosition();
 
         function fetchNewRecord() {
             fetch(`/load-more-old-polish/?offset=${offset}`)
