@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
             { selector: ['#login', '#login-mobile'], text: 'Tu możesz się zarejestrować, aby stworzyć swój profil i spersonalizować swoją naukę 😎' },
             { selector: ['#contact', '#contact-mobile'], text: 'Tu możesz się z nami skontaktować, a ja zamienię się w chatbota 🧐' },
             { selector: ['#mic-btn', '#mic-btn-mobile'], text: 'Jeżeli tu klikniesz - rozpoczniesz nagrywanie swojego głosu 🎤' },
+            { selector: '#swiper-button-next', text: 'Aby przejść do następnego ćwiczenia, przesuń palcem lub przeciągnij myszką ➡️' },
             { selector: '#mirror-btn-exercises', text: 'Dzięki tej opcji, możesz odpalić lusterko 🎥' },
             { selector: '#load-more-exercises-btn', text: 'A tutaj wygenerujesz nowe ćwiczenie do praktyki 💡' },
             { selector: 'body', text: 'Zaczynamy? Zamknij tę chmurkę, aby przejść do rozgrzewki 🚀', final: true }
@@ -88,7 +89,13 @@ document.addEventListener('DOMContentLoaded', function () {
             } else {
                 nextButton.innerText = 'DALEJ';
                 nextButton.addEventListener('click', function () {
-                    if (step === 2) {
+                    var slideArrowContainer = document.getElementById('slide-arrow-container');
+
+                    if (step === 2 && slideArrowContainer) {
+                        slideArrowContainer.style.display = 'block';
+                        moveToStep(step + 1);
+                    } else if (step === 3 && slideArrowContainer) {
+                        slideArrowContainer.style.display = 'none';
                         var swiperInstance = document.querySelector('.mySwiper').swiper;
                         if (swiperInstance) {
                             swiperInstance.slideTo(2, 500);

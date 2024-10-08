@@ -2,10 +2,7 @@
 <h1><strong>CZAS NA ROZGRZEWKĘ 🤼</strong></h1>
 <p class="col-md-16 fs-4"><strong>Wykonaj 5 ruchów głową</strong> w przód i tył ↕️ a jak dasz radę, kolejne 5 w lewo i prawo ‍↔️</p>
 <p class="col-md-16 fs-4">Twój głos zabrzmi teraz lepiej. Sprawdź to - <strong>zacznij … ziewać!</strong> 🥱<br>Otwórz szeroko buzię, przeciągnij się, pozwól sobie wydać kilka dzikich dźwięków 😮‍💨 Możesz też zacząć mlaskać albo mruczeć 😸</p>
-<div class="card text-white bg-secondary mt-3 mb-3 w-100">
-    <div class="card-body"><p class="text-center mb-0">Te ćwiczenia zmniejszyły napięcie? 💪 Gratulacje! 🚀 <br>Śmiało, przesuń palcem lub przeciągnij myszką ➡️</p></div>
-</div>
-<p class="col-md-16 fs-4">Aby jeszcze lepiej przygotować do ćwiczeń, kliknij poniżej i przeczytaj porady językowe 💡</p>
+<p class="col-md-16 fs-4">Aby jeszcze lepiej przygotować do ćwiczeń, kliknij poniżej i przeczytaj na głos porady językowe 💡</p>
 <img src="{% static 'assets/arrows.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"><br><br>
 <button id="load-more-trivia-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ trivia|length }}" data-url="{% url 'load_more_trivia' %}" onclick="changeTriviaButtonText()">Porada językowa</button>
 <br><br>
@@ -19,5 +16,8 @@
     <div class="card-body">
         <p class="card-text text-center mb-0">Ładnie! 👏 Baza porad wyczyszczona, możemy iść dalej 💣</p>
     </div>
+</div>
+<div id="slide-arrow-container" style="display: none;">
+  <span id="slide-specific-arrow" class="highlight">➔</span>
 </div>
 <script src="{% static 'js/loadMoreBonuses.js' %}"></script>
