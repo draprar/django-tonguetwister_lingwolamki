@@ -18,9 +18,9 @@ document.addEventListener('DOMContentLoaded', function () {
         var steps = [
             { selector: ['#login', '#login-mobile'], text: 'Tu możesz się zarejestrować, aby stworzyć swój profil i spersonalizować swoją naukę 😎' },
             { selector: ['#contact', '#contact-mobile'], text: 'Tu możesz się z nami skontaktować, a ja zamienię się w chatbota 🧐' },
-            { selector: ['#mic-btn', '#mic-btn-mobile'], text: 'Jeżeli tu klikniesz - rozpoczniesz nagrywanie swojego głosu 🎤' },
+            { selector: ['#mic-btn', '#mic-btn-mobile'], text: 'Jeżeli klikniesz tu - rozpoczniesz nagrywanie swojego głosu 🎤' },
             { selector: '#swiper-button-next', text: 'Aby przejść do następnego ćwiczenia, przesuń palcem lub przeciągnij myszką ➡️' },
-            { selector: '#mirror-btn-exercises', text: 'Dzięki tej opcji, możesz odpalić lusterko 🎥' },
+            { selector: '#mirror-btn-exercises', text: 'Dzięki tej opcji, możesz odpalić lusterko (kamerę skierowaną na usta) 🎥' },
             { selector: '#load-more-exercises-btn', text: 'A tutaj wygenerujesz nowe ćwiczenie do praktyki 💡' },
             { selector: 'body', text: 'Zaczynamy? Zamknij tę chmurkę, aby przejść do rozgrzewki 🚀', final: true }
         ];
@@ -267,8 +267,12 @@ document.addEventListener('DOMContentLoaded', function () {
             var imgWidth = polishBeaverImg.offsetWidth;
             var imgHeight = polishBeaverImg.offsetHeight;
 
-            var randomLeft = Math.random() * (viewportWidth - imgWidth);
-            var randomTop = Math.random() * (viewportHeight - imgHeight);
+            var marginWidth = 0.1 * viewportWidth;
+            var marginHeight = 0.1 * viewportHeight;
+
+
+            var randomLeft = marginWidth + Math.random() * (viewportWidth - imgWidth - 2 * marginWidth);
+            var randomTop = marginHeight + Math.random() * (viewportHeight - imgHeight - 2 * marginHeight);
 
             polishBeaverImg.style.left = randomLeft + 'px';
             polishBeaverImg.style.top = randomTop + 'px';
