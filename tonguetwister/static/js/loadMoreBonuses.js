@@ -1,15 +1,18 @@
 document.addEventListener('DOMContentLoaded', function() {
-    let triviaBtn = document.getElementById('load-more-trivia-btn');
+    // Initialize button and offset variables
+    const triviaBtn = document.getElementById('load-more-trivia-btn');
     let triviaOffset = parseInt(triviaBtn.getAttribute('data-offset'));
-    let triviaUrl = triviaBtn.getAttribute('data-url');
+    const triviaUrl = triviaBtn.getAttribute('data-url');
 
-    let factsBtn = document.getElementById('load-more-facts-btn');
+    const factsBtn = document.getElementById('load-more-facts-btn');
     let factsOffset = parseInt(factsBtn.getAttribute('data-offset'));
-    let factsUrl = factsBtn.getAttribute('data-url');
+    const factsUrl = factsBtn.getAttribute('data-url');
 
+    // Completion flags to track if all trivia/facts have been loaded
     let triviaComplete = false;
     let factsComplete = false;
 
+    // Trivia button click handler
     triviaBtn.addEventListener('click', function() {
         $.ajax({
             url: triviaUrl,
@@ -34,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Facts button click handler
     factsBtn.addEventListener('click', function() {
         $.ajax({
             url: factsUrl,
@@ -58,18 +62,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    function checkCompletionFacts() {
-        if (factsComplete) {
-            showCongratulationsModal();
-        }
-    }
-
+    // Trivia completion check
     function checkCompletionTrivia() {
         if (triviaComplete) {
             showCongratulationsModalTrivia();
         }
     }
 
+    // Trivia modal
     function showCongratulationsModalTrivia() {
         document.getElementById('congratulations-modal-trivia').style.display = 'block';
         loadMoreBtn.style.display = 'none';
@@ -82,6 +82,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Facts completion check
+    function checkCompletionFacts() {
+        if (factsComplete) {
+            showCongratulationsModal();
+        }
+    }
+
+    // Facts modal
     function showCongratulationsModal() {
         let modal = document.getElementById('congratulations-modal');
         let span = modal.getElementsByClassName('close')[0];
@@ -106,12 +114,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Change button text for trivia
     function changeTriviaButtonText() {
         var button = document.getElementById("load-more-trivia-btn");
         button.textContent = "Więcej porad";
     }
     document.getElementById("load-more-trivia-btn").onclick = changeTriviaButtonText;
 
+    // Change button text for facts
     function changeFactsButtonText() {
         var button = document.getElementById("load-more-facts-btn");
         button.textContent = "Więcej ciekawostek";
