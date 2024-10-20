@@ -1,21 +1,25 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const userAuthenticated = document.body.getAttribute('data-user-authenticated') === 'true';
 
     if (!userAuthenticated) {
-        var beaverImg = document.getElementById('beaver-img');
-        var speechBubble = document.getElementById('beaver-speech-bubble');
-        var closeBubble = document.getElementById('close-speech-bubble');
-        var beaverText = document.getElementById('beaver-text');
-        var screenDim = document.getElementById('screen-dim');
-        var beaverOptions = document.createElement('div');
-        var currentStep = 0;
+        // Get elements for beaver tutorial
+        const beaverImg = document.getElementById('beaver-img');
+        const speechBubble = document.getElementById('beaver-speech-bubble');
+        const closeBubble = document.getElementById('close-speech-bubble');
+        const beaverText = document.getElementById('beaver-text');
+        const screenDim = document.getElementById('screen-dim');
+        const beaverOptions = document.createElement('div'); // Create options div for buttons
+        let currentStep = 0; // Track current tutorial step
 
-        beaverImg.style.width = (beaverImg.offsetWidth * 1.2) + 'px';
-        beaverImg.style.height = (beaverImg.offsetHeight * 1.2) + 'px';
+        // Resize beaver image
+        beaverImg.style.width = `${beaverImg.offsetWidth * 1.2}px`;
+        beaverImg.style.height = `${beaverImg.offsetHeight * 1.2}px`;
 
+        // Dim the screen for focus
         screenDim.style.display = 'block';
 
-        var steps = [
+        // Define tutorial steps with selector and text
+        const steps = [
             { selector: ['#login', '#login-mobile'], text: 'Tu możesz się zarejestrować, aby stworzyć swój profil i spersonalizować swoją naukę 😎' },
             { selector: ['#contact', '#contact-mobile'], text: 'Tu możesz się z nami skontaktować, a ja zamienię się w chatbota 🧐' },
             { selector: ['#mic-btn', '#mic-btn-mobile'], text: 'Jeżeli klikniesz tu - rozpoczniesz nagrywanie swojego głosu 🎤' },
@@ -25,195 +29,178 @@ document.addEventListener('DOMContentLoaded', function () {
             { selector: 'body', text: 'Zaczynamy? Zamknij tę chmurkę, aby przejść do rozgrzewki 🚀', final: true }
         ];
 
-        function getTargetElement(step) {
-            let selector;
+        // Get the target element based on step and screen size (mobile vs desktop)
+        const getTargetElement = (step) => {
+            return step <= 2 ? document.querySelector(window.innerWidth <= 991 ? steps[step].selector[1] : steps[step].selector[0]) : document.querySelector(steps[step].selector);
+        };
 
-            switch (step) {
-                case 0:
-                    selector = window.innerWidth <= 991 ? '#login-mobile' : '#login';
-                    break;
-                case 1:
-                    selector = window.innerWidth <= 991 ? '#contact-mobile' : '#contact';
-                    break;
-                case 2:
-                    selector = window.innerWidth <= 991 ? '#mic-btn-mobile' : '#mic-btn';
-                    break;
-                default:
-                    selector = steps[step].selector;
-                    break;
-            }
-
-            return document.querySelector(selector);
-        }
-
-
+        // Move to the next tutorial step
         function moveToStep(step) {
-            if (step >= steps.length) return;
+            if (step >= steps.length) return; // Exit if beyond last step
 
-            var stepInfo = steps[step];
-            var targetElement = getTargetElement(step);
+            const stepInfo = steps[step];
+            const targetElement = getTargetElement(step); // Get the target element for the current step
 
             if (!targetElement) {
-                console.error('Target element not found for step:', step);
+                console.error('Target element not found for step:', step); // Error if no target element found
                 return;
             }
 
-            var targetRect = targetElement.getBoundingClientRect();
-            var viewportWidth = window.innerWidth;
-            var viewportHeight = window.innerHeight;
+            // Position the beaver image based on viewport size
+            const targetRect = targetElement.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
 
-            beaverImg.style.left = (viewportWidth / 4 - beaverImg.offsetWidth / 2) + 'px';
-            beaverImg.style.top = (viewportHeight / 1.5 - beaverImg.offsetHeight / 2) + 'px';
+            beaverImg.style.left = `${viewportWidth / 4 - beaverImg.offsetWidth / 2}px`;
+            beaverImg.style.top = `${viewportHeight / 1.5 - beaverImg.offsetHeight / 2}px`;
 
-            updateSpeechBubblePosition();
-            beaverText.innerHTML = stepInfo.text;
+            updateSpeechBubblePosition(); // Update the speech bubble position
+            beaverText.innerHTML = stepInfo.text; // Set tutorial text for the step
 
-            beaverOptions.innerHTML = '';
-            var nextButton = document.createElement('button');
+            beaverOptions.innerHTML = ''; // Clear previous buttons
+            const nextButton = document.createElement('button'); // Create next button
             nextButton.className = 'btn btn-dark';
 
+            // If it's the final step
             if (stepInfo.final) {
-                nextButton.innerText = 'ZAMKNIJ';
+                nextButton.innerText = 'ZAMKNIJ'; // Change button text to 'CLOSE'
                 nextButton.addEventListener('click', function () {
                     var swiperInstance = document.querySelector('.mySwiper').swiper;
                     if (swiperInstance) {
-                        swiperInstance.slideTo(0, 500);
+                        swiperInstance.slideTo(0, 500); // Slide to first swiper slide
 
                         swiperInstance.on('slideChangeTransitionEnd', function () {
-                            closeTutorialAndShowPolishBeaver();
+                            closeTutorialAndShowPolishBeaver(); // Close tutorial after sliding
                         });
                     } else {
-                        closeTutorialAndShowPolishBeaver();
+                        closeTutorialAndShowPolishBeaver(); // Close if no swiper found
                     }
                 });
             } else {
-                nextButton.innerText = 'DALEJ';
+                // For intermediate steps
+                nextButton.innerText = 'DALEJ'; // Set button text to 'NEXT'
                 nextButton.addEventListener('click', function () {
                     var slideArrowContainer = document.getElementById('slide-arrow-container');
 
+                    // Handle step 2 - show arrow container
                     if (step === 2 && slideArrowContainer) {
                         slideArrowContainer.style.display = 'block';
-                        moveToStep(step + 1);
+                        moveToStep(step + 1); // Move to next step
+
+                    // Handle step 3 - hide arrow container and move swiper
                     } else if (step === 3 && slideArrowContainer) {
                         slideArrowContainer.style.display = 'none';
                         var swiperInstance = document.querySelector('.mySwiper').swiper;
                         if (swiperInstance) {
-                            swiperInstance.slideTo(2, 500);
+                            swiperInstance.slideTo(2, 500); // Slide to swiper slide 2
 
                             swiperInstance.on('slideChangeTransitionEnd', function () {
-                                moveToStep(step + 1);
+                                moveToStep(step + 1); // Move to next step after swiper transition
                             });
                         } else {
-                            moveToStep(step + 1);
+                            moveToStep(step + 1); // Move to next step if no swiper
                         }
                     } else {
-                        moveToStep(step + 1);
+                        moveToStep(step + 1); // Default next step
                     }
                 });
             }
 
-            beaverOptions.appendChild(nextButton);
-            speechBubble.appendChild(beaverOptions);
-            speechBubble.style.display = 'block';
+            beaverOptions.appendChild(nextButton); // Add next button to beaver options
+            speechBubble.appendChild(beaverOptions); // Show the next button in the speech bubble
+            speechBubble.style.display = 'block'; // Display the speech bubble
 
-            removePulseEffectFromAllSteps();
+            removePulseEffectFromAllSteps(); // Remove highlight effect from previous steps
 
             if (targetElement) {
-                console.log(targetElement)
-                targetElement.classList.add('highlight');
+                targetElement.classList.add('highlight'); // Highlight the current target element
             }
-            updateSpeechBubblePosition();
+            updateSpeechBubblePosition(); // Update the speech bubble position
         }
 
-        function removePulseEffectFromAllSteps() {
+        // Remove pulse effect from all steps
+        const removePulseEffectFromAllSteps = () => {
             steps.forEach((step, index) => {
-                var target = getTargetElement(index);
-                if (target) {
-                    target.classList.remove('highlight');
-                }
+                const target = getTargetElement(index);
+                target?.classList.remove('highlight'); // Remove highlight class from target
             });
-        }
+        };
 
-        function closeTutorialAndShowPolishBeaver() {
-            closeTutorial();
-            showPolishBeaver();
-        }
+        // Close tutorial and show the Polish Beaver
+        const closeTutorialAndShowPolishBeaver = () => {
+            closeTutorial(); // Close the tutorial
+            showPolishBeaver(); // Show the Polish Beaver after closing
+        };
 
-        function closeTutorial() {
-            speechBubble.style.display = 'none';
-            screenDim.style.display = 'none';
-            beaverImg.style.display = 'none';
-            removePulseEffectFromAllSteps();
-        }
+        // Close the tutorial
+        const closeTutorial = () => {
+            speechBubble.style.display = 'none'; // Hide the speech bubble
+            screenDim.style.display = 'none'; // Remove screen dimming effect
+            beaverImg.style.display = 'none'; // Hide the beaver image
+            removePulseEffectFromAllSteps(); // Remove highlight effect
+        };
 
-        function startTutorial() {
-            document.getElementById('beaver-yes').style.display = 'none';
-            document.getElementById('beaver-no').style.display = 'none';
+        // Start the tutorial
+        const startTutorial = () => {
+            document.getElementById('beaver-yes').style.display = 'none'; // Hide 'yes' button
+            document.getElementById('beaver-no').style.display = 'none'; // Hide 'no' button
 
-            screenDim.style.display = 'block';
-            moveToStep(0);
-            updateSpeechBubblePosition();
-        }
+            screenDim.style.display = 'block'; // Show screen dimming effect
+            moveToStep(0); // Start at the first tutorial step
+            updateSpeechBubblePosition(); // Update speech bubble position
+        };
 
-        function updateSpeechBubblePosition() {
-            var beaverRect = beaverImg.getBoundingClientRect();
-            speechBubble.style.left = (beaverRect.right + 20) + 'px';
-            speechBubble.style.top = (beaverRect.top - speechBubble.offsetHeight - 20) + 'px';
-        }
+        // Update the speech bubble position relative to the beaver image
+        const updateSpeechBubblePosition = () => {
+            const beaverRect = beaverImg.getBoundingClientRect();
+            speechBubble.style.left = `${beaverRect.right + 20}px`;
+            speechBubble.style.top = `${beaverRect.top - speechBubble.offsetHeight - 20}px`;
+        };
 
-        var isDragging = false;
-        var startX, startY;
-        var offsetX, offsetY;
+        // Drag functionality for beaver image
+        let isDragging = false, startX, startY, offsetX, offsetY;
 
-        beaverImg.addEventListener('mousedown', startDrag);
-        document.addEventListener('mousemove', doDrag);
-        document.addEventListener('mouseup', stopDrag);
-
-        beaverImg.addEventListener('touchstart', startDrag);
-        document.addEventListener('touchmove', doDrag);
-        document.addEventListener('touchend', stopDrag);
-
-        function startDrag(e) {
+        // Start dragging the beaver image
+        const startDrag = (e) => {
             startX = e.clientX || e.touches[0].clientX;
             startY = e.clientY || e.touches[0].clientY;
             offsetX = startX - beaverImg.getBoundingClientRect().left;
             offsetY = startY - beaverImg.getBoundingClientRect().top;
             isDragging = true;
-            e.preventDefault();
-        }
+            e.preventDefault(); // Prevent default drag behavior
+        };
 
-        function doDrag(e) {
+        // Drag the beaver image
+        const doDrag = (e) => {
             if (isDragging) {
-                var x = (e.clientX || e.touches[0].clientX) - offsetX;
-                var y = (e.clientY || e.touches[0].clientY) - offsetY;
-                beaverImg.style.left = x + 'px';
-                beaverImg.style.top = y + 'px';
-
-                updateSpeechBubblePosition();
+                const x = (e.clientX || e.touches[0].clientX) - offsetX;
+                const y = (e.clientY || e.touches[0].clientY) - offsetY;
+                beaverImg.style.left = `${x}px`; // Update image X position
+                beaverImg.style.top = `${y}px`; // Update image Y position
+                updateSpeechBubblePosition(); // Update speech bubble position
             }
-        }
+        };
 
-        function stopDrag() {
-            if (isDragging) {
-                isDragging = false;
-            }
-        }
+        // Stop dragging the beaver image
+        const stopDrag = () => isDragging = false;
 
-        document.getElementById('beaver-yes').addEventListener('click', function () {
-            startTutorial();
-        });
+        // Add event listeners for dragging the beaver image
+        beaverImg.addEventListener('mousedown', startDrag);
+        document.addEventListener('mousemove', doDrag);
+        document.addEventListener('mouseup', stopDrag);
+        beaverImg.addEventListener('touchstart', startDrag);
+        document.addEventListener('touchmove', doDrag);
+        document.addEventListener('touchend', stopDrag);
 
-        document.getElementById('beaver-no').addEventListener('click', function () {
-            closeTutorialAndShowPolishBeaver();
-        });
+        // Start tutorial
+        document.getElementById('beaver-yes').addEventListener('click', startTutorial);
+        document.getElementById('beaver-no').addEventListener('click', closeTutorialAndShowPolishBeaver);
+        closeBubble.addEventListener('click', closeTutorialAndShowPolishBeaver);
 
-        closeBubble.addEventListener('click', function () {
-            closeTutorialAndShowPolishBeaver();
-        });
-
-        var viewportWidth = window.innerWidth;
-        beaverImg.style.left = (viewportWidth / 4 - beaverImg.offsetWidth / 2) + 'px';
-        beaverImg.style.top = (window.innerHeight / 1.5 - beaverImg.offsetHeight / 2) + 'px';
+        // Initial positioning
+        const viewportWidth = window.innerWidth;
+        beaverImg.style.left = `${viewportWidth / 4 - beaverImg.offsetWidth / 2}px`;
+        beaverImg.style.top = `${window.innerHeight / 1.5 - beaverImg.offsetHeight / 2}px`;
 
         updateSpeechBubblePosition();
     } else {
@@ -222,70 +209,72 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // --- POLISH BEAVER ---
     function showPolishBeaver() {
-        var polishBeaverContainer = document.getElementById('polish-beaver-container');
+        // Select Tutorial Beaver elements
+        const polishBeaverContainer = document.getElementById('polish-beaver-container');
+        const speechBubble = document.getElementById('beaver-speech-bubble');
+        const beaverImg = document.getElementById('beaver-img');
+        const closeBubble = document.getElementById('close-speech-bubble');
+        const beaverText = document.getElementById('beaver-text');
+
+        // Hide original beaver elements
         polishBeaverContainer.style.display = 'block';
-
-        var speechBubble = document.getElementById('beaver-speech-bubble');
         speechBubble.style.display = 'none';
-        var beaverImg = document.getElementById('beaver-img');
         beaverImg.style.display = 'none';
-
-        var closeBubble = document.getElementById('close-speech-bubble');
         closeBubble.style.display = 'none';
-
-        var beaverText = document.getElementById('beaver-text');
         beaverText.style.display = 'none';
 
-        var polishBeaverImg = document.getElementById('polish-beaver-img');
-        var polishSpeechBubble = document.getElementById('polish-beaver-speech-bubble');
-        var polishCloseBubble = document.getElementById('polish-close-speech-bubble');
-        var polishBeaverText = document.getElementById('polish-beaver-text');
+        // Select Polish Beaver elements
+        const polishBeaverImg = document.getElementById('polish-beaver-img');
+        const polishSpeechBubble = document.getElementById('polish-beaver-speech-bubble');
+        const polishCloseBubble = document.getElementById('polish-close-speech-bubble');
+        const polishBeaverText = document.getElementById('polish-beaver-text');
 
-        var offset = 0;
-        var isDragging = false;
-        var startX, startY;
-        var offsetX, offsetY;
-        var moved = false;
-        var bubbleClosedManually = false;
+        let offset = 0;  // Track database offset for fetching new records
+        let isDragging = false, startX, startY, offsetX, offsetY;
+        let moved = false;  // Track if beaver was moved
+        let bubbleClosedManually = false;  // Track manual bubble close state
 
+        // Initialize the beaver size and position once
         if (typeof showPolishBeaver.initialized === 'undefined') {
         showPolishBeaver.initialized = false;
         }
 
+        // If not initialized, enlarge beaver image and randomize its position
         if (!showPolishBeaver.initialized) {
             polishBeaverImg.style.width = (polishBeaverImg.offsetWidth * 1.2) + 'px';
             polishBeaverImg.style.height = (polishBeaverImg.offsetHeight * 1.2) + 'px';
-
             randomizePosition();
-
             showPolishBeaver.initialized = true;
         }
 
+        // Function to randomize position of the Polish Beaver
         function randomizePosition() {
-            var viewportWidth = window.innerWidth;
-            var viewportHeight = window.innerHeight;
-            var imgWidth = polishBeaverImg.offsetWidth;
-            var imgHeight = polishBeaverImg.offsetHeight;
+            const viewportWidth = window.innerWidth;
+            const viewportHeight = window.innerHeight;
+            const imgWidth = polishBeaverImg.offsetWidth;
+            const imgHeight = polishBeaverImg.offsetHeight;
 
-            var marginWidth = 0.1 * viewportWidth;
-            var marginHeight = 0.1 * viewportHeight;
+            const marginWidth = 0.1 * viewportWidth;
+            const marginHeight = 0.1 * viewportHeight;
 
-
-            var randomLeft = marginWidth + Math.random() * (viewportWidth - imgWidth - 2 * marginWidth);
-            var randomTop = marginHeight + Math.random() * (viewportHeight - imgHeight - 2 * marginHeight);
+            // Randomly position the image within margins
+            const randomLeft = marginWidth + Math.random() * (viewportWidth - imgWidth - 2 * marginWidth);
+            const randomTop = marginHeight + Math.random() * (viewportHeight - imgHeight - 2 * marginHeight);
 
             polishBeaverImg.style.left = randomLeft + 'px';
             polishBeaverImg.style.top = randomTop + 'px';
 
-            updatePolishSpeechBubblePosition();
+            updatePolishSpeechBubblePosition(); // Adjust speech bubble position
         }
 
+        // Update speech bubble position relative to the beaver
         function updatePolishSpeechBubblePosition() {
             var beaverRect = polishBeaverImg.getBoundingClientRect();
             polishSpeechBubble.style.left = beaverRect.right + 'px';
             polishSpeechBubble.style.top = (beaverRect.top - polishSpeechBubble.offsetHeight - 20) + 'px';
         }
 
+        // Fetch new Old Polish record and display it in the speech bubble
         function fetchNewRecord() {
             fetch(`/load-more-old-polish/?offset=${offset}`)
                 .then(response => response.json())
@@ -298,6 +287,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     polishSpeechBubble.style.display = 'block';
                     offset++;
+                    updatePolishSpeechBubblePosition();
                 })
                 .catch(error => {
                     polishBeaverText.innerHTML = 'Error loading data.';
@@ -305,6 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         }
 
+        // Dragging start
         function startDrag(e) {
             startX = e.clientX || e.touches[0].clientX;
             startY = e.clientY || e.touches[0].clientY;
@@ -315,45 +306,48 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
         }
 
+        // Dragging
         function doDrag(e) {
             if (isDragging) {
                 var x = (e.clientX || e.touches[0].clientX) - offsetX;
                 var y = (e.clientY || e.touches[0].clientY) - offsetY;
                 polishBeaverImg.style.left = x + 'px';
                 polishBeaverImg.style.top = y + 'px';
-                moved = true;
-
-                updatePolishSpeechBubblePosition();
+                moved = true; // Mark that the beaver was moved
+                updatePolishSpeechBubblePosition(); // Adjust speech bubble position
             }
         }
 
+        // Stop dragging
         function stopDrag() {
             if (isDragging) {
                 if (!moved && !bubbleClosedManually) {
-                    fetchNewRecord();
+                    fetchNewRecord(); // Fetch new record if not moved
                 }
-                isDragging = false;
+                isDragging = false; // Disable dragging state
             }
         }
 
-        polishBeaverImg.addEventListener('mousedown', startDrag);
-        document.addEventListener('mousemove', doDrag);
-        document.addEventListener('mouseup', stopDrag);
+        // Dragging event listeners for Polish Beaver
+        polishBeaverImg.addEventListener('mousedown', startDrag);  // Mouse drag start
+        document.addEventListener('mousemove', doDrag);  // Mouse drag move
+        document.addEventListener('mouseup', stopDrag);  // Mouse drag stop
+        polishBeaverImg.addEventListener('touchstart', startDrag);  // Touch drag start
+        document.addEventListener('touchmove', doDrag);  // Touch drag move
+        document.addEventListener('touchend', stopDrag);  // Touch drag stop
 
-        polishBeaverImg.addEventListener('touchstart', startDrag);
-        document.addEventListener('touchmove', doDrag);
-        document.addEventListener('touchend', stopDrag);
-
+        // Close the speech bubble and hide beaver image
         polishCloseBubble.addEventListener('click', function () {
             polishSpeechBubble.style.display = 'none';
             polishBeaverImg.style.display = 'none';
-            bubbleClosedManually = true;
+            bubbleClosedManually = true;  // Track manual close
         });
 
+        // Re-fetch record if beaver clicked after manually closing bubble
         polishBeaverImg.addEventListener('click', function () {
             if (bubbleClosedManually && !moved) {
                 fetchNewRecord();
-                bubbleClosedManually = false;
+                bubbleClosedManually = false;  // Reset manual close flag
             }
         });
     }
