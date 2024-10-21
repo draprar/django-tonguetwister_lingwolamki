@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'tonguetwister',
+    'tonguetwister.apps.TongueTwisterConfig',  # load app using its custom configuration class
 ]
 
 MIDDLEWARE = [

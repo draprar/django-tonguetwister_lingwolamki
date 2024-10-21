@@ -1,13 +1,25 @@
 import logging
+import os
+import re
 
 from textblob import TextBlob
 import nltk
 
-nltk.download('punkt')
+nltk_data_path = os.path.expanduser('~/nltk_data/')
+if not os.path.exists(nltk_data_path):
+    nltk.download('punkt', download_dir=nltk_data_path)
 
 
 class Chatbot:
+    """
+    A chatbot class that processes user input, checks for sentiment,
+    and responds based on predefined keywords or sentiment analysis.
+    """
+
     def __init__(self):
+        """
+        Initialize the chatbot with predefined keywords and sentiment words.
+        """
         self.keywords = {
             'rejestracja': "Aby się zarejestrować, kliknij przycisk 'Logowanie'. Zarejestruj się już teraz, aby korzystać z pełni funkcji naszej aplikacji!",
             'rejestrację': "Aby się zarejestrować, kliknij przycisk 'Logowanie'. Zarejestruj się już teraz, aby korzystać z pełni funkcji naszej aplikacji!",
@@ -155,59 +167,82 @@ class Chatbot:
         }
         self.keyword_blobs = {TextBlob(k): v for k, v in self.keywords.items()}
 
-        self.negative_words = [
-            'okropne', 'straszne', 'tragiczne', 'złe', 'smutne', 'przykre', 'beznadziejne', 'denerwujące',
-            'nudne', 'uciążliwe', 'stresujące', 'nieprzyjemne', 'irytujące', 'fatalne', 'przerażające',
-            'problematyczne', 'nieakceptowalne', 'męczące', 'niezadowalające', 'odpychające', 'zawstydzające',
-            'frustrujące', 'niszczące', 'potworne', 'kiepskie', 'bezwartościowe', 'nieszczęśliwe', 'depresyjne',
-            'żenujące', 'katastrofalne', 'zdradliwe', 'niedopuszczalne', 'niewygodne', 'bolesne', 'krępujące',
-            'żałosne', 'rozczarowujące', 'nieudane', 'zniechęcające', 'rozpaczliwe', 'wrogie', 'nieprzystępne',
-            'niszczycielskie', 'przytłaczające', 'zdołowane', 'toksyczne', 'żałobne', 'bezsilne', 'tłamszące',
-            'odrażające'
-        ]
+        self.negative_words = {'okropne', 'straszne', 'tragiczne', 'złe', 'smutne', 'przykre', 'beznadziejne',
+                               'denerwujące', 'nudne', 'uciążliwe', 'stresujące', 'nieprzyjemne', 'irytujące',
+                               'fatalne', 'przerażające', 'problematyczne', 'nieakceptowalne', 'męczące',
+                               'niezadowalające', 'odpychające', 'zawstydzające', 'frustrujące', 'niszczące',
+                               'potworne', 'kiepskie', 'bezwartościowe', 'nieszczęśliwe', 'depresyjne', 'żenujące',
+                               'katastrofalne', 'zdradliwe', 'niedopuszczalne', 'niewygodne', 'bolesne',
+                               'krępujące', 'żałosne', 'rozczarowujące', 'nieudane', 'zniechęcające', 'rozpaczliwe',
+                               'wrogie', 'nieprzystępne', 'niszczycielskie', 'przytłaczające', 'zdołowane',
+                               'toksyczne', 'żałobne', 'bezsilne', 'tłamszące', 'odrażające'}
 
-        self.positive_words = [
-            'wspaniałe', 'niesamowite', 'świetne', 'fantastyczne', 'pozytywne', 'doskonałe', 'radosne',
-            'inspirujące', 'przyjemne', 'relaksujące', 'imponujące', 'satysfakcjonujące', 'wyjątkowe', 'cudowne',
-            'piękne', 'zachwycające', 'fenomenalne', 'wartościowe', 'podnoszące na duchu', 'motywujące',
-            'porywające', 'rewelacyjne', 'ekscytujące', 'owocne', 'energetyzujące', 'szczęśliwe', 'optymistyczne',
-            'fascynujące', 'budujące', 'genialne', 'urocze', 'radosne', 'promienne', 'pomyślne', 'zdumiewające',
-            'odprężające', 'hojne', 'zabawne', 'pewne', 'wyborne', 'magiczne', 'natchnione', 'radosne',
-            'dobroczynne', 'życzliwe', 'spektakularne', 'harmonijne', 'kojące', 'twórcze', 'szlachetne'
-        ]
+        self.positive_words = {'wspaniałe', 'niesamowite', 'świetne', 'fantastyczne', 'pozytywne', 'doskonałe',
+                               'radosne', 'inspirujące', 'przyjemne', 'relaksujące', 'imponujące', 'satysfakcjonujące',
+                               'wyjątkowe', 'cudowne', 'piękne', 'zachwycające', 'fenomenalne', 'wartościowe',
+                               'podnoszące na duchu', 'motywujące', 'porywające', 'rewelacyjne', 'ekscytujące',
+                               'owocne', 'energetyzujące', 'szczęśliwe', 'optymistyczne', 'fascynujące', 'budujące',
+                               'genialne', 'urocze', 'radosne', 'promienne', 'pomyślne', 'zdumiewające', 'odprężające',
+                               'hojne', 'zabawne', 'pewne', 'wyborne', 'magiczne', 'natchnione', 'radosne',
+                               'dobroczynne', 'życzliwe', 'spektakularne', 'harmonijne', 'kojące', 'twórcze',
+                               'szlachetne', 'dobre'}
 
     def process_text(self, user_input):
+        """
+        Converts the user input into a TextBlob object for language processing.
+        """
         try:
             return TextBlob(user_input)
         except Exception as e:
-            logging.error(f"Error processing text: {e}")
+            logging.error(f"Error processing text: {e.__class__.__name__} - {e}. Input: {user_input}")
             return None
 
     def get_custom_sentiment(self, user_input):
-        if any(neg_word in user_input.lower() for neg_word in self.negative_words):
+        """
+        Detects whether the user input contains any predefined negative or positive words,
+        allowing for word variations using regex.
+        """
+        # Convert the input text to lowercase for case-insensitive matching
+        user_input = user_input.lower()
+
+        # Join negative and positive words with regex patterns
+        negative_pattern = re.compile(r'\b(' + '|'.join(self.negative_words) + r')\b', re.IGNORECASE)
+        positive_pattern = re.compile(r'\b(' + '|'.join(self.positive_words) + r')\b', re.IGNORECASE)
+
+        # Apply the pattern to the entire user input
+        if negative_pattern.search(user_input):
             return -1
-        if any(pos_word in user_input.lower() for pos_word in self.positive_words):
+        if positive_pattern.search(user_input):
             return 1
         return None
 
     def get_response(self, user_input):
+        """
+        Processes user input and returns an appropriate chatbot response.
+        Custom sentiment detection takes precedence over TextBlob sentiment analysis.
+        """
+        # Check for custom sentiment (positive or negative words)
         custom_sentiment = self.get_custom_sentiment(user_input)
+
         if custom_sentiment == -1:
             return "Przykro mi, że masz negatywne odczucia. Może mogę jakoś pomóc?"
-        if custom_sentiment == 1:
+        elif custom_sentiment == 1:
             return "Cieszę się, że masz pozytywne nastawienie! Jak mogę Ci jeszcze pomóc?"
-
-        blob = self.process_text(user_input)
-        if not blob:
-            return "Niestety, nie mogę przetworzyć Twojej wiadomości. Spróbuj ponownie."
-
-        for keyword_blob, response in self.keyword_blobs.items():
-            if any(word in blob.words for word in keyword_blob.words):
-                return response
-
-        if blob.sentiment.polarity > 0:
-            return "Cieszę się, że masz pozytywne nastawienie! Jak mogę Ci jeszcze pomóc?"
-        elif blob.sentiment.polarity < 0:
-            return "Przykro mi, że masz negatywne odczucia. Może mogę jakoś pomóc?"
         else:
-            return "Dziękuję za wiadomość. Jak mogę pomóc?"
+            # If no custom sentiment is detected, proceed with TextBlob analysis
+            blob = self.process_text(user_input)
+            if not blob:
+                return "Niestety, nie mogę przetworzyć Twojej wiadomości. Spróbuj ponownie."
+
+            # Check for keyword matches
+            for keyword_blob, response in self.keyword_blobs.items():
+                if any(word in blob.words for word in keyword_blob.words):
+                    return response
+
+            # Use TextBlob sentiment if no keyword match or custom sentiment is found
+            if blob.sentiment.polarity > 0:
+                return "Cieszę się, że masz pozytywne nastawienie! Jak mogę Ci jeszcze pomóc?"
+            elif blob.sentiment.polarity < 0:
+                return "Przykro mi, że masz negatywne odczucia. Może mogę jakoś pomóc?"
+            else:
+                return "Dziękuję za wiadomość. Jak mogę pomóc?"
