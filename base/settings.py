@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import environ
 
+# Load environment variables from .env file
+
 env = environ.Env(
     DEBUG=(bool, False),
 )
@@ -59,8 +61,10 @@ MIDDLEWARE = [
     'base.middleware.LoginStreakMiddleware',
 ]
 
+# URL configuration root
 ROOT_URLCONF = 'base.urls'
 
+# Template engine settings
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -77,8 +81,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'base.wsgi.application'
+# WSGI application for deployment
 
+WSGI_APPLICATION = 'base.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -108,23 +113,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Login/Logout settings
+
 LOGIN_URL = '/admin/login/'
 LOGIN_REDIRECT_URL = 'main'
 LOGOUT_REDIRECT_URL = 'main'
 
-# Internationalization
+# Internationalization and timezone settings
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 LANGUAGE_CODE = 'pl-pl'
-
 TIME_ZONE = 'Europe/Warsaw'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static and media files settings
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
@@ -139,13 +143,17 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = env('EMAIL_HOST')
-EMAIL_PORT = env.int('EMAIL_PORT')
-EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+# Email backend settings (using SMTP)
 
-SESSION_COOKIE_AGE = 1200
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env('EMAIL_HOST')  # email server hostname
+EMAIL_PORT = env.int('EMAIL_PORT')  # email server port
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS')  # use TLS for secure connections
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')  # sender email address
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  # sender email password
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')  # default sender email
+
+# Session settings
+
+SESSION_COOKIE_AGE = 1200  # session expiry time in seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # expire session on browser close

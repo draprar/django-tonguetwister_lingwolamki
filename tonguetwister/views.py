@@ -25,15 +25,18 @@ from weasyprint import HTML
 from asgiref.sync import sync_to_async
 from .chatbot import Chatbot
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)  # initialize logger for error handling
 
 
+# Utility function to check if the user is admin
 def is_admin(user):
     return user.is_staff or user.is_superuser
 
 
+# Main view: loads key objects for the main page
 def main(request):
     try:
+        # Prepare context data to be displayed on the main page
         context = {
             'twisters': Twister.objects.all()[:1],
             'articulators': Articulator.objects.all()[:1],
@@ -43,6 +46,7 @@ def main(request):
             'old_polish_texts': OldPolish.objects.order_by('?'),
         }
 
+        # Add user-specific content if the user is authenticated
         if request.user.is_authenticated:
             context.update({
                 'user_twisters_texts': list(UserProfileTwister.objects.filter(user=request.user).select_related('twister').values_list('twister__text', flat=True)),
@@ -56,9 +60,11 @@ def main(request):
         return HttpResponse("Internal Server Error", status=500)
 
 
+# Initialize chatbot instance
 chatbot_instance = Chatbot()
 
 
+# Asynchronous view for handling chatbot responses
 async def chatbot(request):
     user_input = request.GET.get('message', '')
     if user_input:
@@ -69,28 +75,32 @@ async def chatbot(request):
 
 @user_passes_test(is_admin)
 def content_management(request):
+    """View for admin content management."""
     return render(request, 'admin/settings.html')
 
 
 def error_404_view(request, exception):
+    """Custom view for handling 404 errors."""
     data = {}
     return render(request, 'tonguetwister/404.html', data)
 
 
+# Utility function for handling "load more" actions for various models
 def load_more_generic(request, model, user_profile_model, related_field, limit=1):
     try:
-        offset = int(request.GET.get('offset', 0))
-        objects = model.objects.all()[offset:offset + limit]
+        offset = int(request.GET.get('offset', 0))  # get offset from the request, default is 0
+        objects = model.objects.all()[offset:offset + limit]  # get objects based on offset and limit
 
         if request.user.is_authenticated:
-            user_texts = set(user_profile_model.objects.filter(user=request.user).values_list(f'{related_field}__text', flat=True))
+            user_texts = set(user_profile_model.objects.filter(user=request.user).values_list(f'{related_field}__text', flat=True))  # get user's related texts
         else:
             user_texts = set()
 
+        # Prepare data for the response
         data = [{
             'id': obj.id,
-            'text': getattr(obj, 'text', ''),
-            'is_added': obj.text in user_texts,
+            'text': getattr(obj, 'text', ''),  # ensure 'text' is accessed safely
+            'is_added': obj.text in user_texts,  # check if the object is already added to the user's list
         } for obj in objects]
 
         return JsonResponse(data, safe=False)
@@ -99,6 +109,7 @@ def load_more_generic(request, model, user_profile_model, related_field, limit=1
         return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 
+# Specific load more views for different models
 def load_more_articulators(request):
     return load_more_generic(request, Articulator, UserProfileArticulator, related_field='articulator')
 
@@ -111,17 +122,19 @@ def load_more_twisters(request):
     return load_more_generic(request, Twister, UserProfileTwister, related_field='twister')
 
 
+# Simpler "load more" function for models without user-specific associations
 def simple_load_more_generic(request, model, limit=1):
     try:
-        offset = int(request.GET.get('offset', 0))
-        objects = model.objects.all()[offset:offset + limit]
-        data = list(objects.values())
+        offset = int(request.GET.get('offset', 0))  # Get offset from the request
+        objects = model.objects.all()[offset:offset + limit]  # Get objects based on offset and limit
+        data = list(objects.values())  # Convert objects to list of values
         return JsonResponse(data, safe=False)
     except Exception as e:
         logger.error(f"Exception occured: {str(e)}")
         return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 
+# Load more views for other models
 def load_more_old_polish(request):
     return simple_load_more_generic(request, OldPolish)
 
@@ -134,6 +147,7 @@ def load_more_funfacts(request):
     return simple_load_more_generic(request, Funfact)
 
 
+# CRUD Articulators
 @user_passes_test(is_admin)
 def articulator_list(request):
     articulators = Articulator.objects.all()
@@ -174,6 +188,7 @@ def articulator_delete(request, pk):
     return render(request, 'tonguetwister/articulators/articulator_confirm_delete.html', {'articulator': articulator})
 
 
+# CRUD Exercises
 @user_passes_test(is_admin)
 def exercise_list(request):
     exercises = Exercise.objects.all()
@@ -214,6 +229,7 @@ def exercise_delete(request, pk):
     return render(request, 'tonguetwister/exercises/exercise_confirm_delete.html', {'exercise': exercise})
 
 
+# CRUD Twisters
 @user_passes_test(is_admin)
 def twister_list(request):
     twisters = Twister.objects.all()
@@ -254,6 +270,7 @@ def twister_delete(request, pk):
     return render(request, 'tonguetwister/twisters/twister_confirm_delete.html', {'twister': twister})
 
 
+# CRUD Trivia
 @user_passes_test(is_admin)
 def trivia_list(request):
     trivia = Trivia.objects.all()
@@ -294,6 +311,7 @@ def trivia_delete(request, pk):
     return render(request, 'tonguetwister/trivia/trivia_confirm_delete.html', {'t': t})
 
 
+# CRUD Fun Facts
 @user_passes_test(is_admin)
 def funfact_list(request):
     funfacts = Funfact.objects.all()
@@ -334,6 +352,7 @@ def funfact_delete(request, pk):
     return render(request, 'tonguetwister/funfacts/funfact_confirm_delete.html', {'funfact': funfact})
 
 
+# CRUD Old-new Polish
 @user_passes_test(is_admin)
 def oldpolish_list(request):
     oldpolishs = OldPolish.objects.all()
@@ -376,7 +395,12 @@ def oldpolish_delete(request, pk):
 
 @login_required
 def user_content(request):
+    """
+    User content view to handle avatar upload, deletion, and display user's articulators, exercises, and twisters.
+    """
     profile = request.user.profile
+
+    # Handle avatar deletion
     if request.method == 'POST':
         if 'action' in request.POST and request.POST['action'] == 'delete-avatar':
             if profile.avatar:
@@ -384,6 +408,7 @@ def user_content(request):
             else:
                 return redirect('user_content')
 
+        # Handle avatar upload
         form = AvatarUploadForm(request.POST, request.FILES, instance=request.user.profile)
         if form.is_valid():
             form.save()
@@ -391,6 +416,7 @@ def user_content(request):
     else:
         form = AvatarUploadForm(instance=request.user.profile)
 
+    # Fetch all articulators, exercises, and twisters with user-specific content
     all_articulators = Articulator.objects.all()
     user_articulators = UserProfileArticulator.objects.filter(user=request.user).select_related('articulator')
     user_articulators_texts = list(
@@ -417,6 +443,7 @@ def user_content(request):
         'user_twisters_texts': user_twisters_texts,
     }
 
+    # Handle export of user exercises as a PDF
     if 'export' in request.GET and request.GET['export'] == 'exercises':
         html_string = render_to_string('tonguetwister/users/export-exercises.html', context)
         html = HTML(string=html_string)
@@ -428,6 +455,7 @@ def user_content(request):
     return render(request, 'tonguetwister/users/user-content.html', context)
 
 
+# Add/delete Articulators
 @login_required
 @csrf_protect
 def add_articulator(request, articulator_id):
@@ -448,6 +476,7 @@ def delete_articulator(request, articulator_id):
     return JsonResponse({'status': 'Articulator deleted'})
 
 
+# Add/delete Exercises
 @login_required
 @csrf_protect
 def add_exercise(request, exercise_id):
@@ -467,6 +496,7 @@ def delete_exercise(request, exercise_id):
     return JsonResponse({'status': 'Exercise deleted'})
 
 
+# Add/delete Twisters
 @login_required
 @csrf_protect
 def add_twister(request, twister_id):
@@ -486,35 +516,25 @@ def delete_twister(request, twister_id):
     return JsonResponse({'status': 'Twister deleted'})
 
 
-class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=True)
-
-    class Meta:
-        model = User
-        fields = ("username", "email", "password1", "password2")
-
-    def save(self, commit=True):
-        user = super(CustomUserCreationForm, self).save(commit=False)
-        user.email = self.cleaned_data["email"]
-        if commit:
-            user.save()
-            regular_users_group = Group.objects.get(name='Regular Users')
-            user.groups.add(regular_users_group)
-        return user
-
-
 def login_view(request):
+    # Initializes an authentication form for user login
     form = AuthenticationForm()
 
     if request.method == 'POST':
-        form = AuthenticationForm(data=request.POST)
+        form = AuthenticationForm(data=request.POST)  # populates form with submitted data
+
         if form.is_valid():
+            # Retrieves the username and password from cleaned data (validated form data)
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
+
+            # Authenticates the user using Django's authentication system
             user = authenticate(request, username=username, password=password)
+
             if user is not None:
+                # Logs the user in if authentication is successful
                 login(request, user)
-                return redirect('main')
+                return redirect('main')  # redirects to the 'main' view after login
             else:
                 messages.error(request, 'Napotkaliśmy zgoła nieoczekiwane błędy 😱 spróbuj raz jeszcze 😊')
 
@@ -522,25 +542,38 @@ def login_view(request):
 
 
 def send_activation_email(user, request):
+    # Prepares the email subject and token for account activation
     subject = 'Witamy na pokładzie!'
-    token = account_activation_token.make_token(user)
-    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    token = account_activation_token.make_token(user)  # generates an activation token for the user
+    uid = urlsafe_base64_encode(force_bytes(user.pk))  # encodes the user's primary key
+
+    # Builds the activation link with the user's uid and token
     activation_link = request.build_absolute_uri(reverse('activate', args=[uid, token]))
+
+    # Renders an HTML template for the email body and generates a plain text version
     html_message = render_to_string('registration/activation.html', {'user': user, 'activation_link': activation_link})
     plain_message = strip_tags(html_message)
+
+    # Sets the sender's email and recipient (user's email)
     from_email = settings.EMAIL_HOST_USER
     to = user.email
 
+    # Sends the email with both HTML and plain text versions
     send_mail(subject, plain_message, from_email, [to], html_message=html_message)
 
 
 def register_view(request):
+    # Handles user registration via POST request
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST)  # custom form for user registration
+
         if form.is_valid():
+            # Saves the new user and sends them an activation email
             user = form.save()
             send_activation_email(user, request)
-            messages.success(request, 'Brawo! Możesz się zalogować. Sprawdź swoją skrzynkę e-mail, aby aktywować konto.')
+            # Shows a success message and redirects to the login page
+            messages.success(request,
+                             'Brawo! Możesz się zalogować. Sprawdź swoją skrzynkę e-mail, aby aktywować konto.')
             return redirect('login')
         else:
             for field, errors in form.errors.items():
@@ -548,18 +581,22 @@ def register_view(request):
                     messages.error(request, error)
             return render(request, 'registration/register.html', {'form': form})
     else:
+        # If not a POST request, renders an empty registration form
         form = CustomUserCreationForm()
     return render(request, 'registration/register.html', {'form': form})
 
 
 def activate(request, uidb64, token):
+    # Attempts to decode the user ID from the URL-safe base64 string
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
+        user = User.objects.get(pk=uid)  # retrieves the user based on the decoded UID
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
+    # Checks if the user exists and the activation token is valid
     if user is not None and account_activation_token.check_token(user, token):
+        # Marks the user's email as confirmed and saves the profile
         user.profile.email_confirmed = True
         user.profile.save()
         messages.success(request, 'Dziękujemy za potwierdzenie :) Twoje konto zostało zweryfikowane.')
@@ -571,14 +608,17 @@ def activate(request, uidb64, token):
 
 @csrf_protect
 def password_reset_view(request):
+    # Handles the password reset process
     if request.method == 'POST':
         email = request.POST.get('email')
         try:
+            # Tries to find the user based on the provided email
             user = User.objects.get(email=email)
-            token = default_token_generator.make_token(user)
-            uid = urlsafe_base64_encode(force_bytes(user.pk))
-            reset_link = request.build_absolute_uri(f'/accounts/reset/{uid}/{token}/')
+            token = default_token_generator.make_token(user)  # generates a reset token
+            uid = urlsafe_base64_encode(force_bytes(user.pk))  # encodes the user's ID
 
+            # Constructs a password reset link and email message
+            reset_link = request.build_absolute_uri(f'/accounts/reset/{uid}/{token}/')
             plain_message = f"""
             Resetuj hasło
 
@@ -594,6 +634,8 @@ def password_reset_view(request):
             """
             context = {'reset_link': reset_link, 'user': user}
             html_message = render_to_string('registration/password_reset_email.html', context)
+
+            # Sends the password reset email
             subject = 'Resetuj swoje hasło'
             from_email = settings.EMAIL_HOST_USER
             send_mail(
@@ -611,20 +653,22 @@ def password_reset_view(request):
 
 @csrf_protect
 def password_reset_confirm_view(request, uidb64, token):
+    # Handles confirmation of password reset
     try:
-        uid = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk=uid)
+        uid = force_str(urlsafe_base64_decode(uidb64))  # decodes the UID
+        user = User.objects.get(pk=uid)  # retrieves the user
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
     if user is not None and default_token_generator.check_token(user, token):
+        # If token is valid, the user can reset their password
         if request.method == 'POST':
             new_password1 = request.POST.get('new_password1')
             new_password2 = request.POST.get('new_password2')
             if new_password1 == new_password2:
                 user.set_password(new_password1)
                 user.save()
-                update_session_auth_hash(request, user)
+                update_session_auth_hash(request, user)  # Prevents logout after password reset
                 messages.success(request, 'Twoje hasło zostało zmienione.')
                 return redirect('password_reset_complete')
             else:
@@ -646,9 +690,12 @@ def password_reset_done_view(request):
 
 
 def contact(request):
+    # Handles the contact form submission
     if request.method == "POST":
         form = ContactForm(request.POST)
+
         if form.is_valid():
+            # Retrieves data from the cleaned form
             name = form.cleaned_data['name']
             email = form.cleaned_data['email']
             message = form.cleaned_data['message']
@@ -656,6 +703,7 @@ def contact(request):
             message_with_email = f"Od: {email}\n\n{message}"
 
             try:
+                # Sends the contact email
                 send_mail(
                     subject=subject,
                     message=message_with_email,
