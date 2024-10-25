@@ -15,14 +15,14 @@
     <img src="{% static 'assets/arrows.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"><br><br>
     <div id="trivia-container">
         {% for x in trivia %}
-            <div class="trivia col-md-16 fs-5 bg-light bg-gradient">{{ x.text }}</div>
+            <div class="trivia col-md-16 fs-4 bg-light bg-gradient text-center shadow-sm p-3 my-3 rounded border">{{ x.text }}</div>
         {% endfor %}
     </div>
     <br>
     <button id="load-more-trivia-btn" class="btn btn-dark btn-lg text-uppercase fw-bold" data-offset="{{ trivia|length }}" data-url="{% url 'load_more_trivia' %}" onclick="changeTriviaButtonText()">Porada językowa</button>
 </div>
 
-<div id="congratulations-modal-trivia" class="card text-white bg-secondary mt-3 mb-3 w-100" style="display: none;">
+<div id="congratulations-modal-trivia" class="card text-white bg-secondary mt-3 mb-3 w-100 shadow" style="display: none;">
     <audio id="success-sound-trivia" src="{% static 'sounds/fanfare.mp3' %}" preload="auto"></audio>
     <div class="card-body">
         <p class="card-text text-center mb-0">Ładnie! 👏 Baza porad wyczyszczona, możemy iść dalej 💣</p>

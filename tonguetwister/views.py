@@ -43,7 +43,7 @@ def main(request):
             'exercises': Exercise.objects.all()[:1],
             'trivia': Trivia.objects.all()[:0],
             'funfacts': Funfact.objects.all()[:0],
-            'old_polish_texts': OldPolish.objects.order_by('?'),
+            'old_polish_texts': OldPolish.objects.order_by('?').first(),
         }
 
         # Add user-specific content if the user is authenticated

@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     $('#trivia-container').empty();
                     $('#facts-container').empty();
                     for (let i = 0; i < data.length; i++) {
-                        $('#trivia-container').append('<div class="trivia col-md-16 fs-4">' + data[i].text + '</div>');
+                        $('#trivia-container').append('<div class="trivia col-md-16 fs-4 bg-light bg-gradient text-center shadow-sm p-3 my-3 rounded border">' + data[i].text + '</div>');
                     }
                     triviaOffset += data.length;
 

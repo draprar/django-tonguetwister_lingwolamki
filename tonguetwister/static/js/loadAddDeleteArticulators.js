@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create a container for the articulator
         const articulatorContainer = document.createElement('div');
         articulatorContainer.id = `articulators-container-${articulator.id}`;
-        articulatorContainer.classList.add('articulators-container', 'col-md-16', 'fs-4');
+        articulatorContainer.classList.add('articulators-container', 'col-md-16', 'fs-4', 'bg-light', 'bg-gradient', 'bg-gradient', 'text-center', 'shadow-sm', 'p-3', 'my-3', 'rounded','border');
 
         // Create the articulator element and set its content
         const articulatorDiv = document.createElement('div');

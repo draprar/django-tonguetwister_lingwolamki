@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create a container for the exercise
         const exerciseContainer = document.createElement('div');
         exerciseContainer.id = `exercises-container-${exercise.id}`;
-        exerciseContainer.classList.add('exercises-container', 'col-md-16', 'fs-4');
+        exerciseContainer.classList.add('exercises-container', 'col-md-16', 'fs-4', 'bg-light', 'bg-gradient', 'bg-gradient', 'text-center', 'shadow-sm', 'p-3', 'my-3', 'rounded','border');
 
         // Create the exercise element and set its content
         const exerciseDiv = document.createElement('div');
