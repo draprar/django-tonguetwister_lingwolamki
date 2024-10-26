@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     $('#facts-container').empty();
                     $('#trivia-container').empty();
                     for (let i = 0; i < data.length; i++) {
-                        $('#facts-container').append('<br><div class="fact col-md-16 fs-4">' + data[i].text + '</div>');
+                        $('#facts-container').append('<br><div class="fact col-md-16 fs-4 bg-light bg-gradient text-center shadow-sm p-3 my-3 rounded border">' + data[i].text + '</div>');
                     }
                     factsOffset += data.length;
 

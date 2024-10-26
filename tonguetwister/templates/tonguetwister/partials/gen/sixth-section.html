@@ -2,11 +2,10 @@
 
 <h1><strong>PREZENT</strong></h1>
 <p class="col-md-16 fs-4">Kliknij w przycisk, aby otworzyć podarek.</p>
-<img src="{% static 'assets/arrows.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"><br>
-
+<img src="{% static 'assets/arrows.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top">
 <div id="facts-container">
     {% for funfact in funfacts %}
-    <div class="fact col-md-16 fs-5">{{ funfact.text }}</div>
+    <div class="fact col-md-16 fs-4 bg-light bg-gradient text-center shadow-sm p-3 my-3 rounded border">{{ funfact.text }}</div>
     {% endfor %}
 </div>
 <br>
