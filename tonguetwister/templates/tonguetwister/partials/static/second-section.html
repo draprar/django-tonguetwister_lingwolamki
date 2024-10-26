@@ -12,7 +12,7 @@
 
 <div id="step-3" class="step" style="display: none;">
     <p class="col-md-16 fs-4">Aby jeszcze lepiej przygotować do ćwiczeń, kliknij poniżej i przeczytaj na głos porady językowe 💡</p>
-    <img src="{% static 'assets/arrows.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"><br><br>
+    <img src="{% static 'assets/arrows.svg' %}" alt="" width="24" height="24" class="d-inline-block align-text-top"><br>
     <div id="trivia-container">
         {% for x in trivia %}
             <div class="trivia col-md-16 fs-4 bg-light bg-gradient text-center shadow-sm p-3 my-3 rounded border">{{ x.text }}</div>
