@@ -1,3 +1,5 @@
+import random
+
 from django import forms
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
@@ -135,16 +137,26 @@ def simple_load_more_generic(request, model, limit=1):
 
 
 # Load more views for other models
-def load_more_old_polish(request):
-    return simple_load_more_generic(request, OldPolish)
-
-
 def load_more_trivia(request):
     return simple_load_more_generic(request, Trivia)
 
 
 def load_more_funfacts(request):
     return simple_load_more_generic(request, Funfact)
+
+
+# Randomized loading for Old Polish records
+def load_more_old_polish(request):
+    try:
+        # Get a random record from the OldPolish model
+        random_record = OldPolish.objects.order_by('?').values().first()
+        if random_record:
+            return JsonResponse([random_record], safe=False)
+        else:
+            return JsonResponse([], safe=False)  # Empty response if no records
+    except Exception as e:
+        logger.error(f"Exception occurred: {str(e)}")
+        return JsonResponse({'error': 'Internal Server Error'}, status=500)
 
 
 # CRUD Articulators

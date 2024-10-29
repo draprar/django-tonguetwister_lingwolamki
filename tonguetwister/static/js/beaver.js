@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Fetch new Old Polish record and display it in the speech bubble
         function fetchNewRecord() {
-            fetch(`/load-more-old-polish/?offset=${offset}`)
+            fetch(`/load-more-old-polish/`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.length > 0) {
@@ -292,7 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         polishBeaverText.innerHTML = 'Brawo! Baza danych wyczyszczona 😲';
                     }
                     polishSpeechBubble.style.display = 'block';
-                    offset++;
                     updatePolishSpeechBubblePosition();
                 })
                 .catch(error => {
