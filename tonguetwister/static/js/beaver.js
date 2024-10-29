@@ -84,7 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Handle step 2 - show arrow container
                     if (step === 2 && slideArrowContainer) {
-                        slideArrowContainer.style.display = 'block';
+                        if (window.innerWidth <= 992) {
+                            slideArrowContainer.style.display = 'block';
+                        }
                         moveToStep(step + 1); // Move to next step
 
                     // Handle step 3 - hide arrow container and move swiper
@@ -118,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateSpeechBubblePosition(); // Update the speech bubble position
         }
 
-        // Remove pulse effect from all steps
+        // Remove highlight effect from all steps
         const removePulseEffectFromAllSteps = () => {
             steps.forEach((step, index) => {
                 const target = getTargetElement(index);
@@ -269,9 +271,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update speech bubble position relative to the beaver
         function updatePolishSpeechBubblePosition() {
-            var beaverRect = polishBeaverImg.getBoundingClientRect();
-            polishSpeechBubble.style.left = beaverRect.right + 'px';
-            polishSpeechBubble.style.top = (beaverRect.top - polishSpeechBubble.offsetHeight - 20) + 'px';
+            var polishBeaverRect = polishBeaverImg.getBoundingClientRect();
+            polishSpeechBubble.style.left = polishBeaverRect.right + 'px';
+            polishSpeechBubble.style.top = (polishBeaverRect.top - polishSpeechBubble.offsetHeight - 20) + 'px';
         }
 
         // Fetch new Old Polish record and display it in the speech bubble
