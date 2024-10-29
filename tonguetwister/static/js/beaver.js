@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const beaverOptions = document.createElement('div'); // Create options div for buttons
         let currentStep = 0; // Track current tutorial step
 
+        beaverImg.onload = () => {
+            speechBubble.style.display = 'block'; // Show speech bubble after image loads
+        };
+
         // Resize beaver image
         beaverImg.style.width = `${beaverImg.offsetWidth * 1.2}px`;
         beaverImg.style.height = `${beaverImg.offsetHeight * 1.2}px`;
