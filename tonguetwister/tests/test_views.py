@@ -221,7 +221,6 @@ class TestLoadMoreGenerics:
 class TestSimpleLoadMoreGenerics:
 
     @pytest.fixture(params=[
-        ('load_more_old_polish', OldPolish),
         ('load_more_trivia', Trivia),
         ('load_more_funfacts', Funfact),
     ])
@@ -231,21 +230,14 @@ class TestSimpleLoadMoreGenerics:
     def test_simple_load_more_generic(self, client, model_data):
         url = reverse(model_data[0])
         model_class = model_data[1]
-        if model_data[0] == 'load_more_old_polish':
-            model_class.objects.create(old_text='old_text', new_text='new_text')
-        else:
-            model_class.objects.create(text='Test text')
+        model_class.objects.create(text='Test text')
 
         response = client.get(url)
 
         assert response.status_code == 200
         assert isinstance(response, JsonResponse)
         assert len(response.json()) == 1
-        if model_data[0] == 'load_more_old_polish':
-            assert response.json()[0]['old_text'] == 'old_text'
-            assert response.json()[0]['new_text'] == 'new_text'
-        else:
-            assert response.json()[0]['text'] == 'Test text'
+        assert response.json()[0]['text'] == 'Test text'
 
     def test_simple_load_more_generic_internal_error(self, client, mocker, model_data):
         url = reverse(model_data[0])
@@ -253,6 +245,36 @@ class TestSimpleLoadMoreGenerics:
 
         response = client.get(url)
 
+        assert response.status_code == 500
+        assert response.json() == {'error': 'Internal Server Error'}
+
+
+@pytest.mark.django_db
+class TestLoadMoreOldPolish:
+
+    def test_load_more_old_polish(self, client):
+        url = reverse('load_more_old_polish')
+
+        # Create a test record for OldPolish model
+        OldPolish.objects.create(old_text='old_text', new_text='new_text')
+
+        response = client.get(url)
+
+        assert response.status_code == 200
+        assert isinstance(response, JsonResponse)
+        assert len(response.json()) == 1
+        assert response.json()[0]['old_text'] == 'old_text'
+        assert response.json()[0]['new_text'] == 'new_text'
+
+    def test_load_more_old_polish_internal_error(self, client, mocker):
+        url = reverse('load_more_old_polish')
+
+        # Mocking order_by method to raise an exception
+        mocker.patch('tonguetwister.models.OldPolish.objects.order_by', side_effect=Exception("Test Exception"))
+
+        response = client.get(url)
+
+        # Assert that the view returns a 500 status code and correct error message
         assert response.status_code == 500
         assert response.json() == {'error': 'Internal Server Error'}
 
