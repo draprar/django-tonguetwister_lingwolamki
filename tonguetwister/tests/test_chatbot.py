@@ -8,6 +8,7 @@ from django.test import AsyncClient
 @pytest.mark.django_db
 @pytest.mark.asyncio
 async def test_chatbot_view_with_message():
+    # Test chatbot response to a specific message
     client = AsyncClient()
 
     response = await client.get(reverse('chatbot'), {'message': 'rejestracja'})
@@ -22,6 +23,7 @@ async def test_chatbot_view_with_message():
 @pytest.mark.django_db
 @pytest.mark.asyncio
 async def test_chatbot_view_without_message():
+    # Test chatbot default response when no message is provided
     client = AsyncClient()
 
     response = await client.get(reverse('chatbot'))
