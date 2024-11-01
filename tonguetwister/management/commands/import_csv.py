@@ -9,8 +9,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         files = {
-            'twister': '/home/lingwolamki/django-tonguetwister/twister.csv',
-            'old_polish': '/home/lingwolamki/django-tonguetwister/oldpolish.csv'
+            'twister': '/home/lingwolamki/django-tonguetwister/twister_data.csv',
+            'old_polish': '/home/lingwolamki/django-tonguetwister/oldpolish_data.csv'
         }
 
         for label, file_path in files.items():
