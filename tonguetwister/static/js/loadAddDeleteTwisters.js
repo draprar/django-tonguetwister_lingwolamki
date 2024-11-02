@@ -52,11 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
         // Create a container for the twister
         const twisterContainer = document.createElement('div');
         twisterContainer.id = `twisters-container-${twister.id}`;
-        twisterContainer.classList.add('twisters-container', 'col-md-16', 'fs-4', 'bg-light', 'bg-gradient', 'bg-gradient', 'text-center', 'shadow-sm', 'p-3', 'my-3', 'rounded','border');
 
         // Create the twister element and set its content
         const twisterDiv = document.createElement('div');
-        twisterDiv.classList.add('twister');
+        twisterDiv.classList.add('twister', 'col-md-16', 'fs-4', 'bg-light', 'bg-gradient', 'bg-gradient', 'text-center', 'shadow-sm', 'p-3', 'my-3', 'rounded','border);
         twisterDiv.textContent = twister.text;
         twisterDiv.id = `twister-${twister.id}`;
 
