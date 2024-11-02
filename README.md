@@ -125,4 +125,4 @@ lingwolamki/
 ### License
 This project is licensed under the MIT License.
 
-Developed by ***Paulina Śledź*** & ***Michał Walerowicz***.
+Developed by ***Michał*** & ***Paulina***.
