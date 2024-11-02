@@ -1,6 +1,6 @@
 # LingwoŁamki
 
-LingwoŁamki is a Django web application designed to help users enhance their vocal clarity, articulation, and breathing techniques. The app includes interactive features such as tongue twisters, exercises, trivia, and more to assist users in their practice. It is built using Django 4.1.1 and offers both an admin panel for content management and a front-end interface for user interaction.
+LingwoŁamki is a Django web application designed to help users enhance their vocal clarity, articulation, and breathing techniques. The app includes interactive features such as tongue twisters, exercises, trivia, and more to assist users in their practice. It is built using Django 4.2.1 and offers both an admin panel for content management and a front-end interface for user interaction.
 
 ## Features
 
@@ -38,10 +38,10 @@ LingwoŁamki is a Django web application designed to help users enhance their vo
 
 1. **Clone the repository:**
 
-   ```bash
-   git clone https://github.com/yourusername/lingwolamki.git
-   cd lingwolamki
-   ```
+```bash
+git clone https://github.com/draprar/django-tonguetwister-app_lingwolamki.git
+cd lingwolamki
+```
 
 2. **Install dependencies:**
 
@@ -58,12 +58,14 @@ Create a `.env` file in the project root directory with the following keys:
    ```bash
    SECRET_KEY=your-secret-key
    DEBUG=True
+   ALLOWED_HOSTS=your-allowed-hosts
    EMAIL_HOST=smtp.your-email-provider.com
    EMAIL_PORT=587
    EMAIL_USE_TLS=True
    EMAIL_HOST_USER=your-email@example.com
    EMAIL_HOST_PASSWORD=your-email-password
    DEFAULT_FROM_EMAIL=your-email@example.com
+   USE_MYSQL=False
    ```
 
 4. **Apply migrations:**
@@ -91,8 +93,8 @@ Start the Django development server:
    ```
 7. **Access the app:**
 
+- Main page: `/`
 - Admin panel: `http://127.0.0.1:8000/admin/`
-- Main page: `/` (after logging in)
 
 ### Project Structure
 ```tree
