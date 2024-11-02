@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Create the twister element and set its content
         const twisterDiv = document.createElement('div');
-        twisterDiv.classList.add('twister', 'col-md-16', 'fs-4', 'bg-light', 'bg-gradient', 'bg-gradient', 'text-center', 'shadow-sm', 'p-3', 'my-3', 'rounded','border);
+        twisterDiv.classList.add('twister', 'col-md-16', 'fs-4', 'bg-light', 'bg-gradient', 'bg-gradient', 'text-center', 'shadow-sm', 'p-3', 'my-3', 'rounded','border');
         twisterDiv.textContent = twister.text;
         twisterDiv.id = `twister-${twister.id}`;
 
