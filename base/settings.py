@@ -161,7 +161,14 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER')  # sender email address
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  # sender email password
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')  # default sender email
 
-# Session settings
+# Security & Session settings
+
+SECURE_HSTS_SECONDS = 31536000  # enforce HTTPS for one year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+SECURE_SSL_REDIRECT = True  # redirect all HTTP traffic to HTTPS
 
 SESSION_COOKIE_AGE = 1200  # session expiry time in seconds
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # expire session on browser close
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
