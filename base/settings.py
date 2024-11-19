@@ -163,10 +163,9 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')  # default sender email
 
 # Security & Session settings
 
-SESSION_COOKIE_AGE = 1200  # session expiry time in seconds
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # expire session on browser close
-
 if not DEBUG:
+    SESSION_COOKIE_AGE = 1200  # session expiry time in seconds
+    SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # expire session on browser close
     SECURE_HSTS_SECONDS = 31536000  # enforce HTTPS for one year
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
