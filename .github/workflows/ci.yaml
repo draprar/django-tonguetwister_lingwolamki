@@ -43,7 +43,7 @@ jobs:
 
       - name: Set up environment variables
         run: |
-          echo "DEBUG=False" >> .env
+          echo "DEBUG=${{ secrets.DEBUG }}" >> .env
           echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
           echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> .env
           echo "EMAIL_PORT=${{ secrets.EMAIL_PORT }}" >> .env
