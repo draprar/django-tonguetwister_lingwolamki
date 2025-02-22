@@ -1,13 +1,6 @@
 import logging
-import os
 import re
-
 from textblob import TextBlob
-import nltk
-
-nltk_data_path = os.path.expanduser('~/nltk_data/')
-if not os.path.exists(nltk_data_path):
-    nltk.download('punkt', download_dir=nltk_data_path)
 
 
 class Chatbot:

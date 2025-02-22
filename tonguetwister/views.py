@@ -1,6 +1,3 @@
-import random
-
-from django import forms
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
@@ -23,7 +20,6 @@ from .forms import (ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, Funf
                     ContactForm, AvatarUploadForm, OldPolishForm)
 from .tokens import account_activation_token
 import logging
-from weasyprint import HTML
 from asgiref.sync import sync_to_async
 from .chatbot import Chatbot
 
@@ -458,10 +454,29 @@ def user_content(request):
     # Handle export of user exercises as a PDF
     if 'export' in request.GET and request.GET['export'] == 'exercises':
         html_string = render_to_string('tonguetwister/users/export-exercises.html', context)
-        html = HTML(string=html_string)
+
+        # Create a simple PDF with the rendered HTML content
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'attachment; filename="lingwolamkowe-cwiczenia.pdf"'
-        html.write_pdf(target=response)
+
+        from reportlab.lib.pagesizes import letter
+        from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+        from reportlab.lib.styles import getSampleStyleSheet
+        from django.utils.html import strip_tags
+
+        # Prepare PDF document
+        pdf = SimpleDocTemplate(response, pagesize=letter)
+        styles = getSampleStyleSheet()
+        story = []
+
+        # Convert the HTML into plain text and add it to the PDF content
+        for exercise in context['user_exercises_texts']:
+            plain_text = strip_tags(exercise)  # Clean HTML tags
+            story.append(Paragraph(plain_text, styles["Normal"]))
+            story.append(Spacer(1, 12))  # Add some spacing between exercises
+
+        # Build the PDF
+        pdf.build(story)
         return response
 
     return render(request, 'tonguetwister/users/user-content.html', context)
