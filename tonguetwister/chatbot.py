@@ -1,11 +1,10 @@
 import re
 import spacy
 
-
 class Chatbot:
     """
     A chatbot class that processes user input, checks for sentiment,
-    and responds based on predefined keywords or sentiment analysis.
+    and responds based on predefined keywords or sentiment.
     """
 
     def __init__(self):
@@ -40,7 +39,13 @@ class Chatbot:
             'zdjęcie': "Kliknij przycisk 'Zarządzaj Awatarem', aby dostosować swoje zdjęcie profilowe. Pokaż światu, kim jesteś!",
             'kurs': "Lingwołamki oferują specjalistyczne kursy wymowy, które pomogą Ci w opanowaniu trudnych aspektów mowy.",
             'sesja': "Planowanie sesji ćwiczeniowych pomoże Ci w regularnej praktyce i osiągnięciu zamierzonych celów.",
-            'pomoc': "Jeśli potrzebujesz pomocy, odwiedź sekcję 'Kontakt' lub skontaktuj się z nami bezpośrednio."
+            'pomoc': "Jeśli potrzebujesz pomocy, odwiedź sekcję 'Kontakt' lub skontaktuj się z nami bezpośrednio.",
+            'artykulator': "Zarządzaj artykulatorami i dostosuj je do swoich potrzeb.",
+            'ćwiczenie': "Odkrywaj i zarządzaj ćwiczeniami oraz personalizuj swoje treningi.",
+            'łamaniec': "Zarządzaj łamańcami językowymi i sprawdzaj swoje umiejętności.",
+            'porada': "Przeglądaj i zarządzaj poradami językowymi.",
+            'ciekawostka': "Odkrywaj i zarządzaj ciekawostkami językowymi.",
+            'staropolszczyzna': "Odkrywaj słowa ze staropolszczyzny."
         }
 
         self.negative_words = {'okropne', 'straszne', 'tragiczne', 'złe', 'smutne', 'przykre', 'beznadziejne',
