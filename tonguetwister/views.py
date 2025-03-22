@@ -19,6 +19,8 @@ from .models import (Twister, Articulator, Exercise, Trivia, Funfact, OldPolish,
 from .forms import (ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm,
                     ContactForm, AvatarUploadForm, OldPolishForm)
 from .tokens import account_activation_token
+from .serializers import OldPolishSerializer
+from rest_framework import generics
 import logging
 from asgiref.sync import sync_to_async
 from .chatbot import Chatbot
@@ -746,3 +748,13 @@ def contact(request):
         form = ContactForm()
 
     return render(request, 'tonguetwister/partials/static/contact.html', {'form': form})
+
+class OldPolishList(generics.ListAPIView):
+    """Endpoint returning a list of old Polish phrases"""
+    queryset = OldPolish.objects.all()
+    serializer_class = OldPolishSerializer
+
+class OldPolishDetail(generics.RetrieveAPIView):
+    """Endpoint returning details of a specific return"""
+    queryset = OldPolish.objects.all()
+    serializer_class = OldPolishSerializer

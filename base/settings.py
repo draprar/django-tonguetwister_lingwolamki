@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_extensions',
     'tonguetwister.apps.TongueTwisterConfig',  # load app using its custom configuration class
+    'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +61,38 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'base.middleware.LoginStreakMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+# REST API configuration
+# Allow CORS - all domains
+CORS_ALLOW_ALL_ORIGINS = True
+
+# Rate Limiting
+REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '50/hour',
+    }
+}
+
+# Logging
+LOGGING = {
+    'version': 1,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'requests.log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}
 
 # URL configuration root
 ROOT_URLCONF = 'base.urls'
@@ -162,7 +195,7 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')  # sender email password
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')  # default sender email
 
 # Security & Session settings
-
+'''
 if not DEBUG:
     SESSION_COOKIE_AGE = 1200  # session expiry time in seconds
     SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # expire session on browser close
@@ -172,3 +205,4 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = True  # redirect all HTTP traffic to HTTPS
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+'''

@@ -54,6 +54,8 @@ urlpatterns = [
     path('delete-twister/<int:twister_id>/', views.delete_twister, name='delete_twister'),
     path('contact/', views.contact, name='contact'),
     path('chatbot/', views.chatbot, name='chatbot'),
+    path('api/oldpolish/', views.OldPolishList.as_view(), name='oldpolish_list'),
+    path('api/oldpolish/<int:pk>/', views.OldPolishDetail.as_view(), name='oldpolish_detail'),
 ]
 
 # Serving media files in development mode
