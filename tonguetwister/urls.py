@@ -56,6 +56,7 @@ urlpatterns = [
     path('chatbot/', views.chatbot, name='chatbot'),
     path('api/oldpolish/', views.OldPolishList.as_view(), name='oldpolish_list'),
     path('api/oldpolish/<int:pk>/', views.OldPolishDetail.as_view(), name='oldpolish_detail'),
+    path('api/search/', views.OldPolishSearchView.as_view({'get': 'list'}), name='oldpolish_search'),
 ]
 
 # Serving media files in development mode

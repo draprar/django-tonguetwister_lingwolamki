@@ -14,12 +14,16 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
+from django_elasticsearch_dsl_drf.filter_backends import SearchFilterBackend, FilteringFilterBackend
+
 from .models import (Twister, Articulator, Exercise, Trivia, Funfact, OldPolish, UserProfileArticulator,
                      UserProfileTwister, UserProfileExercise)
 from .forms import (ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm,
                     ContactForm, AvatarUploadForm, OldPolishForm)
 from .tokens import account_activation_token
-from .serializers import OldPolishSerializer
+from .serializers import OldPolishSerializer, OldPolishESSerializer
+from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
+from .documents import OldPolishDocument
 from rest_framework import generics
 import logging
 from asgiref.sync import sync_to_async
@@ -758,3 +762,13 @@ class OldPolishDetail(generics.RetrieveAPIView):
     """Endpoint returning details of a specific return"""
     queryset = OldPolish.objects.all()
     serializer_class = OldPolishSerializer
+
+class OldPolishSearchView(DocumentViewSet):
+    """Elasticsearch-based search view for OldPolish phrases"""
+    document = OldPolishDocument
+    serializer_class = OldPolishESSerializer
+    search_fields = {
+        'old_text': {'match': {}},
+        'new_text': {'match': {}}
+    }
+    filter_fields = [SearchFilterBackend, FilteringFilterBackend]
