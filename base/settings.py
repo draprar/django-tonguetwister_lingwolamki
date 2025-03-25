@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 from pathlib import Path
 import environ
 
@@ -49,8 +50,7 @@ INSTALLED_APPS = [
     'tonguetwister.apps.TongueTwisterConfig',  # load app using its custom configuration class
     'rest_framework',
     'corsheaders',
-    'django_elasticsearch_dsl',
-    'django_elasticsearch_dsl_drf',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -66,15 +66,30 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-# REST API configuration
-# Allow CORS - all domains
+# Allow CORS - all domains (🔴 not a good idea in production)
 CORS_ALLOW_ALL_ORIGINS = True
 
-# Rate Limiting
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": os.path.join(os.path.abspath(os.sep), "var", "tmp", "django_cache"),
+    }
+}
+
+# REST API Configuration
 REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_CLASSES': [
+        'tonguetwister.throttling.CustomAnonThrottle',
+    ],
     'DEFAULT_THROTTLE_RATES': {
         'anon': '50/hour',
-    }
+    },
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',  # JSON
+        'rest_framework.renderers.BrowsableAPIRenderer' # UI
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
 }
 
 # Logs handling
@@ -111,13 +126,6 @@ LOGGING = {
             'propagate': True,
         },
     },
-}
-
-# Elasticsearch
-ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': env.str('ELASTICSEARCH_URL')
-    }
 }
 
 # URL configuration root

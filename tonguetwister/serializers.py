@@ -1,6 +1,6 @@
-from django_elasticsearch_dsl_drf.serializers import DocumentSerializer
+from drf_yasg.utils import swagger_serializer_method
+from drf_yasg import openapi
 from rest_framework import serializers
-from .documents import OldPolishDocument
 from .models import OldPolish
 
 class OldPolishSerializer(serializers.ModelSerializer):
@@ -8,7 +8,9 @@ class OldPolishSerializer(serializers.ModelSerializer):
         model = OldPolish
         fields = ['id', 'old_text', 'new_text']
 
-class OldPolishESSerializer(DocumentSerializer):
-    class Meta:
-        document = OldPolishDocument
-        fields = ['id', 'old_text', 'new_text']
+    @swagger_serializer_method(serializer_or_field=openapi.Schema(
+        type=openapi.TYPE_STRING,
+        description="Example of an old Polish phrase"
+    ))
+    def old_text(self, obj):
+        return obj.old_text

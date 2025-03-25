@@ -6,6 +6,8 @@ from django.urls import reverse
 from django.utils.encoding import force_bytes, force_str
 from django.utils.html import strip_tags
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, update_session_auth_hash
@@ -14,20 +16,19 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
-from django_elasticsearch_dsl_drf.filter_backends import SearchFilterBackend, FilteringFilterBackend
-
 from .models import (Twister, Articulator, Exercise, Trivia, Funfact, OldPolish, UserProfileArticulator,
                      UserProfileTwister, UserProfileExercise)
 from .forms import (ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm,
                     ContactForm, AvatarUploadForm, OldPolishForm)
 from .tokens import account_activation_token
-from .serializers import OldPolishSerializer, OldPolishESSerializer
-from django_elasticsearch_dsl_drf.viewsets import DocumentViewSet
-from .documents import OldPolishDocument
-from rest_framework import generics
+from .serializers import OldPolishSerializer
+from rest_framework import generics, filters, status
+from rest_framework.response import Response
 import logging
 from asgiref.sync import sync_to_async
 from .chatbot import Chatbot
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 logger = logging.getLogger(__name__)  # initialize logger for error handling
 
@@ -757,18 +758,30 @@ class OldPolishList(generics.ListAPIView):
     """Endpoint returning a list of old Polish phrases"""
     queryset = OldPolish.objects.all()
     serializer_class = OldPolishSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['old_text', 'new_text']
+
+    @method_decorator(cache_page(60 * 5))  # cache for 5 min
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                'search', openapi.IN_QUERY,
+                description="Search for old Polish phrases",
+                type=openapi.TYPE_STRING
+            )
+        ],
+        responses={200: OldPolishSerializer(many=True)}
+    )
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        if not response.data:
+            return Response({"detail": "No results found"}, status=status.HTTP_404_NOT_FOUND)
+        return response
 
 class OldPolishDetail(generics.RetrieveAPIView):
     """Endpoint returning details of a specific return"""
     queryset = OldPolish.objects.all()
     serializer_class = OldPolishSerializer
-
-class OldPolishSearchView(DocumentViewSet):
-    """Elasticsearch-based search view for OldPolish phrases"""
-    document = OldPolishDocument
-    serializer_class = OldPolishESSerializer
-    search_fields = {
-        'old_text': {'match': {}},
-        'new_text': {'match': {}}
-    }
-    filter_fields = [SearchFilterBackend, FilteringFilterBackend]
