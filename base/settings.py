@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 import environ
+import sentry_sdk
 
 # Load environment variables from .env file
 
@@ -71,8 +72,12 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
-        "LOCATION": os.path.join(os.path.abspath(os.sep), "var", "tmp", "django_cache"),
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env("REDIS_URL"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "SSL_CERT_REQS": None,
+        }
     }
 }
 
@@ -91,6 +96,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
+
+# Sentry settings
+sentry_sdk.init(
+    dsn=env("SENTRY_DSN"),
+    traces_sample_rate=1.0, # error logging rate, e.g. 1.0 (100%)
+    send_default_pii=False, # use user data
+)
 
 # Logs handling
 LOGGING = {

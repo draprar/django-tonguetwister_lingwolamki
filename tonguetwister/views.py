@@ -761,7 +761,7 @@ class OldPolishList(generics.ListAPIView):
     filter_backends = [filters.SearchFilter]
     search_fields = ['old_text', 'new_text']
 
-    @method_decorator(cache_page(60 * 5))  # cache for 5 min
+    @method_decorator(cache_page(60 * 5, cache="default"))  # cache for 5 min
     def dispatch(self, *args, **kwargs):
         return super().dispatch(*args, **kwargs)
 
