@@ -1,8 +1,16 @@
 from django.contrib.auth.views import LogoutView
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from rest_framework.routers import DefaultRouter
+from .views import OldPolishViewSet, ArticulatorViewSet, FunfactViewSet, CustomTokenObtainPairView
+from rest_framework_simplejwt.views import TokenRefreshView
+
+router = DefaultRouter()
+router.register(r'oldpolish', OldPolishViewSet, basename='oldpolish')
+router.register(r'articulators', ArticulatorViewSet, basename='articulators')
+router.register(r'funfacts', FunfactViewSet, basename='funfacts')
 
 urlpatterns = [
     path('', views.main, name='main'),
@@ -54,8 +62,9 @@ urlpatterns = [
     path('delete-twister/<int:twister_id>/', views.delete_twister, name='delete_twister'),
     path('contact/', views.contact, name='contact'),
     path('chatbot/', views.chatbot, name='chatbot'),
-    path('api/oldpolish/', views.OldPolishList.as_view(), name='oldpolish_list'),
-    path('api/oldpolish/<int:pk>/', views.OldPolishDetail.as_view(), name='oldpolish_detail'),
+    path('api/', include(router.urls)),
+    path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
 
 # Serving media files in development mode

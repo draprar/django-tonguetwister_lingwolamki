@@ -16,19 +16,24 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema
+from rest_framework.authentication import TokenAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from .models import (Twister, Articulator, Exercise, Trivia, Funfact, OldPolish, UserProfileArticulator,
                      UserProfileTwister, UserProfileExercise)
 from .forms import (ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm,
                     ContactForm, AvatarUploadForm, OldPolishForm)
 from .tokens import account_activation_token
-from .serializers import OldPolishSerializer
-from rest_framework import generics, filters, status
+from .serializers import OldPolishSerializer, ArticulatorSerializer, FunfactSerializer
+from rest_framework import generics, filters, status, viewsets
 from rest_framework.response import Response
 import logging
 from asgiref.sync import sync_to_async
 from .chatbot import Chatbot
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 logger = logging.getLogger(__name__)  # initialize logger for error handling
 
@@ -754,34 +759,86 @@ def contact(request):
 
     return render(request, 'tonguetwister/partials/static/contact.html', {'form': form})
 
-class OldPolishList(generics.ListAPIView):
-    """Endpoint returning a list of old Polish phrases"""
+CACHE_TIMEOUT = 60 * 5  # 5 min
+
+class OldPolishViewSet(viewsets.ReadOnlyModelViewSet):
+    """API ViewSet for Old Polish phrases"""
     queryset = OldPolish.objects.all()
     serializer_class = OldPolishSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['old_text', 'new_text']
+    permission_classes = [AllowAny]
 
-    @method_decorator(cache_page(60 * 5, cache="default"))  # cache for 5 min
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
-    @swagger_auto_schema(
-        manual_parameters=[
-            openapi.Parameter(
-                'search', openapi.IN_QUERY,
-                description="Search for old Polish phrases",
-                type=openapi.TYPE_STRING
-            )
+    @method_decorator(cache_page(CACHE_TIMEOUT, cache="default"))
+    @extend_schema(
+        parameters=[
+            {
+                "name": "search",
+                "in": "query",
+                "description": "Search for Old Polish phrases",
+                "schema": {"type": "string"},
+            }
         ],
         responses={200: OldPolishSerializer(many=True)}
     )
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
-        if not response.data:
-            return Response({"detail": "No results found"}, status=status.HTTP_404_NOT_FOUND)
-        return response
+        return response if response.data else Response({"detail": "No results found"}, status=404)
 
-class OldPolishDetail(generics.RetrieveAPIView):
-    """Endpoint returning details of a specific return"""
-    queryset = OldPolish.objects.all()
-    serializer_class = OldPolishSerializer
+class ArticulatorViewSet(viewsets.ReadOnlyModelViewSet):
+    """API ViewSet for articulators"""
+    queryset = Articulator.objects.all()
+    serializer_class = ArticulatorSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['text']
+    permission_classes = [AllowAny]
+
+    @method_decorator(cache_page(CACHE_TIMEOUT, cache="default"))
+    @extend_schema(
+        parameters=[
+            {
+                "name": "search",
+                "in": "query",
+                "description": "Search for Articulator phrases",
+                "schema": {"type": "string"},
+            }
+        ],
+        responses={200: ArticulatorSerializer(many=True)}
+    )
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return response if response.data else Response({"detail": "No results found"}, status=404)
+
+class FunfactViewSet(viewsets.ReadOnlyModelViewSet):
+    """API ViewSet for funfacts"""
+    queryset = Funfact.objects.all()
+    serializer_class = FunfactSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['text']
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @method_decorator(cache_page(CACHE_TIMEOUT, cache="default"))
+    @extend_schema(
+        parameters=[
+            {
+                "name": "search",
+                "in": "query",
+                "description": "Search for Funfact phrases",
+                "schema": {"type": "string"},
+            }
+        ],
+        responses={200: FunfactSerializer(many=True)}
+    )
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return response if response.data else Response({"detail": "No results found"}, status=404)
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    @extend_schema(
+        tags=["Authentication"],
+        summary="Zaloguj i pobierz token JWT",
+        description="Podaj login i hasło, aby otrzymać JWT access i refresh token.",
+    )
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)

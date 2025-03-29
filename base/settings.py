@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
 import environ
 import sentry_sdk
@@ -51,7 +52,8 @@ INSTALLED_APPS = [
     'tonguetwister.apps.TongueTwisterConfig',  # load app using its custom configuration class
     'rest_framework',
     'corsheaders',
-    'drf_yasg',
+    'drf_spectacular',
+    'rest_framework_simplejwt',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +72,46 @@ MIDDLEWARE = [
 # Allow CORS - all domains (🔴 not a good idea in production)
 CORS_ALLOW_ALL_ORIGINS = True
 
+# REST API configuration
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'tonguetwister.throttling.CustomAnonThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '50/hour',
+    },
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',  # JSON
+        'rest_framework.renderers.BrowsableAPIRenderer' # UI
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}
+
+# Swagger configuration
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Lingwołamki API",
+    "DESCRIPTION": "Endpointy dla różnych modeli lingwołamków",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "persistAuthorization": True,
+    },
+    "COMPONENT_SPLIT_REQUEST": True,
+    "SECURITY_DEFINITIONS": {
+        "BearerAuth": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT",
+        }
+    },
+}
+
+# Redis configuration
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -81,28 +123,21 @@ CACHES = {
     }
 }
 
-# REST API Configuration
-REST_FRAMEWORK = {
-    'DEFAULT_THROTTLE_CLASSES': [
-        'tonguetwister.throttling.CustomAnonThrottle',
-    ],
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '50/hour',
-    },
-    'DEFAULT_RENDERER_CLASSES': [
-        'rest_framework.renderers.JSONRenderer',  # JSON
-        'rest_framework.renderers.BrowsableAPIRenderer' # UI
-    ],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-}
-
-# Sentry settings
+# Sentry configuration
 sentry_sdk.init(
     dsn=env("SENTRY_DSN"),
     traces_sample_rate=1.0, # error logging rate, e.g. 1.0 (100%)
     send_default_pii=False, # use user data
 )
+
+# JWT configuration
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 # Logs handling
 LOGGING = {
