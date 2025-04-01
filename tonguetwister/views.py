@@ -1,6 +1,8 @@
+import sentry_sdk
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import send_mail
+from django.core.cache import cache
 from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from django.utils.encoding import force_bytes, force_str
@@ -76,12 +78,21 @@ chatbot_instance = Chatbot()
 
 # Asynchronous view for handling chatbot responses
 async def chatbot(request):
-    user_input = request.GET.get('message', '')
-    if user_input:
-        response = await sync_to_async(chatbot_instance.get_response)(user_input)
-        return JsonResponse({'response': response})
-    return JsonResponse({'response': 'Nie rozumiem.'})
+    try:
+        user_input = request.GET.get('message', '')
+        if not user_input:
+            return JsonResponse({'response': 'Nie rozumiem.'})
 
+        cached_response = cache.get(user_input)
+        if cached_response:
+            return JsonResponse({'response': cached_response})
+
+        response = await sync_to_async(chatbot_instance.get_response)(user_input)
+        cache.set(user_input, response, timeout=3600)  # cache for 1 hour
+        return JsonResponse({'response': response})
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        return JsonResponse({'response': 'Wystąpił błąd. Spróbuj ponownie później.'})
 
 @user_passes_test(is_admin)
 def content_management(request):
@@ -558,6 +569,8 @@ def delete_twister(request, twister_id):
 def login_view(request):
     # Initializes an authentication form for user login
     form = AuthenticationForm()
+    login_attempts_key = f"login_attempts_{request.META.get('REMOTE_ADDR')}"
+    login_attempts = cache.get(login_attempts_key, 0)
 
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)  # populates form with submitted data
@@ -573,33 +586,43 @@ def login_view(request):
             if user is not None:
                 # Logs the user in if authentication is successful
                 login(request, user)
+                cache.delete(login_attempts_key)  # reset login attempts on success
                 return redirect('main')  # redirects to the 'main' view after login
             else:
+                login_attempts += 1
+                cache.set(login_attempts_key, login_attempts, timeout=300)  # 5 min lock
                 messages.error(request, 'Napotkaliśmy zgoła nieoczekiwane błędy 😱 spróbuj raz jeszcze 😊')
+
+                if login_attempts >= 5:
+                    messages.error(request, 'Zbyt wiele nieudanych prób logowania. Spróbuj ponownie za 5 minut.')
+                    return redirect('login')
 
     return render(request, 'registration/login.html', {'form': form})
 
 
 def send_activation_email(user, request):
-    # Prepares the email subject and token for account activation
-    subject = 'Witamy na pokładzie!'
-    token = account_activation_token.make_token(user)  # generates an activation token for the user
-    uid = urlsafe_base64_encode(force_bytes(user.pk))  # encodes the user's primary key
+    try:
+        # Prepares the email subject and token for account activation
+        subject = 'Witamy na pokładzie!'
+        token = account_activation_token.make_token(user)  # generates an activation token for the user
+        uid = urlsafe_base64_encode(force_bytes(user.pk))  # encodes the user's primary key
 
-    # Builds the activation link with the user's uid and token
-    activation_link = request.build_absolute_uri(reverse('activate', args=[uid, token]))
+        # Builds the activation link with the user's uid and token
+        activation_link = request.build_absolute_uri(reverse('activate', args=[uid, token]))
 
-    # Renders an HTML template for the email body and generates a plain text version
-    html_message = render_to_string('registration/activation.html', {'user': user, 'activation_link': activation_link})
-    plain_message = strip_tags(html_message)
+        # Renders an HTML template for the email body and generates a plain text version
+        html_message = render_to_string('registration/activation.html', {'user': user, 'activation_link': activation_link})
+        plain_message = strip_tags(html_message)
 
-    # Sets the sender's email and recipient (user's email)
-    from_email = settings.EMAIL_HOST_USER
-    to = user.email
+        # Sets the sender's email and recipient (user's email)
+        from_email = settings.EMAIL_HOST_USER
+        to = user.email
 
-    # Sends the email with both HTML and plain text versions
-    send_mail(subject, plain_message, from_email, [to], html_message=html_message)
-
+        # Sends the email with both HTML and plain text versions
+        send_mail(subject, plain_message, from_email, [to], html_message=html_message)
+    except Exception as e:
+        sentry_sdk.capture_exception(e)
+        print(f"Błąd przy wysyłaniu e-maila: {e}")
 
 def register_view(request):
     # Handles user registration via POST request
@@ -656,6 +679,9 @@ def password_reset_view(request):
             token = default_token_generator.make_token(user)  # generates a reset token
             uid = urlsafe_base64_encode(force_bytes(user.pk))  # encodes the user's ID
 
+            # Hold token in redis
+            cache.set(f'password_reset_{uid}', token, timeout=600)  # 10 min
+
             # Constructs a password reset link and email message
             reset_link = request.build_absolute_uri(f'/accounts/reset/{uid}/{token}/')
             plain_message = f"""
@@ -686,6 +712,7 @@ def password_reset_view(request):
             )
             return redirect('password_reset_done')
         except User.DoesNotExist:
+            sentry_sdk.capture_message(f'Nieudana próba resetowania hasła dla: {email}', level='warning')
             messages.error(request, 'Nie znaleziono użytkownika z tym adresem email.')
     return render(request, 'registration/password_reset_form.html')
 

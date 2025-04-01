@@ -90,6 +90,11 @@ class Chatbot:
         words = set(user_input.split())
         lemmas = set(self.lemmatize_input(user_input).split())
 
+        # Greetings
+        greetings = ["cześć", "hej", "siema", "witaj", "dzień dobry"]
+        if user_input in greetings:
+            return random.choice(["Cześć! Jak mogę pomóc?", "Hej! Co dla Ciebie?", "Witaj! Jak się masz?"])
+
         # Keyword matching (original)
         for keyword, responses in self.keyword_responses.items():
             if keyword in words:
@@ -110,12 +115,12 @@ class Chatbot:
         # Check for Wikipedia requests
         wiki_phrases = ["powiedz mi o", "informacje o", "co to jest", "kim jest", "czym jest", "co oznacza",
                         "co wiadomo o"]
-        topic = user_input
-        for phrase in wiki_phrases:
-            topic = topic.replace(phrase, "").strip()
 
-        if topic:
-            return self.query_wikipedia(topic)
+        for phrase in wiki_phrases:
+            if user_input.startswith(phrase):
+                topic = user_input.replace(phrase, "").strip()
+                if topic:
+                    return self.query_wikipedia(topic)
 
         # Store unanswered questions for later review
         self.unanswered_questions.add(user_input)

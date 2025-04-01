@@ -14,6 +14,7 @@ from datetime import timedelta
 from pathlib import Path
 import environ
 import sentry_sdk
+from sentry_sdk.integrations.redis import RedisIntegration
 
 # Load environment variables from .env file
 
@@ -126,6 +127,7 @@ CACHES = {
 # Sentry configuration
 sentry_sdk.init(
     dsn=env("SENTRY_DSN"),
+    integrations=[RedisIntegration()], # integrate redis
     traces_sample_rate=1.0, # error logging rate, e.g. 1.0 (100%)
     send_default_pii=False, # use user data
 )
@@ -141,39 +143,39 @@ SIMPLE_JWT = {
 
 # Logs handling
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {message}',
-            'style': '{',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "sentry": {
+            "level": "ERROR",
+            "class": "sentry_sdk.integrations.logging.EventHandler",
         },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': 'requests.log',
-            'formatter': 'verbose',
-        },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'simple',
+        "console": {
+            "level": "DEBUG",
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
         },
     },
-    'loggers': {
-        'django': {
-            'handlers': ['file', 'console'],
-            'level': 'INFO',
-            'propagate': True,
+    "formatters": {
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["sentry", "console"],
+            "level": "INFO",
+            "propagate": True,
+        },
+        "django.request": {
+            "handlers": ["sentry"],
+            "level": "ERROR",
+            "propagate": False,
         },
     },
 }
+
 
 # URL configuration root
 ROOT_URLCONF = 'base.urls'
