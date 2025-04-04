@@ -4,13 +4,17 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from .views import OldPolishViewSet, ArticulatorViewSet, FunfactViewSet, CustomTokenObtainPairView
+from .views import (OldPolishViewSet, ArticulatorViewSet, FunfactViewSet, ExerciseViewSet, TriviaViewSet,
+                    TwisterViewSet, CustomTokenObtainPairView)
 from rest_framework_simplejwt.views import TokenRefreshView
 
 router = DefaultRouter()
 router.register(r'oldpolish', OldPolishViewSet, basename='oldpolish')
 router.register(r'articulators', ArticulatorViewSet, basename='articulators')
 router.register(r'funfacts', FunfactViewSet, basename='funfacts')
+router.register(r'exercises', ExerciseViewSet, basename='exercises')
+router.register(r'twisters', TwisterViewSet, basename='twisters')
+router.register(r'trivias', TriviaViewSet, basename='trivias')
 
 urlpatterns = [
     path('', views.main, name='main'),

@@ -29,7 +29,8 @@ from .models import (Twister, Articulator, Exercise, Trivia, Funfact, OldPolish,
 from .forms import (ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, FunfactForm, CustomUserCreationForm,
                     ContactForm, AvatarUploadForm, OldPolishForm)
 from .tokens import account_activation_token
-from .serializers import OldPolishSerializer, ArticulatorSerializer, FunfactSerializer
+from .serializers import OldPolishSerializer, ArticulatorSerializer, FunfactSerializer, TwisterSerializer, \
+    ExerciseSerializer, TriviaSerializer
 from rest_framework import generics, filters, status, viewsets
 from rest_framework.response import Response
 import logging
@@ -856,6 +857,78 @@ class FunfactViewSet(viewsets.ReadOnlyModelViewSet):
             }
         ],
         responses={200: FunfactSerializer(many=True)}
+    )
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return response if response.data else Response({"detail": "No results found"}, status=404)
+
+class TwisterViewSet(viewsets.ReadOnlyModelViewSet):
+    """API ViewSet for twisters"""
+    queryset = Twister.objects.all()
+    serializer_class = TwisterSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['text']
+    permission_classes = [AllowAny]
+
+    @method_decorator(cache_page(CACHE_TIMEOUT, cache="default"))
+    @extend_schema(
+        parameters=[
+            {
+                "name": "search",
+                "in": "query",
+                "description": "Search for Twister phrases",
+                "schema": {"type": "string"},
+            }
+        ],
+        responses={200: TwisterSerializer(many=True)}
+    )
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return response if response.data else Response({"detail": "No results found"}, status=404)
+
+class ExerciseViewSet(viewsets.ReadOnlyModelViewSet):
+    """API ViewSet for exercises"""
+    queryset = Exercise.objects.all()
+    serializer_class = ExerciseSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['text']
+    permission_classes = [AllowAny]
+
+    @method_decorator(cache_page(CACHE_TIMEOUT, cache="default"))
+    @extend_schema(
+        parameters=[
+            {
+                "name": "search",
+                "in": "query",
+                "description": "Search for Exercise phrases",
+                "schema": {"type": "string"},
+            }
+        ],
+        responses={200: ExerciseSerializer(many=True)}
+    )
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        return response if response.data else Response({"detail": "No results found"}, status=404)
+
+class TriviaViewSet(viewsets.ReadOnlyModelViewSet):
+    """API ViewSet for trivias"""
+    queryset = Trivia.objects.all()
+    serializer_class = TriviaSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['text']
+    permission_classes = [AllowAny]
+
+    @method_decorator(cache_page(CACHE_TIMEOUT, cache="default"))
+    @extend_schema(
+        parameters=[
+            {
+                "name": "search",
+                "in": "query",
+                "description": "Search for Trivia phrases",
+                "schema": {"type": "string"},
+            }
+        ],
+        responses={200: TriviaSerializer(many=True)}
     )
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)

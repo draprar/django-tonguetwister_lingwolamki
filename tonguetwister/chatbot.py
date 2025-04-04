@@ -1,9 +1,12 @@
 import pickle
 import random
 import re
+import string
+import sentry_sdk
 import spacy
 import requests
 import wikipedia
+from django.core.cache import cache
 
 
 class Chatbot:
@@ -37,11 +40,10 @@ class Chatbot:
             print(f"Error loading file {filepath}: {e}")
             return {} if 'keywords' in filepath else set()
 
-    def save_unanswered_questions(self, filepath="tonguetwister/data/unanswered.pkl", flush_threshold=5):
-        """Saves unanswered questions to a pickle file only when threshold is met."""
+    def save_unanswered_questions(self, redis_key="chatbot:unanswered_questions", flush_threshold=5):
+        """Saves unanswered questions to Redis."""
         if len(self.unanswered_questions) % flush_threshold == 0:
-            with open(filepath, "wb") as f:
-                pickle.dump(self.unanswered_questions, f)
+            cache.set(redis_key, pickle.dumps(self.unanswered_questions), timeout=None)
 
     def lemmatize_input(self, text):
         """
@@ -86,44 +88,63 @@ class Chatbot:
         """
         Processes user input and returns an appropriate chatbot response.
         """
-        user_input = user_input.lower()
-        words = set(user_input.split())
-        lemmas = set(self.lemmatize_input(user_input).split())
+        try:
+            user_input = user_input.lower().strip()
 
-        # Greetings
-        greetings = ["cześć", "hej", "siema", "witaj", "dzień dobry"]
-        if user_input in greetings:
-            return random.choice(["Cześć! Jak mogę pomóc?", "Hej! Co dla Ciebie?", "Witaj! Jak się masz?"])
+            # Remove punctuation
+            user_input_clean = user_input.translate(str.maketrans("", "", string.punctuation))
 
-        # Keyword matching (original)
-        for keyword, responses in self.keyword_responses.items():
-            if keyword in words:
-                return random.choice(responses) if isinstance(responses, list) else responses
+            # Empty input
+            if not user_input_clean:
+                return "Nie zrozumiałem. Możesz powtórzyć?"
 
-        # Keyword matching (lemma)
-        for keyword, responses in self.keyword_responses.items():
-            if keyword in lemmas or any(lemma.startswith(keyword[:4]) for lemma in lemmas):
-                return random.choice(responses) if isinstance(responses, list) else responses
+            # Cache key for Redis
+            cache_key = f"chatbot:response:{user_input_clean}"
+            cached_response = cache.get(cache_key)
 
-        # Custom sentiment analysis
-        custom_sentiment = self.get_custom_sentiment(user_input)
-        if custom_sentiment == -1:
-            return "Przykro mi, że masz negatywne odczucia. Może mogę jakoś pomóc?"
-        elif custom_sentiment == 1:
-            return "Cieszę się, że masz pozytywne nastawienie! Jak mogę Ci jeszcze pomóc?"
+            if cached_response:
+                return cached_response
 
-        # Check for Wikipedia requests
-        wiki_phrases = ["powiedz mi o", "informacje o", "co to jest", "kim jest", "czym jest", "co oznacza",
-                        "co wiadomo o"]
+            words = set(user_input_clean.split())
 
-        for phrase in wiki_phrases:
-            if user_input.startswith(phrase):
-                topic = user_input.replace(phrase, "").strip()
-                if topic:
-                    return self.query_wikipedia(topic)
+            # Greetings
+            greetings = {"cześć", "hej", "siema", "witaj", "dzień dobry"}
+            if words & greetings:  # Sprawdzenie, czy jakiekolwiek słowo pasuje
+                return random.choice(["Cześć! Jak mogę pomóc?", "Hej! Co dla Ciebie?", "Witaj! Jak się masz?"])
 
-        # Store unanswered questions for later review
-        self.unanswered_questions.add(user_input)
-        self.save_unanswered_questions()
+            # Keyword matching (original)
+            for keyword, responses in self.keyword_responses.items():
+                if keyword in words:
+                    return random.choice(responses) if isinstance(responses, list) else responses
 
-        return "Dziękuję za wiadomość. Jak mogę pomóc?"
+            # Keyword matching (lemma)
+            lemmas = set(self.lemmatize_input(user_input_clean).split())
+            for keyword, responses in self.keyword_responses.items():
+                if keyword in lemmas or any(lemma.startswith(keyword[:4]) for lemma in lemmas):
+                    return random.choice(responses) if isinstance(responses, list) else responses
+
+            # Custom sentiment analysis
+            custom_sentiment = self.get_custom_sentiment(user_input)
+            if custom_sentiment == -1:
+                return "Przykro mi, że masz negatywne odczucia. Może mogę jakoś pomóc?"
+            elif custom_sentiment == 1:
+                return "Cieszę się, że masz pozytywne nastawienie! Jak mogę Ci jeszcze pomóc?"
+
+            # Check for Wikipedia requests
+            wiki_phrases = ["powiedz mi o", "informacje o", "co to jest", "kim jest", "czym jest", "co oznacza",
+                            "co wiadomo o"]
+            for phrase in wiki_phrases:
+                if user_input.startswith(phrase):
+                    topic = user_input.replace(phrase, "").strip()
+                    if topic:
+                        return self.query_wikipedia(topic)
+
+            # Store unanswered questions for later review
+            self.unanswered_questions.add(user_input)
+            self.save_unanswered_questions()
+
+            return "Dziękuję za wiadomość. Jak mogę pomóc?"
+
+        except Exception as e:
+            sentry_sdk.capture_exception(e) # logging to Sentry
+            return "Wystąpił błąd, spróbuj ponownie później."
