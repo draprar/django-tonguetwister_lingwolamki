@@ -21,9 +21,11 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Clean pywin32 from requirements
+      - name: Clean pywin32 from requirements (safe)
         run: |
-          grep -v 'pywin32' requirements.txt > temp.txt && mv temp.txt requirements.txt
+          if grep -q 'pywin32' requirements.txt; then
+            grep -v 'pywin32' requirements.txt > temp.txt && mv temp.txt requirements.txt
+          fi
           cat requirements.txt
 
       - name: Clean pip cache
