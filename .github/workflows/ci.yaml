@@ -33,17 +33,6 @@ jobs:
           pip install -r requirements.txt
           pip install pytest pytest-django
 
-      - name: Cache NLTK corpora
-        uses: actions/cache@v3
-        with:
-          path: ~/.local/share/nltk_data
-          key: ${{ runner.os }}-nltk-data
-
-      - name: Download NLTK data
-        run: |
-          python -m textblob.download_corpora
-          python -m nltk.downloader punkt_tab
-
       - name: Set up environment variables
         run: |
           echo "DEBUG=${{ secrets.DEBUG }}" >> .env
