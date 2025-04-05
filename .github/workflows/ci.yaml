@@ -23,9 +23,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          if [ $RUNNER_OS != "Windows" ]; then
-            sed -i '/pywin32/d' requirements.txt
-          fi
+          sed -i '/pywin32/d' requirements.txt
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pytest pytest-django
