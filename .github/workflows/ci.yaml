@@ -24,14 +24,13 @@ jobs:
       - name: Clean pywin32 from requirements
         run: |
           grep -v 'pywin32' requirements.txt > temp.txt && mv temp.txt requirements.txt
-          echo "✅ Cleaned pywin32 from requirements.txt"
           cat requirements.txt
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-django
+          pip install django pytest pytest-django
 
       - name: Set up environment variables
         run: |
