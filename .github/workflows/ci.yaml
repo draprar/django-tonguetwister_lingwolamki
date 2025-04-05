@@ -34,6 +34,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name:
+          Debug: Show installed packages
+        run: |
+          pip list
+
       - name: Set up environment variables
         run: |
           echo "DEBUG=${{ secrets.DEBUG }}" >> .env
