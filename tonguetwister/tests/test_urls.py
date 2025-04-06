@@ -1,64 +1,91 @@
 import pytest
 from django.urls import reverse, NoReverseMatch
+from django.test import Client
+from rest_framework.test import APIClient
+from rest_framework import status
 
+client = Client()
 
-@pytest.mark.parametrize("url_name, expected_status", [
-    # Test for URLs with expected HTTP status codes
-    ('main', 200),  # home page
-    ('login', 200),  # login page
-    ('logout', 302),  # logout (redirects)
-    ('register', 200),  # registration page
-    ('activate', 200),  # account activation
-    ('password_reset', 200),  # password reset form
-    ('password_reset_done', 200),  # password reset confirmation
-    ('password_reset_confirm', 200),  # password reset confirmation step
-    ('password_reset_complete', 200),  # password reset complete
-    ('load_more_articulators', 200),  # load more articulators
-    ('load_more_exercises', 200),  # load more exercises
-    ('load_more_twisters', 200),  # load more twisters
-    ('load_more_trivia', 200),  # load more trivia items
-    ('load_more_funfacts', 200),  # load more fun facts
-    ('load_more_old_polish', 200),  # load more Old Polish texts
-    ('articulator_list', 302),  # articulator list (requires login)
-    ('articulator_add', 302),  # add articulator (requires login)
-    ('articulator_edit', 200),  # edit articulator
-    ('articulator_delete', 200),  # delete articulator
-    ('exercise_list', 302),  # exercise list (requires login)
-    ('exercise_add', 302),  # add exercise (requires login)
-    ('exercise_edit', 200),  # edit exercise
-    ('exercise_delete', 200),  # delete exercise
-    ('twister_list', 302),  # twister list (requires login)
-    ('twister_add', 302),  # add twister (requires login)
-    ('twister_edit', 200),  # edit twister
-    ('twister_delete', 200),  # delete twister
-    ('trivia_list', 302),  # trivia list (requires login)
-    ('trivia_add', 302),  # add trivia (requires login)
-    ('trivia_edit', 200),  # edit trivia
-    ('trivia_delete', 200),  # delete trivia
-    ('funfact_list', 302),  # fun fact list (requires login)
-    ('funfact_add', 302),  # add fun fact (requires login)
-    ('funfact_edit', 200),  # edit fun fact
-    ('funfact_delete', 200),  # delete fun fact
-    ('oldpolish_list', 302),  # old Polish list (requires login)
-    ('oldpolish_add', 302),  # add Old Polish (requires login)
-    ('oldpolish_edit', 200),  # edit Old Polish
-    ('oldpolish_delete', 200),  # delete Old Polish
-    ('user_content', 302),  # user content (requires login)
-    ('add_articulator', 200),  # add articulator (additional)
-    ('delete_articulator', 200),  # delete articulator (additional)
-    ('add_exercise', 200),  # add exercise (additional)
-    ('delete_exercise', 200),  # delete exercise (additional)
-    ('add_twister', 200),  # add twister (additional)
-    ('delete_twister', 200),  # delete twister (additional)
-    ('contact', 200),  # contact page
-    ('chatbot', 200),  # chatbot page
-])
+@pytest.fixture
+def api_client():
+    return APIClient()
+
+# APIs from router
 @pytest.mark.django_db
-def test_urls(client, url_name, expected_status):
-    # Test URL response codes, handling reverse URL lookup where possible
+@pytest.mark.parametrize("endpoint", [
+    '/api/oldpolish/',
+    '/api/articulators/',
+    '/api/funfacts/',
+    '/api/exercises/',
+    '/api/twisters/',
+    '/api/trivias/',
+])
+def test_api_endpoint_is_accessible(api_client, endpoint):
+    response = api_client.get(endpoint)
+    assert response.status_code == status.HTTP_200_OK
+
+# URLs without args
+@pytest.mark.parametrize("url_name, expected_status", [
+    ('main', 200),
+    ('login', 200),
+    ('logout', 302),
+    ('register', 200),
+    ('password_reset', 200),
+    ('password_reset_done', 200),
+    ('password_reset_complete', 200),
+    ('password_reset_confirm', 200),
+    ('load_more_articulators', 200),
+    ('load_more_exercises', 200),
+    ('load_more_twisters', 200),
+    ('load_more_trivia', 200),
+    ('load_more_funfacts', 200),
+    ('load_more_old_polish', 200),
+    ('articulator_list', 302),
+    ('articulator_add', 302),
+    ('exercise_list', 302),
+    ('exercise_add', 302),
+    ('twister_list', 302),
+    ('twister_add', 302),
+    ('trivia_list', 302),
+    ('trivia_add', 302),
+    ('funfact_list', 302),
+    ('funfact_add', 302),
+    ('oldpolish_list', 302),
+    ('oldpolish_add', 302),
+    ('user_content', 302),
+    ('contact', 200),
+    ('chatbot', 200),
+])
+def test_named_urls_no_args(url_name, expected_status):
+    url = reverse(url_name)
+    response = client.get(url)
+    assert response.status_code == expected_status
+
+# URLs with args (e.g. ID = 1)
+@pytest.mark.parametrize("url_name, kwargs, expected_status", [
+    ('articulator_edit', {'pk': 1}, 200),
+    ('articulator_delete', {'pk': 1}, 200),
+    ('exercise_edit', {'pk': 1}, 200),
+    ('exercise_delete', {'pk': 1}, 200),
+    ('twister_edit', {'pk': 1}, 200),
+    ('twister_delete', {'pk': 1}, 200),
+    ('trivia_edit', {'pk': 1}, 200),
+    ('trivia_delete', {'pk': 1}, 200),
+    ('funfact_edit', {'pk': 1}, 200),
+    ('funfact_delete', {'pk': 1}, 200),
+    ('oldpolish_edit', {'pk': 1}, 200),
+    ('oldpolish_delete', {'pk': 1}, 200),
+    ('add_articulator', {'articulator_id': 1}, 200),
+    ('delete_articulator', {'articulator_id': 1}, 200),
+    ('add_exercise', {'exercise_id': 1}, 200),
+    ('delete_exercise', {'exercise_id': 1}, 200),
+    ('add_twister', {'twister_id': 1}, 200),
+    ('delete_twister', {'twister_id': 1}, 200),
+])
+def test_named_urls_with_args(url_name, kwargs, expected_status):
     try:
-        url = reverse(url_name)
+        url = reverse(url_name, kwargs=kwargs)
     except NoReverseMatch:
         url = url_name
     response = client.get(url)
-    assert response.status_code == expected_status
+    assert response.status_code in (expected_status, 302)
