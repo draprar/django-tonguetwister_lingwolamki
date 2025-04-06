@@ -15,13 +15,26 @@ def api_client():
 @pytest.mark.parametrize("endpoint", [
     '/api/oldpolish/',
     '/api/articulators/',
-    '/api/funfacts/',
     '/api/exercises/',
     '/api/twisters/',
     '/api/trivias/',
 ])
 def test_api_endpoint_is_accessible(api_client, endpoint):
     response = api_client.get(endpoint)
+    assert response.status_code == status.HTTP_200_OK
+
+@pytest.fixture
+def auth_client(db, django_user_model):
+    user = django_user_model.objects.create_user(username='testuser', password='password123')
+    client = APIClient()
+    response = client.post('/api/token/', {'username': 'testuser', 'password': 'password123'})
+    token = response.data['access']
+    client.credentials(HTTP_AUTHORIZATION=f'Bearer {token}')
+    return client
+
+@pytest.mark.django_db
+def test_authenticated_api_access(auth_client):
+    response = auth_client.get('/api/funfacts/')
     assert response.status_code == status.HTTP_200_OK
 
 # URLs without args
