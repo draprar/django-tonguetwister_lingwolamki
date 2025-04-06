@@ -24,7 +24,7 @@ jobs:
       - name: Install dependencies (skip pywin32)
         run: |
           python -m pip install --upgrade pip
-          grep -v 'pywin32' requirements.txt | pip install -r /dev/stdin
+          grep -a -v 'pywin32' requirements.txt | pip install -r /dev/stdin
 
       - name: Show installed packages
         run: |
