@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import patch
 from django.urls import reverse
 import wikipedia
-from ..chatbot import chatbot_instance
+from ..chatbot import chatbot_instance, Chatbot
 
 @pytest.mark.django_db
 @pytest.mark.asyncio
@@ -26,14 +26,23 @@ def test_greeting_detection(text):
     assert any(word in response.lower() for word in ["cześć", "hej", "witaj"])
 
 
-def test_positive_sentiment():
-    response = chatbot_instance.get_response("super fajnie świetnie")
-    assert "pozytywne" in response.lower()
-
-
-def test_negative_sentiment():
-    response = chatbot_instance.get_response("okropnie źle tragicznie")
-    assert "przykro" in response.lower()
+@pytest.mark.parametrize(
+    "message, expected_phrase",
+    [
+        ("super fajnie świetnie", "pozytywne"),
+        ("okropnie źle tragicznie", "przykro"),
+    ]
+)
+def test_sentiment_detection(message, expected_phrase):
+    with patch.object(Chatbot, "load_data") as mock_load:
+        mock_load.side_effect = [
+            {},  # keywords
+            {"tragicznie", "źle", "okropnie"},  # negative_words
+            {"super", "fajnie", "świetnie"}     # positive_words
+        ]
+        chatbot = Chatbot()
+        response = chatbot.get_response(message)
+        assert expected_phrase in response.lower()
 
 
 def test_fallback_for_noise():
