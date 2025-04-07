@@ -148,3 +148,5 @@ class Chatbot:
         except Exception as e:
             sentry_sdk.capture_exception(e) # logging to Sentry
             return "Wystąpił błąd, spróbuj ponownie później."
+
+chatbot_instance = Chatbot()
