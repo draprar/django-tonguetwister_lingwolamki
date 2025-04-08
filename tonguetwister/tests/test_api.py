@@ -28,12 +28,14 @@ def test_oldpolish_list_success(api_client):
     obj = OldPolish.objects.create(old_text="ćwiczenie", new_text="ćwiczenie")
     response = api_client.get('/api/oldpolish/')
     assert response.status_code == 200
-    assert response.data == OldPolishSerializer([obj], many=True).data
+    assert response.data["results"] == OldPolishSerializer([obj], many=True).data
 
 @pytest.mark.django_db
 def test_oldpolish_list_not_found(api_client):
     response = api_client.get('/api/oldpolish/?search=xyz')
-    assert response.status_code == 404
+    assert response.status_code == 200
+    assert response.data["count"] == 0
+    assert response.data["results"] == []
 
 # ---------- ARTICULATORS ----------
 @pytest.mark.django_db
@@ -41,12 +43,14 @@ def test_articulator_list_success(api_client):
     obj = Articulator.objects.create(text="Szczebrzeszyn")
     response = api_client.get('/api/articulators/')
     assert response.status_code == 200
-    assert response.data == ArticulatorSerializer([obj], many=True).data
+    assert response.data["results"] == ArticulatorSerializer([obj], many=True).data
 
 @pytest.mark.django_db
 def test_articulator_list_not_found(api_client):
     response = api_client.get('/api/articulators/?search=nieistnieje')
-    assert response.status_code == 404
+    assert response.status_code == 200
+    assert response.data["count"] == 0
+    assert response.data["results"] == []
 
 # ---------- TWISTERS ----------
 @pytest.mark.django_db
@@ -54,12 +58,14 @@ def test_twister_list_success(api_client):
     obj = Twister.objects.create(text="Król Karol kupił królowej Karolinie korale")
     response = api_client.get('/api/twisters/')
     assert response.status_code == 200
-    assert response.data == TwisterSerializer([obj], many=True).data
+    assert response.data["results"] == TwisterSerializer([obj], many=True).data
 
 @pytest.mark.django_db
 def test_twister_list_not_found(api_client):
     response = api_client.get('/api/twisters/?search=xyz')
-    assert response.status_code == 404
+    assert response.status_code == 200
+    assert response.data["count"] == 0
+    assert response.data["results"] == []
 
 # ---------- EXERCISES ----------
 @pytest.mark.django_db
@@ -67,12 +73,14 @@ def test_exercise_list_success(api_client):
     obj = Exercise.objects.create(text="Ćwicz: szosa, susza")
     response = api_client.get('/api/exercises/')
     assert response.status_code == 200
-    assert response.data == ExerciseSerializer([obj], many=True).data
+    assert response.data["results"] == ExerciseSerializer([obj], many=True).data
 
 @pytest.mark.django_db
 def test_exercise_list_not_found(api_client):
     response = api_client.get('/api/exercises/?search=xyz')
-    assert response.status_code == 404
+    assert response.status_code == 200
+    assert response.data["count"] == 0
+    assert response.data["results"] == []
 
 # ---------- TRIVIAS ----------
 @pytest.mark.django_db
@@ -80,12 +88,14 @@ def test_trivia_list_success(api_client):
     obj = Trivia.objects.create(text="Polski alfabet ma 32 litery")
     response = api_client.get('/api/trivias/')
     assert response.status_code == 200
-    assert response.data == TriviaSerializer([obj], many=True).data
+    assert response.data["results"] == TriviaSerializer([obj], many=True).data
 
 @pytest.mark.django_db
 def test_trivia_list_not_found(api_client):
     response = api_client.get('/api/trivias/?search=xyz')
-    assert response.status_code == 404
+    assert response.status_code == 200
+    assert response.data["count"] == 0
+    assert response.data["results"] == []
 
 # ---------- FUNFACTS (JWT protected) ----------
 @pytest.mark.django_db
@@ -93,7 +103,7 @@ def test_funfact_list_success(auth_client):
     obj = Funfact.objects.create(text="W polskim są nosówki.")
     response = auth_client.get('/api/funfacts/')
     assert response.status_code == 200
-    assert response.data == FunfactSerializer([obj], many=True).data
+    assert response.data["results"] == FunfactSerializer([obj], many=True).data
 
 @pytest.mark.django_db
 def test_funfact_list_unauthorized(api_client):
@@ -103,7 +113,9 @@ def test_funfact_list_unauthorized(api_client):
 @pytest.mark.django_db
 def test_funfact_list_not_found(auth_client):
     response = auth_client.get('/api/funfacts/?search=xyz')
-    assert response.status_code == 404
+    assert response.status_code == 200
+    assert response.data["count"] == 0
+    assert response.data["results"] == []
 
 # ---------- AUTH (token obtain) ----------
 @pytest.mark.django_db
