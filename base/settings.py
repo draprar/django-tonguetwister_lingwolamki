@@ -36,9 +36,9 @@ SECRET_KEY = env.str('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', 'www.lingwolamki.online', 'lingwolamki.online']
+ALLOWED_HOSTS = ['.onrender.com', '127.0.0.1', '.pythonanywhere.com', 'www.lingwolamki.online', 'lingwolamki.online']
 
-CSRF_TRUSTED_ORIGINS = ['https://www.lingwolamki.online', 'https://lingwolamki.online']
+CSRF_TRUSTED_ORIGINS = ['https://www.lingwolamki.online', 'https://lingwolamki.online', 'https://*.onrender.com']
 
 # Application definition
 
