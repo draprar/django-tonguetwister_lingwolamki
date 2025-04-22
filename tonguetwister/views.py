@@ -14,13 +14,11 @@ from django.views.decorators.csrf import csrf_protect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import user_passes_test, login_required
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.template.loader import render_to_string
-from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema
-from rest_framework.authentication import TokenAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.views import TokenObtainPairView
 
@@ -31,7 +29,7 @@ from .forms import (ArticulatorForm, ExerciseForm, TwisterForm, TriviaForm, Funf
 from .tokens import account_activation_token
 from .serializers import OldPolishSerializer, ArticulatorSerializer, FunfactSerializer, TwisterSerializer, \
     ExerciseSerializer, TriviaSerializer
-from rest_framework import generics, filters, status, viewsets
+from rest_framework import filters, viewsets
 from rest_framework.response import Response
 import logging
 from asgiref.sync import sync_to_async
