@@ -5,7 +5,8 @@ services:
     plan: free
     buildCommand: |
       pip install -r requirements.txt
-      python manage.py migrate
+      python manage.py makemigrations --noinput
+      python manage.py migrate --noinput
     startCommand: gunicorn base.wsgi:application
     envVars:
       - key: DATABASE_URL
