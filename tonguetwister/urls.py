@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 from .views import (OldPolishViewSet, ArticulatorViewSet, FunfactViewSet, ExerciseViewSet, TriviaViewSet,
-                    TwisterViewSet, CustomTokenObtainPairView)
+                    TwisterViewSet, CustomTokenObtainPairView, HealthCheckView)
 from rest_framework_simplejwt.views import TokenRefreshView
 
 router = DefaultRouter()
@@ -69,6 +69,7 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/health/', HealthCheckView.as_view(), name='health-check'),
 ]
 
 # Serving media files in development mode
