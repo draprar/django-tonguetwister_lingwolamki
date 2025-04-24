@@ -204,20 +204,25 @@ WSGI_APPLICATION = 'base.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql' if env.bool("USE_MYSQL", default=False) else 'django.db.backends.sqlite3',
-        'NAME': env.str("DB_NAME") if env.bool("USE_MYSQL", default=False) else BASE_DIR / 'db.sqlite3',
-        'USER': env.str("DB_USER", default="") if env.bool("USE_MYSQL", default=False) else '',
-        'PASSWORD': env.str("DB_PASSWORD", default="") if env.bool("USE_MYSQL", default=False) else '',
-        'HOST': env.str("DB_HOST", default="") if env.bool("USE_MYSQL", default=False) else '',
-        'PORT': env.str("DB_PORT", default="") if env.bool("USE_MYSQL", default=False) else '',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            'charset': 'utf8mb4',
-        } if env.bool("USE_MYSQL", default=False) else {},
+if env.bool("USE_MYSQL", default=False):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': env.str("DB_NAME"),
+            'USER': env.str("DB_USER"),
+            'PASSWORD': env.str("DB_PASSWORD"),
+            'HOST': env.str("DB_HOST"),
+            'PORT': env.str("DB_PORT"),
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+                'charset': 'utf8mb4',
+            },
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': env.db('DATABASE_URL')
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
