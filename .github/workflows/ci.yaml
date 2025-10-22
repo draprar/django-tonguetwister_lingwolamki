@@ -42,6 +42,7 @@ jobs:
           echo "DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}" >> .env
           echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> .env
           echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
