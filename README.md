@@ -1,4 +1,4 @@
-# LingwoŁamki
+# 🎤 LingwoŁamki
 
 LingwoŁamki is a Django web application designed to help users enhance their vocal clarity, articulation, and breathing techniques. The app includes interactive features such as tongue twisters, exercises, trivia, and more to assist users in their practice. It is built using Django 4.2.1 and offers both an admin panel for content management and a front-end interface for user interaction.
 
@@ -6,7 +6,7 @@ LingwoŁamki is a Django web application designed to help users enhance their vo
 
 ![Project Demo](tonguetwister/static/assets/ll-demo.gif)
 
-## Features
+## 🚀 Features
 
 - **User Login Streak Tracking**: Tracks daily user login streaks and updates them automatically. Users are encouraged to maintain their streak.
 - **Content Management**: Admin users can manage a variety of models including:
@@ -28,9 +28,9 @@ LingwoŁamki is a Django web application designed to help users enhance their vo
 - **Responsive Design**: Optimized for both desktop and mobile views, providing a seamless experience across different devices.
 - **Polish Language Support**: Fully localized for Polish-speaking users, from UI to error messages and notifications.
 
-## Installation
+## ⚡ Installation
 
-### Requirements
+### 🛠️ Tech Stack
 
 - Python 3.10+
 - Django 4.2.1
@@ -100,7 +100,7 @@ Start the Django development server:
 - Main page: `/`
 - Admin panel: `http://127.0.0.1:8000/admin/`
 
-### Project Structure
+### 🌿 Project Structure
 ```tree
 lingwolamki/
 │
@@ -126,7 +126,8 @@ lingwolamki/
 └── manage.py             # Django project management script
 ```
 
-### License
+### 📜 License
 This project is licensed under the MIT License.
 
+### 👤 Authors
 Developed by ***Michał*** & ***Paulina***.
