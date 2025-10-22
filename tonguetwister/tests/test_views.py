@@ -377,7 +377,7 @@ class TestUserObjectViews:
         obj = model.objects.create(text='text')
         user_obj = user_model.objects.create(user=regular_user, **{model.__name__.lower(): obj})
 
-        url = reverse(delete_url, args=[obj.id])
+        url = reverse(delete_url, args=[user_obj.id])
         response = client.post(url)
 
         assert response.status_code == 200
