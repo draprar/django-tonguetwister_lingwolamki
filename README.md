@@ -1,12 +1,25 @@
-# 🎤 LingwoŁamki
+# 🎤 LingwoŁamki — Django App (Archived)
 
-LingwoŁamki is a Django web application designed to help users enhance their vocal clarity, articulation, and breathing techniques. The app includes interactive features such as tongue twisters, exercises, trivia, and more to assist users in their practice. It is built using Django 4.2.1 and offers both an admin panel for content management and a front-end interface for user interaction.
+LingwoŁamki is a Django web application designed to help users improve vocal clarity, articulation, and breathing techniques. It includes tongue twisters, exercises, trivia, fun facts, and more — all manageable through an admin panel and presented through a responsive frontend.
 
-[Visit LingwoŁamki](https://www.lingwolamki.online/)
+> ⚠️ This repository is archived.  
+> This project has been integrated into my main portfolio:  
+> https://github.com/draprar/django_portfolio-walery (see `/tonguetwister` app)
 
 ![Project Demo](tonguetwister/static/assets/ll-demo.gif)
 
-## 🚀 Features
+## 📖 Overview
+This application was built as a standalone Django project focused on speech-training tools, gamified practice, and content-rich UI.
+
+It has since been integrated into the main portfolio project as a compact, modular tongue-twister app.
+
+## 🧠 Project Evolution
+- Standalone Django application  
+- Feature-rich content system (twisters, exercises, trivia, funfacts, old Polish phrases)  
+- Integrated into the portfolio project as a module  
+- Archived for historical reference
+  
+## ✨ Features
 
 - **User Login Streak Tracking**: Tracks daily user login streaks and updates them automatically. Users are encouraged to maintain their streak.
 - **Content Management**: Admin users can manage a variety of models including:
@@ -28,19 +41,21 @@ LingwoŁamki is a Django web application designed to help users enhance their vo
 - **Responsive Design**: Optimized for both desktop and mobile views, providing a seamless experience across different devices.
 - **Polish Language Support**: Fully localized for Polish-speaking users, from UI to error messages and notifications.
 
+## 🛠️ Tech Stack
+
+- Python 3.10+  
+- Django 4.2.1  
+- SQLite (default) or MySQL  
+- `django-environ` for environment variables  
+- WhiteNoise for static files  
+
 ## ⚡ Installation
-
-### 🛠️ Tech Stack
-
-- Python 3.10+
-- Django 4.2.1
-- SQLite (default) or MySQL for production
-- `django-environ` package for environment variable management
-- WhiteNoise for static file management
 
 ### Step-by-Step Guide
 
 1. **Clone the repository:**
+
+Via:
 
 ```bash
 git clone https://github.com/draprar/django-tonguetwister-app_lingwolamki.git
@@ -100,7 +115,8 @@ Start the Django development server:
 - Main page: `/`
 - Admin panel: `http://127.0.0.1:8000/admin/`
 
-### 🌿 Project Structure
+## 🌿 Project Structure
+
 ```tree
 lingwolamki/
 │
@@ -126,8 +142,14 @@ lingwolamki/
 └── manage.py             # Django project management script
 ```
 
-### 📜 License
+## 📌 Notes
+
+- This project is no longer actively maintained as a standalone app.
+- The tongue-twister functionality now lives inside the main portfolio project.
+- This repository is kept as an archived reference.
+
+## 📜 License
 This project is licensed under the MIT License.
 
-### 👤 Authors
+## 👤 Authors
 Developed by ***Michał*** & ***Paulina***.
