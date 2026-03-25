@@ -113,24 +113,38 @@ SPECTACULAR_SETTINGS = {
 }
 
 # Redis configuration
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": env("REDIS_URL"),
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "SSL_CERT_REQS": None,
+REDIS_URL = env("REDIS_URL", default="")
+
+if REDIS_URL:
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": REDIS_URL,
+            "OPTIONS": {
+                "CLIENT_CLASS": "django_redis.client.DefaultClient",
+                "SSL_CERT_REQS": None,
+            }
         }
     }
-}
+else:
+    # Use local memory cache for testing/development without Redis
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "unique-snowflake",
+        }
+    }
 
 # Sentry configuration
-sentry_sdk.init(
-    dsn=env("SENTRY_DSN"),
-    integrations=[RedisIntegration()], # integrate redis
-    traces_sample_rate=1.0, # error logging rate, e.g. 1.0 (100%)
-    send_default_pii=False, # use user data
-)
+SENTRY_DSN = env("SENTRY_DSN", default="")
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[RedisIntegration()], # integrate redis
+        traces_sample_rate=1.0, # error logging rate, e.g. 1.0 (100%)
+        send_default_pii=False, # use user data
+    )
 
 # JWT configuration
 SIMPLE_JWT = {
