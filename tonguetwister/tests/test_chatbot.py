@@ -8,11 +8,14 @@ from ..chatbot import chatbot_instance, Chatbot
 @pytest.mark.asyncio
 async def test_chatbot_view_with_keyword(async_client):
     response = await async_client.get(reverse("chatbot"), {"message": "rejestracja"})
+    assert response.status_code == 200
+
     expected_variants = [
+        "Aby się zarejestrować, kliknij przycisk 'Logowanie'.",
         "Nie masz konta? Rejestracja to tylko chwila!",
         "Zarejestruj się już teraz, aby korzystać z pełni funkcji naszej aplikacji!",
     ]
-    assert response.status_code == 200
+
     assert response.json()["response"] in expected_variants
 
 
