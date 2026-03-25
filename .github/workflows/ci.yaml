@@ -36,6 +36,8 @@ jobs:
           echo "DATABASE_URL=sqlite:///testdb.sqlite3" >> .env
           echo "EMAIL_USE_TLS=True" >> .env
           echo "EMAIL_HOST=localhost" >> .env
+          echo "EMAIL_HOST_USER=" >> .env
+          echo "EMAIL_HOST_PASSWORD=" >> .env
           echo "EMAIL_PORT=1025" >> .env
           echo "DEFAULT_FROM_EMAIL=test@example.com" >> .env
           echo "SENTRY_DSN=" >> .env
