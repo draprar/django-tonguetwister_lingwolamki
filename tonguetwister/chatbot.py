@@ -19,7 +19,13 @@ class Chatbot:
         """
         Initialize the chatbot with predefined keywords and sentiment words.
         """
-        self.nlp = spacy.load("pl_core_news_sm")
+        try:
+            self.nlp = spacy.load("pl_core_news_sm")
+        except OSError:
+            # If spacy model is not available, set to None
+            # Lemmatization will be skipped in get_response
+            self.nlp = None
+            print("Warning: Polish spacy model not available. Lemmatization will be disabled.")
 
         self.keyword_responses = self.load_data("tonguetwister/data/keywords.pkl")
         self.negative_words = self.load_data("tonguetwister/data/negative_words.pkl")
@@ -48,7 +54,11 @@ class Chatbot:
     def lemmatize_input(self, text):
         """
         Lemmatizes user text using SpaCy to simplify keyword searching.
+        Returns original text if spacy model is not available.
         """
+        if self.nlp is None:
+            return text.lower()
+        
         doc = self.nlp(text.lower())
         return " ".join([token.lemma_ for token in doc])
 
@@ -149,4 +159,31 @@ class Chatbot:
             sentry_sdk.capture_exception(e) # logging to Sentry
             return "Wystąpił błąd, spróbuj ponownie później."
 
-chatbot_instance = Chatbot()
+def get_chatbot_instance():
+    """
+    Lazy initialization of chatbot instance.
+    Handles cases where spacy model is not available.
+    """
+    global _chatbot_instance
+    if '_chatbot_instance' not in globals():
+        try:
+            _chatbot_instance = Chatbot()
+        except Exception as e:
+            print(f"Warning: Failed to initialize chatbot: {e}")
+            # Return a fallback chatbot that always returns error message
+            class FallbackChatbot:
+                def get_response(self, user_input):
+                    return "Chatbot is temporarily unavailable. Please try again later."
+            _chatbot_instance = FallbackChatbot()
+    return _chatbot_instance
+
+# Initialize chatbot_instance for backward compatibility
+try:
+    chatbot_instance = Chatbot()
+except Exception as e:
+    print(f"Warning: Failed to initialize chatbot_instance at module load: {e}")
+    # Create a minimal fallback instance
+    class FallbackChatbot:
+        def get_response(self, user_input):
+            return "Chatbot is temporarily unavailable. Please try again later."
+    chatbot_instance = FallbackChatbot()

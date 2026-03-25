@@ -73,7 +73,15 @@ def main(request):
 
 
 # Initialize chatbot instance
-chatbot_instance = Chatbot()
+try:
+    chatbot_instance = Chatbot()
+except Exception as e:
+    print(f"Warning: Failed to initialize chatbot in views: {e}")
+    # Create a fallback chatbot
+    class FallbackChatbot:
+        def get_response(self, user_input):
+            return "Chatbot jest tymczasowo niedostępny. Spróbuj ponownie później."
+    chatbot_instance = FallbackChatbot()
 
 
 # Asynchronous view for handling chatbot responses
