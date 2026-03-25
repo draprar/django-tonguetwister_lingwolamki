@@ -31,17 +31,22 @@ jobs:
 
       - name: Set test environment variables (SQLite instead of Neon)
         run: |
-          echo "DEBUG=1" >> .env
-          echo "SECRET_KEY=test" >> .env
-          echo "DATABASE_URL=sqlite:///testdb.sqlite3" >> .env
-          echo "EMAIL_USE_TLS=True" >> .env
-          echo "EMAIL_HOST=localhost" >> .env
-          echo "EMAIL_HOST_USER=" >> .env
-          echo "EMAIL_HOST_PASSWORD=" >> .env
-          echo "EMAIL_PORT=1025" >> .env
-          echo "DEFAULT_FROM_EMAIL=test@example.com" >> .env
-          echo "SENTRY_DSN=" >> .env
-          echo "REDIS_URL=" >> .env
+          cat > .env << 'EOF'
+          DEBUG=1
+          SECRET_KEY=test
+          DATABASE_URL=sqlite:///testdb.sqlite3
+          REDIS_URL=
+          SENTRY_DSN=
+          EMAIL_HOST=localhost
+          EMAIL_PORT=1025
+          EMAIL_USE_TLS=True
+          EMAIL_HOST_USER=
+          EMAIL_HOST_PASSWORD=
+          DEFAULT_FROM_EMAIL=test@example.com
+          
+          CONNECTIONS={}
+          CONNECTION_STRING=
+          EOF
 
       - name: Run migrations
         run: |
