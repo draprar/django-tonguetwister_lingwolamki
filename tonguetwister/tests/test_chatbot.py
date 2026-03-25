@@ -1,5 +1,5 @@
 import pytest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from django.urls import reverse
 import wikipedia
 from ..chatbot import chatbot_instance, Chatbot
@@ -28,8 +28,12 @@ async def test_chatbot_view_empty(async_client):
 
 @pytest.mark.parametrize("text", ["hej", "cześć", "witaj", "siema"])
 def test_greeting_detection(text):
-    response = chatbot_instance.get_response(text)
-    assert any(word in response.lower() for word in ["cześć", "hej", "witaj"])
+    # Create fresh chatbot instance with mocked spacy
+    with patch("tonguetwister.chatbot.spacy.load") as mock_spacy:
+        mock_spacy.return_value = None  # spacy model not needed for greetings
+        chatbot = Chatbot()
+        response = chatbot.get_response(text)
+        assert any(word in response.lower() for word in ["cześć", "hej", "witaj"])
 
 
 @pytest.mark.parametrize(
@@ -40,15 +44,17 @@ def test_greeting_detection(text):
     ]
 )
 def test_sentiment_detection(message, expected_phrase):
-    with patch.object(Chatbot, "load_data") as mock_load:
-        mock_load.side_effect = [
-            {},  # keywords
-            {"tragicznie", "źle", "okropnie"},  # negative_words
-            {"super", "fajnie", "świetnie"}     # positive_words
-        ]
-        chatbot = Chatbot()
-        response = chatbot.get_response(message)
-        assert expected_phrase in response.lower()
+    with patch("tonguetwister.chatbot.spacy.load") as mock_spacy:
+        mock_spacy.return_value = None
+        with patch.object(Chatbot, "load_data") as mock_load:
+            mock_load.side_effect = [
+                {},  # keywords
+                {"tragicznie", "źle", "okropnie"},  # negative_words
+                {"super", "fajnie", "świetnie"}     # positive_words
+            ]
+            chatbot = Chatbot()
+            response = chatbot.get_response(message)
+            assert expected_phrase in response.lower()
 
 
 def test_fallback_for_noise():
