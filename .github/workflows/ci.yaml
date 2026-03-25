@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the repository
+      - name: Check out repository
         uses: actions/checkout@v3
 
       - name: Set up Python
@@ -27,33 +27,26 @@ jobs:
           grep -a -v 'pywin32' requirements.txt | pip install -r /dev/stdin
 
       - name: Show installed packages
-        run: |
-          pip list
+        run: pip list
 
-      - name: Set up environment variables
+      - name: Set test environment variables (SQLite instead of Neon)
         run: |
-          echo "DEBUG=${{ secrets.DEBUG }}" >> .env
-          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
-          echo "EMAIL_HOST=${{ secrets.EMAIL_HOST }}" >> .env
-          echo "EMAIL_PORT=${{ secrets.EMAIL_PORT }}" >> .env
-          echo "EMAIL_USE_TLS=${{ secrets.EMAIL_USE_TLS }}" >> .env
-          echo "EMAIL_HOST_USER=${{ secrets.EMAIL_HOST_USER }}" >> .env
-          echo "EMAIL_HOST_PASSWORD=${{ secrets.EMAIL_HOST_PASSWORD }}" >> .env
-          echo "DEFAULT_FROM_EMAIL=${{ secrets.DEFAULT_FROM_EMAIL }}" >> .env
-          echo "REDIS_URL=${{ secrets.REDIS_URL }}" >> .env
-          echo "SENTRY_DSN=${{ secrets.SENTRY_DSN }}" >> .env
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-        env:
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          echo "DEBUG=1" >> .env
+          echo "SECRET_KEY=test" >> .env
+          echo "DATABASE_URL=sqlite:///testdb.sqlite3" >> .env
+          echo "EMAIL_HOST=localhost" >> .env
+          echo "EMAIL_PORT=1025" >> .env
+          echo "DEFAULT_FROM_EMAIL=test@example.com" >> .env
+          echo "SENTRY_DSN=" >> .env
+          echo "REDIS_URL=" >> .env
 
       - name: Run migrations
         run: |
-          python manage.py makemigrations
-          python manage.py migrate
+          python manage.py makemigrations --noinput
+          python manage.py migrate --noinput
 
       - name: Collect static
-        run: |
-          python manage.py collectstatic --noinput
+        run: python manage.py collectstatic --noinput
 
       - name: Run tests with pytest
         run: |
@@ -65,4 +58,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pytest-results
-          path: ./test-reports/results.xml
+          path: ./test-reports
