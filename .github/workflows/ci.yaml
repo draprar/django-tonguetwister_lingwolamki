@@ -33,24 +33,22 @@ jobs:
         run: |
           cat > .env << 'EOF'
           DEBUG=1
-          SECRET_KEY=test
+          SECRET_KEY=test-secret-key-for-testing-only
           DATABASE_URL=sqlite:///testdb.sqlite3
           REDIS_URL=
           SENTRY_DSN=
           EMAIL_HOST=localhost
           EMAIL_PORT=1025
           EMAIL_USE_TLS=True
-          EMAIL_HOST_USER=
-          EMAIL_HOST_PASSWORD=
+          EMAIL_HOST_USER=test@example.com
+          EMAIL_HOST_PASSWORD=testpass
           DEFAULT_FROM_EMAIL=test@example.com
-          
           CONNECTIONS={}
           CONNECTION_STRING=
           EOF
 
       - name: Run migrations
         run: |
-          python manage.py makemigrations --noinput
           python manage.py migrate --noinput
 
       - name: Collect static
@@ -59,7 +57,7 @@ jobs:
       - name: Run tests with pytest
         run: |
           mkdir -p ./test-reports
-          pytest --disable-warnings
+          pytest --disable-warnings -v
 
       - name: Store test results
         if: always()
@@ -67,3 +65,4 @@ jobs:
         with:
           name: pytest-results
           path: ./test-reports
+
